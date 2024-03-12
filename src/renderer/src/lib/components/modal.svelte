@@ -2,17 +2,18 @@
 	import { fly } from 'svelte/transition';
 	import { clickOutside, portal } from '../utils/index'
 	export let show: boolean = false;
+	export let outside = true
+	export let overlay = true
 </script>
 
 {#if show}
-	<div use:portal class="fixed inset-0 flex flex-col justify-end items-center bg-gray-600  bg-opacity-20">
+	<div use:portal class="fixed inset-0 flex flex-col justify-center items-center { overlay ? 'bg-gray-600  bg-opacity-20' : '' }">
 		<div
 			use:clickOutside
-			on:click_outside={() => (show = !show)}
+			on:click_outside={() => outside ? show = !show : ''}
 			in:fly={{ duration: 200, y: 100 }}
 			out:fly={{ duration: 200, y: 100 }}
-			class="bg-gray-50 shadow dark:bg-gray-800 rounded-t-2xl p-6 mx-auto w-full max-h-[60vh] overflow-y-auto"
-		>
+			class={`bg-gray-50 shadow dark:bg-gray-800 rounded-lg p-4 mx-auto max-h-[60vh] overflow-y-auto ${$$props.class}`}>
 			<slot />
 		</div>
 	</div>

@@ -1,5 +1,5 @@
 <script>
-	import toast_ from 'svelte-french-toast';
+	import toast_ from '@teddy-error/svelte-french-toast';
 
 	export let toast;
     export let someProp;

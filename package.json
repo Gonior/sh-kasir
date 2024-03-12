@@ -25,7 +25,7 @@
 		"@dicebear/core": "^7.1.1",
 		"@electron-toolkit/preload": "^3.0.0",
 		"@electron-toolkit/utils": "^3.0.0",
-		"svelte-french-toast": "^1.2.0"
+		"@teddy-error/svelte-french-toast": "^1.2.2"
 	},
 	"devDependencies": {
 		"@electron-toolkit/eslint-config-prettier": "^2.0.0",

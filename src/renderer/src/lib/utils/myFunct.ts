@@ -11,6 +11,11 @@ export const convertToRupiah = (num : number = 0) => {
 		.reverse()
 		.join('')
 }
+export const handleSwitchTheme = (theme : string = "" ) => {
+	theme === 'dark'
+		? document.documentElement.classList.add('dark')
+		: document.documentElement.classList.remove('dark')
+}
 
 export const dateFormat = (date : Date, optDate :Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', weekday:'long', year:"numeric" }, optHours : Intl.DateTimeFormatOptions = { hour: '2-digit', minute: 'numeric', second:'numeric', hour12: false }) => {
 	const myDate = new Date(date)
@@ -60,7 +65,7 @@ export const isEqual = (obj1: { [x: string]: any; }, obj2: { [x: string]: any; }
     let orders1 = obj1.orders
     let orders2 = obj1.orders
     if(orders1.length !== orders2.length) return false
-	
+
     for (let i = 0; i < orders1.length; i++) {
         if (!orders1[i].forId) {
             if (orders1[i].name !== orders2[i].name) return false
