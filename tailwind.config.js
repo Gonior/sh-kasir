@@ -6,6 +6,9 @@ module.exports = {
   ],
   darkMode : "class",
   theme: {
+    fontFamily: {
+      poppins: ["Poppins", "sans-serif"],
+    },
     extend: {
       animation: {
 				'spin-slow': 'spin 3s linear infinite'

@@ -1,1 +1,0 @@
-export type View = 'short' | 'half' | 'full'

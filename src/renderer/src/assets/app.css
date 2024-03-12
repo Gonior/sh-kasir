@@ -1,12 +1,21 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @layer components {
+	html * {
+		@apply font-poppins;
+	}
 	.btn {
 		@apply rounded px-2 py-1 font-semibold transform transition-all active:scale-90 disabled:active:scale-100 duration-200 ease-in-out disabled:bg-opacity-50 disabled:text-opacity-20 dark:disabled:bg-opacity-50 dark:disabled:text-opacity-20;
 	}
 }
-
+@font-face {
+	font-family: "Poppins";
+	src: url("./fonts/Poppins-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
 body {
 	font-family:
 		Inter,

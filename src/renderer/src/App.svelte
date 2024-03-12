@@ -4,24 +4,24 @@
 	import Icon from '@components/Icon.svelte'
 	import Tooltip from '@components/popover.svelte'
 	import { onMount } from 'svelte'
-	import { count } from './lib/stores/count'
 	import Cashier from './routes/Cashier.svelte'
+	import RichContent from './lib/components/toast.svelte'
+	import toast, { Toaster } from 'svelte-french-toast';
 	// const ipcHandle = async (): Promise<void> => {
-	// 	let response = await window.electron.ipcRenderer.invoke('print', {message : 'sayang isma'})
-	// 	console.log(response)
-	// }
-
+		// 	let response = await window.electron.ipcRenderer.invoke('print', {message : 'sayang isma'})
+		// 	console.log(response)
+		// }
+		
 	onMount( async () => {
-		let response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-		let json = await response.json()
-		count.set(json)
-
-		console.log('the component mounted');
+			
+		toast(RichContent, { })
+		
 	})
 
 
 </script>
 
+<Toaster/>
 <Tooltip>
 	<svelte:fragment slot="button">
 		<Icon name="home" />

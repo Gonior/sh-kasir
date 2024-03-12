@@ -1,9 +1,36 @@
-import type { View } from './View'
-import type { Item } from './Item'
 import type { Icon, IconName } from './Icon'
+
+interface Printer {
+    _id : string
+    name : string
+    type : 'main' | 'copy' | 'adds'
+}
+
+interface Menu {
+    _id : string
+    name : string
+    upc : number | null
+    category : string | Category
+    price : number
+}
+
+interface Category {
+    _id : string
+    name : string
+    printer : string | Printer
+}
+
+interface MenuOrder extends Menu {
+    qty : number
+    total : number
+    printed : boolean
+}
+
 export type {
-    View,
-    Item,
     Icon,
-    IconName
+    Menu,
+    Category,
+    MenuOrder,
+    IconName,
+    Printer
 }
