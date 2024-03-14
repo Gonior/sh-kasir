@@ -1,6 +1,7 @@
 
 import { createAvatar } from "@dicebear/core";
 import { thumbs } from "@dicebear/collection";
+import { theme } from "../store";
 
 export const convertToRupiah = (num : number = 0) => {
 	let rupiah = ''
@@ -11,10 +12,14 @@ export const convertToRupiah = (num : number = 0) => {
 		.reverse()
 		.join('')
 }
-export const handleSwitchTheme = (theme : string = "" ) => {
-	theme === 'dark'
-		? document.documentElement.classList.add('dark')
-		: document.documentElement.classList.remove('dark')
+export const handleSwitchTheme = (isDarkMode : boolean ) : void => {
+	if(isDarkMode) {
+		document.documentElement.classList.add('dark')
+		theme.set('dark')
+	} else {
+		document.documentElement.classList.remove('dark')
+		theme.set('light')
+	}
 }
 
 export const dateFormat = (date : Date, optDate :Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', weekday:'long', year:"numeric" }, optHours : Intl.DateTimeFormatOptions = { hour: '2-digit', minute: 'numeric', second:'numeric', hour12: false }) => {
