@@ -2,6 +2,9 @@
 import { createAvatar } from "@dicebear/core";
 import { thumbs } from "@dicebear/collection";
 import { theme } from "../store";
+import toast from "@teddy-error/svelte-french-toast";
+import {AxiosError} from 'axios'
+import type { IService } from "../types";
 
 export const convertToRupiah = (num : number = 0) => {
 	let rupiah = ''
@@ -85,4 +88,34 @@ export const isEqual = (obj1: { [x: string]: any; }, obj2: { [x: string]: any; }
         }
     }
 	return true
+}
+
+export const catch_func = (error : AxiosError) => {
+    // this portion is the same universally
+	let message 
+    if (error.response) {
+		if(error.response.status === 401 || error.response.status === 403) {
+			message = "Akses ditolak. silakan login terlebih dahulu"
+		} else if (error.response.data) {
+			let response = error.response.data as IService.IResponse<unknown>
+			message = response.message
+		}		
+		console.log(error.response.headers);
+    } else if (error.request) {
+		message = error.request
+      	console.log(error.request);
+    } else {
+		message = error.message
+      	console.log('Error', error.message);
+    }
+    toast.error(
+		`ERROR ${error.response.status}: 
+		${message}
+		Lihat console untuk informasi lebih lanjut.`,
+		{
+			duration: 4000,
+			position: 'top-right',
+		}
+    );
+    console.log(error.config);
 }

@@ -27,16 +27,14 @@
 
 	}
 </script>
-
-<div class="flex flex-col space-y-1 mb-3">
-	<h1 class="">Info</h1>
-	<h2 class="text-gray-500 dark:text-gray-300">
-		Masukan informasi Toko maupun Perusahaan yang ingin di tampilkan pada bill pembayaran
+<div class="">
+	<h1 class="font-bold">Info Perusahaan</h1>
+	<h2 class="text-gray-500 dark:text-gray-400">
+		Masukan Perusahaan yang ingin di tampilkan pada bill pembayaran
 	</h2>
 </div>
-
-<div class="">
-	<div class="flex my-2">
+<div class="py-2">
+	<div class="flex">
 		<div class="flex items-start w-full">
 			<div class="w-1/4">
 				<label class="block" for="inline-address"> Logo </label>
@@ -52,80 +50,135 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="flex my-2">
-		<div class="flex items-start w-full">
-			<div class="w-1/4">
-				<span class="block"> Nama </span>
-			</div>
-			<div class="w-2/3">
-				<input
-					class="form-control w-full"
-					placeholder="RM Sawo Matang"
-					type="text"
-					bind:value={storeInfo.name}
-				/>
-			</div>
+</div>
+<div class="py-2">	
+	<div class="flex items-start w-full">
+		<div class="w-1/4">
+			<span class="block"> Nama </span>
+		</div>
+		<div class="w-2/3">
+			<input
+				class="form-control w-full"
+				placeholder="RM Sawo Matang"
+				type="text"
+				bind:value={storeInfo.name}
+			/>
 		</div>
 	</div>
+</div>
 
-	<div class="flex my-2">
-		<div class="flex items-start w-full">
-			<div class="w-1/4">
-				<label class="block" for="address"> Alamat </label>
-			</div>
-			<div class="w-2/3">
-				<textarea
-					id="address"
-					class="form-control w-full resize-none h-20"
-					placeholder="Jl. Kita Masih Panjang"
-					type="text-area"
-					bind:value={storeInfo.address}
-				></textarea>
-			</div>
+<div class="py-2">
+	<div class="flex items-start w-full">
+		<div class="w-1/4">
+			<label class="block" for="address"> Alamat </label>
+		</div>
+		<div class="w-2/3">
+			<textarea
+				id="address"
+				class="form-control w-full resize-none h-20"
+				placeholder="Jl. Kita Masih Panjang"
+				bind:value={storeInfo.address}
+			></textarea>
 		</div>
 	</div>
+</div>
 
-	<div class="flex my-2">
-		<div class="flex items-start w-full">
-			<div class="w-1/4">
-				<label class="block" for="phonenumber"> Telepon </label>
-			</div>
-			<div class="w-2/3">
-				<input
-					class="form-control w-1/3"
-					placeholder="022 - xxxxxx"
-					id="phonenumber"
-					type="text"
-					bind:value={storeInfo.phone}
-				/>
-			</div>
+<div class="py-2">
+	<div class="flex items-start w-full">
+		<div class="w-1/4">
+			<label class="block" for="phonenumber"> Telepon </label>
+		</div>
+		<div class="w-2/3">
+			<input class="form-control w-1/3" placeholder="022 - xxxxxx" id="phonenumber" type="text" bind:value={storeInfo.phone} />
 		</div>
 	</div>
-
-	<div class="flex my-2">
-		<div class="flex items-start w-full">
-			<div class="w-1/4 flex flex-col">
-				<span class="block"> Catatan Kaki </span>
-				<span class="block text-gray-500 dark:text-gray-300">
-					Akan ditampilkan pada akhir bill pembayaran
-				</span>
-			</div>
-			<div class="w-2/3">
-				<input
-					class="form-control w-full"
-					placeholder="TERIMAKASIH ATAS KUNJUNGANNYA"
-					type="text"
-					bind:value={storeInfo.footerNote}
-				/>
-			</div>
+</div>
+<div class="py-2">
+	<div class="flex items-start w-full">
+		<div class="w-1/4">
+			<label class="block" for="phonenumber"> Nomor Handphone </label>
+		</div>
+		<div class="w-2/3">
+			<input class="form-control w-1/3" placeholder="022 - xxxxxx" id="phonenumber" type="text" bind:value={storeInfo.mobilePhone} />
 		</div>
 	</div>
+</div>
 
+<div class="py-2">
+	<div class="flex items-start w-full">
+		<div class="w-1/4 flex flex-col">
+			<span class="block"> Catatan Kaki </span>
+			<span class="block text-gray-500 dark:text-gray-400 text-sm">
+				Akan ditampilkan pada akhir bill pembayaran
+			</span>
+		</div>
+		<div class="w-2/3">
+			<input
+				class="form-control w-full"
+				placeholder="TERIMAKASIH ATAS KUNJUNGANNYA"
+				type="text"
+				bind:value={storeInfo.footerNote}
+			/>
+		</div>
+	</div>
+</div>
 
-	<div class="flex my-2 w-11/12 justify-end">
-		<button on:click={() => saveChange()} class="btn-primary flex items-center">
-			<span>Simpan Perubahan</span>
+<div class="flex flex-col space-y-1 mt-10 py-2">
+	<h1 class="font-bold">Infomasi Nomor Rekening</h1>
+	<h2 class="text-gray-500 dark:text-gray-300">
+		Masukan informasi yang ingin di tampilkan pada Invoice (PDF)
+	</h2>
+</div>
+<div class="my-2">
+	<div class="flex items-start w-full">
+		<div class="w-1/4">
+			<span class="block"> Bank </span>
+		</div>
+		<div class="w-2/3">
+			<input
+				class="form-control w-full"
+				placeholder="Nama Anda"
+				type="text"
+				bind:value={storeInfo.bank}
+			/>
+		</div>
+	</div>
+</div>
+<div class="my-2">
+	<div class="flex items-start w-full">
+		<div class="w-1/4">
+			<span class="block"> Nomor Rekening </span>
+		</div>
+		<div class="w-2/3">
+			<input
+				class="form-control w-full"
+				placeholder="Nama Anda"
+				type="text"
+				bind:value={storeInfo.norek}
+			/>
+		</div>
+	</div>
+</div>
+<div class="my-2">
+	<div class="flex items-start w-full">
+		<div class="w-1/4">
+			<span class="block"> Atas Nama </span>
+		</div>
+		<div class="w-2/3">
+			<input
+				class="form-control w-full"
+				placeholder="Nama Anda"
+				type="text"
+				bind:value={storeInfo.holder}
+			/>
+		</div>
+	</div>
+</div>
+<div class="py-4">
+	<div class="w-11/12 flex justify-end ">
+		<button on:click={() => saveChange()} class="btn-primary !px-5 !py-3 flex items-center">
+			<span>Simpan</span>
 		</button>
 	</div>
+	
 </div>

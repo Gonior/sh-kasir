@@ -44,7 +44,7 @@
 
 <Modal class="w-1/2  flex flex-col space-y-2" {outside} {overlay} on:close={() => dispatch('close', false)}>
 	<div class="flex items-center justify-between">
-		<h1 class="text-gray-500 dark:text-white font-bold text-lg">Login Sebagai</h1>
+		<h1 class=" font-bold text-lg">Login Sebagai</h1>
 		<button disabled={isLoading} on:click={() => dispatch('close', false)} class="btn-ghost text-gray-500 dark:text-gray-300">
 			<Icon name="close" class="h-6 w-6" ></Icon>
 		</button>
@@ -52,7 +52,7 @@
 		<div class="flex flex-col">
 			<div class="grid grid-flow-row gap-1 grid-cols-4">
 				{#each users as switcher}
-				<button on:click={() => handleSwitch(switcher)} disabled={isLoading} class="btn flex flex-col rounded-lg bg-gray-100 !py-2 dark:bg-gray-700 items-center space-y-1">
+				<button on:click={() => handleSwitch(switcher)} disabled={isLoading} class="btn flex flex-col rounded-lg bg-gray-200 !py-2 dark:bg-gray-700 items-center space-y-1">
 					<img src={switcher.avatar} alt={`avatar-${switcher.name}`} class="">
 					<span class="">{switcher.name}</span>
 				</button>

@@ -6,6 +6,8 @@
 	import PrinterSetting from './PrinterSetting.svelte'
 	import TaxSetting from './TaxSetting.svelte'
 	import { fade } from "svelte/transition"
+	import { onMount } from "svelte"
+	import { dragscroll } from '@svelte-put/dragscroll';
 
 	let submenu : IModel.ISubMenu[]= [
 		{
@@ -38,6 +40,10 @@
 		}
 	]
 	export let selectedId = submenu.find(s => s.selected).id
+
+	onMount(() => {
+		subMenuHandleClick(selectedId)
+	})
 	const subMenuHandleClick = (id : string | number) => {
 		submenu = [
 			...submenu.map((s) => {
@@ -54,16 +60,11 @@
 	}
 </script>
 
-<div class="h-full flex flex-col w-full mt-5">
-	<!-- header -->
+<div class="w-full flex flex-col h-full">
 	<div class="flex flex-col mb-5">
-
 		<div class="flex items-center overflow-x-auto space-x-2">
 			{#each submenu as sm}
-				<button
-					on:click={() => subMenuHandleClick(sm.id)}
-					class="chips {sm.selected ? 'active' : '' }"
-				>
+				<button on:click={() => subMenuHandleClick(sm.id)} class="chips {sm.selected ? 'active' : '' }" >
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					<Icon name={sm.icon} />
 					<span>{sm.name}</span>
@@ -72,8 +73,8 @@
 		</div>
 	</div>
 	{#key selectedId}
-		<div class="flex-1 overflow-y-auto scrollbar flex flex-col" in:fade={{duration : 200}}>
-			<svelte:component this={submenu.find((menu) => menu.selected === true).component}></svelte:component>
+		<div use:dragscroll={{axis : 'y'}} class="flex-1 h-[50%] max-h-full overflow-y-auto pb-10" in:fade={{duration : 200}}>
+			<svelte:component this={submenu.find((menu) => menu.id === selectedId).component}></svelte:component>
 		</div>
 	{/key}
 
