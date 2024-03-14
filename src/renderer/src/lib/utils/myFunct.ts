@@ -4,6 +4,7 @@ import { thumbs } from "@dicebear/collection";
 import { theme } from "../store";
 import toast from "@teddy-error/svelte-french-toast";
 import {AxiosError} from 'axios'
+import axios from "axios";
 import type { IService } from "../types";
 
 export const convertToRupiah = (num : number = 0) => {
@@ -90,32 +91,37 @@ export const isEqual = (obj1: { [x: string]: any; }, obj2: { [x: string]: any; }
 	return true
 }
 
-export const catch_func = (error : AxiosError) => {
-    // this portion is the same universally
-	let message 
-    if (error.response) {
-		if(error.response.status === 401 || error.response.status === 403) {
-			message = "Akses ditolak. silakan login terlebih dahulu"
-		} else if (error.response.data) {
-			let response = error.response.data as IService.IResponse<unknown>
-			message = response.message
-		}		
-		console.log(error.response.headers);
-    } else if (error.request) {
-		message = error.request
-      	console.log(error.request);
-    } else {
-		message = error.message
-      	console.log('Error', error.message);
-    }
-    toast.error(
-		`ERROR ${error.response.status}: 
-		${message}
-		Lihat console untuk informasi lebih lanjut.`,
-		{
-			duration: 4000,
-			position: 'top-right',
+
+export function httpErrorHandler(error) {
+	
+	if (error === null) throw new Error('Unrecoverable error!! Error is null!')
+	if (axios.isAxiosError(error)) {
+	  //here we have a type guard check, error inside this if will be treated as AxiosError
+		const response = error?.response
+		const request = error?.request
+		const config = error?.config //here we have access the config used to make the api call (we can make a retry using this conf)
+	
+		if (error.code === 'ERR_NETWORK') {
+			toast.error('Masalah koneksi', {position : 'top-right'})
+		} else if (error.code === 'ERR_CANCELED') {
+			toast.error('Request dibatalkan', {position : 'top-right'})
 		}
-    );
-    console.log(error.config);
+		if (response) {
+			//The request was made and the server responded with a status code that falls out of the range of 2xx the http status code mentioned above
+			const statusCode = response?.status
+			if (statusCode === 404) {
+				toast.error('Data tidak ada dalam database atau sudah dihapus' , {position : 'top-right'})
+				
+			} else if (statusCode === 401 || statusCode === 403) {
+				toast.error('Akses ditolak, silakan login terlebih dahulu' , {position : 'top-right'})
+			}
+		} else if (request) {
+			// toast.error(`Terjadi kesalahan!!
+			// silakan periksa console untuk informasi lebih lanjut!` , {position : 'top-right'})
+		}
+	}
+	
+	
+	console.log(error.message)
+	return error
 }

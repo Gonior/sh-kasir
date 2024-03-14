@@ -3,7 +3,8 @@
 	import logo from '../../assets/icons/logo.png'
 	import {IModel} from '../../lib/types'
 	import { getStoreInfo } from '../../lib/controller/store.controller'
-
+	let isLoading = false
+	let isValid = false
 	let storeInfo : IModel.Store ={
 		_id: 'storeid',
 		name: '',
@@ -16,10 +17,16 @@
 		mobilePhone : ''
 	}
 	onMount(async () => {
-		let response = await getStoreInfo()
-		if( response ) {
-			storeInfo={...response}
-		}
+		isLoading = true
+		
+			let response = await getStoreInfo()
+			if( response ) {
+				storeInfo={...response}
+				isValid = true
+			}
+		
+		
+		isLoading = false
 
 	})
 
@@ -27,6 +34,9 @@
 
 	}
 </script>
+{#if isLoading }
+<p>Memuat data</p>
+{:else if isValid}
 <div class="">
 	<h1 class="font-bold">Info Perusahaan</h1>
 	<h2 class="text-gray-500 dark:text-gray-400">
@@ -182,3 +192,6 @@
 	</div>
 	
 </div>
+{:else}
+<p class="text-red-500">Gagal memuat data</p>
+{/if}

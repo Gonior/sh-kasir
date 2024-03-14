@@ -19,7 +19,8 @@
       "@types/*" : ["lib/types/*"],
       "@routes/*" : ["routes/*"]
     },
-    "lib": ["ESNext", "DOM", "DOM.Iterable"]
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

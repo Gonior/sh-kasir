@@ -2,7 +2,8 @@ import axios from "axios";
 import type { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios'
 import { token, server } from "../store";
 import { get } from 'svelte/store'
-
+import { HttpError } from "./http.error";
+import { httpErrorHandler } from "../utils/myFunct";
 // TYPES
 import { IService, EHttpMethod } from "../types";
 
@@ -18,12 +19,6 @@ class HttpService {
 		});
 	}
 
-	// Get authorization token for requests
-	private get getAuthorization() {
-		let accessToken = get(token)
-		return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
-	}
-
 	// Initialize service configuration
 	public service() {
 		this.injectInterceptors();
@@ -34,8 +29,8 @@ class HttpService {
 	// Set up request headers
 	private setupHeaders(hasAttachment = false) {
 		return hasAttachment
-		? { "Content-Type": "multipart/form-data", ...this.getAuthorization }
-		: { "Content-Type": "application/json", ...this.getAuthorization };
+		? { "Content-Type": "multipart/form-data"}
+		: { "Content-Type": "application/json"};
 	}
 
 	// Handle HTTP requests
@@ -64,7 +59,7 @@ class HttpService {
 		hasAttachment = false
 	): Promise<T> {
 		return this.request<T>(EHttpMethod.GET, url, {
-			params,
+			...params,
 			headers: this.setupHeaders(hasAttachment),
 		});
 	}
@@ -77,7 +72,7 @@ class HttpService {
 		hasAttachment = false
 	): Promise<T> {
 		return this.request<T>(EHttpMethod.POST, url, {
-			params,
+			...params,
 			data: payload,
 			headers: this.setupHeaders(hasAttachment),
 		});
@@ -91,9 +86,9 @@ class HttpService {
 		hasAttachment = false
 	): Promise<T> {
 		return this.request<T>(EHttpMethod.PATCH, url, {
-		params,
-		data: payload,
-		headers: this.setupHeaders(hasAttachment),
+			...params,
+			data: payload,
+			headers: this.setupHeaders(hasAttachment),
 		});
 	}
 
@@ -104,32 +99,48 @@ class HttpService {
 		hasAttachment = false
 	): Promise<T> {
 		return this.request<T>(EHttpMethod.DELETE, url, {
-			params,
+			...params,
 			headers: this.setupHeaders(hasAttachment),
 		});
 	}
 
 	// Inject interceptors for request and response
 	private injectInterceptors() {
-		// Set up request interceptor
+		
 		this.http.interceptors.request.use((request) => {
-			// * Perform an action
-			// TODO: implement an NProgress
+			let accessToken = get(token)
+			let ip = get(server).ip
+			accessToken ? request.headers.Authorization = `Bearer ${accessToken}` : ''
+			ip ? request.baseURL = `http://${ip}:8000` : ''
+	
 			return request;
 		});
 
 		// Set up response interceptor
 		this.http.interceptors.response.use(
 		(response) => {
-			// * Do something
-			// console.info(response)
-			return response;
+			const config = response?.config
+			if (config?.raw) {
+				return response
+			}
+			if (response.status < 400) {
+				const data = response?.data
+				if (!data) {
+					throw new HttpError('API Error. No data!')
+				}
+				return response
+			}
+			throw new HttpError('API Error! Invalid status code!')
 		},
 
 		(error) => {
-			// * Implement a global error alert
-			console.info(error)
-			return Promise.reject(error);
+			const config = error?.config
+			if (config?.raw) {
+				return error;
+			}
+			
+			return httpErrorHandler(error)
+			
 		});
 	}
 
@@ -140,3 +151,4 @@ class HttpService {
 }
 
 export { HttpService };
+
