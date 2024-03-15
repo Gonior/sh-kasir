@@ -5,6 +5,7 @@
 	import { getStoreConfig, updateStoreConfig } from '../../lib/controller/store.controller'
 	import Toogle from '../../lib/components/toggle.svelte'
 	import {slide} from 'svelte/transition'
+	import Title from '../../lib/components/title.svelte'
 	let isLoadingData = false
 	let isLoading = false
 	let isValid = false
@@ -58,12 +59,7 @@
 {#if isLoadingData }
 <p class="text-center py-5">Memuat data</p>
 {:else if isValid}
-<div class="">
-	<h1 class="font-bold text-3xl">Info Perusahaan</h1>
-	<h2 class="text-gray-500 dark:text-gray-400">
-		Masukan Perusahaan yang ingin di tampilkan pada bill pembayaran
-	</h2>
-</div>
+<Title title="Info Perusahaan" subtitle={'Masukan Perusahaan yang ingin di tampilkan pada bill pembayaran'}/>
 <div class="py-2">
 	<div class="flex items-start w-full">
 		<div class="w-1/4">
