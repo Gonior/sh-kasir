@@ -30,12 +30,10 @@
 		font-weight : 500;
 		background: #333;color: #fff;
 	`
-
 }}/>
 
 <Router {url}>
 	<div class="h-screen select-none">
-	  <!-- <Route path="/blog/:id" component={BlogPost} /> -->
 		<Route path="/cashier" component={Cashier} />
 		<Route path="/admin" component={Admin} />
 		<Route path="/"><Home/></Route>

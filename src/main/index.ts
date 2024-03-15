@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import {readConfigPrinterFile, writeConfigPrinterFile, writeDefaultConfigPrinter} from './lib/utils'
 
 function createWindow(): void {
 	// Create the browser window.
@@ -26,6 +27,10 @@ function createWindow(): void {
 		return { action: 'deny' }
 	})
 
+	ipcMain.handle('list-printer', async (_event) => {
+		return mainWindow.webContents.getPrintersAsync()
+	})
+
 	// HMR for renderer base on electron-vite cli.
 	// Load the remote URL for development or the local html file for production.
 	if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
@@ -35,16 +40,12 @@ function createWindow(): void {
 	}
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+
 app.whenReady().then(() => {
-	// Set app user model id for windows
+	if (!readConfigPrinterFile()) writeDefaultConfigPrinter()
+
 	electronApp.setAppUserModelId('com.electron')
 
-	// Default open or close DevTools by F12 in development
-	// and ignore CommandOrControl + R in production.
-	// see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
 	app.on('browser-window-created', (_, window) => {
 		optimizer.watchWindowShortcuts(window)
 	})
@@ -54,8 +55,18 @@ app.whenReady().then(() => {
 
 	ipcMain.handle('print', (_event, data) => {
 		console.log(data)
-		return {success : true, message : "you succes!!"}
+		return {success : true, message : "you success!!"}
 	})
+
+	ipcMain.handle('write-printer-config', async (_event, data) => {
+		return writeConfigPrinterFile(data)
+	})
+
+	ipcMain.handle('read-printer-config', async (_event) => {
+		return readConfigPrinterFile()
+	})
+
+
 
 	createWindow()
 

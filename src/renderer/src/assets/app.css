@@ -41,19 +41,19 @@ body {
 ::-webkit-scrollbar {
     width: 10px;
 }
- 
+
 /* Track */
 ::-webkit-scrollbar-track {
     background: transparent;
     border-radius: 5px;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
     background: #d97706;
     border-radius: 5px;
 }
- 
+
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #b45309;
@@ -87,4 +87,8 @@ input[type="checkbox"] {
 
 .form-control {
 	@apply text-left rounded-lg outline-none py-1 px-2 border border-gray-300 dark:border-gray-700 bg-transparent focus:outline-none focus:bg-white dark:focus:bg-gray-700 focus:border-amber-600 dark:focus:border-amber-600;
+}
+
+.container-placeholder {
+	@apply animate-pulse bg-gray-200 rounded-lg dark:bg-gray-700;
 }

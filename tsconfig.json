@@ -12,15 +12,8 @@
     "strict": false,
     "allowJs": true,
     "checkJs": true,
-    "baseUrl": "./src/renderer/src",
-    "paths": {
-      "@components/*" : ["lib/components/*"],
-      "@utils/*" : ["lib/utils/*"],
-      "@types/*" : ["lib/types/*"],
-      "@routes/*" : ["routes/*"]
-    },
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    
+	"types": ["electron-vite/node"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"]
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

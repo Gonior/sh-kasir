@@ -3,9 +3,7 @@ import { createAvatar } from "@dicebear/core";
 import { thumbs } from "@dicebear/collection";
 import { theme } from "../store";
 import toast from "@teddy-error/svelte-french-toast";
-import {AxiosError} from 'axios'
 import axios from "axios";
-import type { IService } from "../types";
 
 export const convertToRupiah = (num : number = 0) => {
 	let rupiah = ''
@@ -93,16 +91,16 @@ export const isEqual = (obj1: { [x: string]: any; }, obj2: { [x: string]: any; }
 
 
 export function httpErrorHandler(error) {
-	
+
 	if (error === null) throw new Error('Unrecoverable error!! Error is null!')
 	if (axios.isAxiosError(error)) {
 	  //here we have a type guard check, error inside this if will be treated as AxiosError
 		const response = error?.response
 		const request = error?.request
 		const config = error?.config //here we have access the config used to make the api call (we can make a retry using this conf)
-	
+
 		if (error.code === 'ERR_NETWORK') {
-			toast.error('Masalah koneksi', {position : 'top-right'})
+			toast.error('Connection problems...\nPastikan anda terhubung dengan jaringan!', {position : 'top-right'})
 		} else if (error.code === 'ERR_CANCELED') {
 			toast.error('Request dibatalkan', {position : 'top-right'})
 		}
@@ -111,17 +109,19 @@ export function httpErrorHandler(error) {
 			const statusCode = response?.status
 			if (statusCode === 404) {
 				toast.error('Data tidak ada dalam database atau sudah dihapus' , {position : 'top-right'})
-				
+
 			} else if (statusCode === 401 || statusCode === 403) {
 				toast.error('Akses ditolak, silakan login terlebih dahulu' , {position : 'top-right'})
+			} else if (statusCode === 400 ) {
+				toast.error(response?.data?.message , {position : 'top-right'})
 			}
 		} else if (request) {
 			// toast.error(`Terjadi kesalahan!!
 			// silakan periksa console untuk informasi lebih lanjut!` , {position : 'top-right'})
 		}
 	}
-	
-	
+
+
 	console.log(error.message)
 	return error
 }

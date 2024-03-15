@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import toast from '@teddy-error/svelte-french-toast';
+	import {server} from '../../lib/store'
+	import type { IModel } from '../../lib/types'
 	let isLoading = false
 	let ipAddress = 'localhost'
-	let radioValue = 'local'
+	let radioValue : IModel.Connection = 'local'
 	let inputEl : HTMLInputElement
 	onMount(async () => {
-		
+		ipAddress = $server.ip
+		radioValue = $server.type
 	})
 
 	const radioOnChange = (e) => {
@@ -16,15 +19,12 @@
 		} else {
 			inputEl.blur()
 			ipAddress = "localhost"
-			
+
 		}
-		// radioValue = e.target.value
 	}
 
-
-	
 	const testConnection = async () => {
-		
+
 		isLoading = true
 		let url = `http://${ipAddress}:8000`
 		try {
@@ -32,17 +32,18 @@
 				loading :'Menunggu respon dari server...',
 				success : 'Berhasil terhubung dengan server',
 				error : 'Gagal terhubung dengan server'
-			}, {position : 'top-right'})	
+			}, {position : 'top-right'})
 		} catch (error) {
 			console.error(error)
 		}
-		
+
 		isLoading = false
-		
+
 	}
 
 	const handleSave = async () => {
-		console.log({radioValue, ipAddress})
+		server.set({type : radioValue , ip : ipAddress})
+		toast.success('Berhasil menyimpan Konfigurasi Server', {position : 'top-right'})
 	}
 </script>
 

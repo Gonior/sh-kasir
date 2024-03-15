@@ -1,7 +1,201 @@
-<!-- <script>
+<script lang="ts">
 	import { onMount } from 'svelte'
+	import {slide} from 'svelte/transition'
+	import {IModel} from '../../lib/types'
+	import Toogle from '../../lib/components/toggle.svelte'
+	import Icon from '../../lib/components/Icon.svelte'
+	import toast from '@teddy-error/svelte-french-toast'
+	let listPrinter = []
+	let addsPrinter : IModel.Printer[] = []
+	let isChange = false
+	let isLoading = false
+	let useCopyPrinter = false
+	let useAddsPrinter = false
+	let mainPrinter = ""
+	let copyPrinter = ""
+	onMount(async() => {
+		listPrinter = await window.electron.ipcRenderer.invoke('list-printer')
+		let pc : IModel.Printer[] = await window.electron.ipcRenderer.invoke('read-printer-config')
+		mainPrinter = pc.find(p => p.type === "main")?.name ?? ""
+		copyPrinter = pc.find(p => p.type === "copy")?.name ?? ""
+		if(copyPrinter) useCopyPrinter = true
+		addsPrinter = pc.filter(p => p.type === "adds") ?? []
+		if (addsPrinter.length > 0) useAddsPrinter = true
+	})
+
+	const saveChange = async () => {
+		let printers: IModel.Printer[] = []
+		if (mainPrinter) printers.push(generateObjectPrinter(mainPrinter, "main"))
+		if (useCopyPrinter && copyPrinter) printers.push(generateObjectPrinter(copyPrinter, "copy"))
+
+		if(addsPrinter.length > 0) {
+			addsPrinter.forEach(printer => {
+				if (printer.name) printers.push(generateObjectPrinter(printer.name, "adds", printer._id, printer.displayName))
+			})
+		}
+		let response = await window.electron.ipcRenderer.invoke('write-printer-config', printers)
+		if(response) {
+			toast.success(response, {position : 'top-right'})
+			isChange = false
+		}
+		else toast.error("Gagal menyimpan konfigurasi", {position : 'top-right'})
+	}
+
+	const handleChange = (e, type?) => {
+		if(type === "copy" && !e.detail?.checked) copyPrinter = ""
+		if(type === "adds" && !e.detail?.checked) addsPrinter = []
+		isChange = true
+	}
+
+	const generateObjectPrinter = (name : string, type : any, _id?, displayName?) : IModel.Printer => {
+		let obj = {
+			name : name,
+			type : type,
+			_id : _id ? _id : `printer-${type}`,
+			displayName : displayName ? displayName : null
+		}
+
+		return obj as IModel.Printer
+	}
+
+	const handleTestPrint = (name : string) => {
+		console.log(name)
+		throw 'Not implement yet'
+	}
+
+	const handleAddPrinters = () => {
+		let id = addsPrinter.length + 1
+
+		let printer : IModel.Printer = {
+			_id: `printer-adds-${id}`,
+			name: '',
+			type: 'adds',
+			displayName: `Printer Tambahan ${id}`,
+		}
+
+		addsPrinter = [...addsPrinter, printer]
+		isChange = true
+	}
+	const handleDeletePrinterAdd = (id : any) => {
+		addsPrinter = [...addsPrinter.filter((p) => p._id !== id)]
+		isChange = true
+	}
+</script>
+
+
+<div class="flex items-start w-3/4 justify-between mb-3">
+	<div class="flex flex-col space-y-1">
+		<h1 class="font-bold">Konfigurasi Printer</h1>
+		<h2 class="text-gray-500 dark:text-gray-400">
+			Daftarkan printer untuk keperluan Mencetak Struk Pembelian, maupun Struk Pemesanan.
+		</h2>
+	</div>
+</div>
+<div class="flex py-4">
+	<div class="flex items-start w-full">
+		<div class="w-1/2  flex flex-col">
+			<h1 class="font-semibold">Printer Kasir</h1>
+			<span class="text-sm text-gray-500 dark:text-gray-400">Lakukan Test Print untuk memastikan printer mencetak Struk</span>
+		</div>
+		<div class="w-1/2 flex items-start space-x-2">
+			<select
+				on:change={(e) => handleChange(e, "main")}
+				class="form-control"
+				bind:value={mainPrinter}>
+				<option value="">--tidak ada--</option>
+				{#each listPrinter as printer}
+					<option value={printer.name}>{printer.displayName}</option>
+				{/each}
+			</select>
+			<button
+				class="btn-secondary"
+				disabled={isLoading || !mainPrinter}
+				on:click={() => handleTestPrint(mainPrinter)}>Test Print</button
+			>
+		</div>
+	</div>
+</div>
+<div class="flex py-4">
+	<div class="flex items-start w-full">
+		<div class="w-1/2 flex flex-col">
+			<h1 class="font-semibold">Printer Rekap Pesanan</h1>
+			<span class="text-sm text-gray-500 dark:text-gray-400">Akan mencetak semua pesanan</span>
+		</div>
+		<div class="w-1/2">
+			<Toogle bind:checked={useCopyPrinter} on:change={(e) => handleChange(e, 'copy')}/>
+			{#if useCopyPrinter}
+			<div transition:slide={{axis : 'y', duration : 200}} class="flex items-start space-x-2">
+				<select
+					on:change={handleChange}
+					class="form-control"
+					bind:value={copyPrinter}>
+					<option value="">--tidak ada--</option>
+					{#each listPrinter as printer}
+						<option value={printer.name}>{printer.displayName}</option>
+					{/each}
+				</select>
+				<button class="btn-secondary" disabled={isLoading || !copyPrinter} on:click={() => handleTestPrint(copyPrinter)}>Test Print</button>
+			</div>
+			{/if}
+		</div>
+
+	</div>
+</div>
+<div class="flex py-4">
+	<div class="flex items-start w-full">
+		<div class="flex flex-col w-1/2">
+			<h1 class="font-semibold">Printer Tambahan</h1>
+			<span class="text-sm pr-10 text-gray-500 dark:text-gray-400">Akan mencetak menu sesuai printer yang didaftarkan pada Kategori Menu.
+				(Contoh : Mendaftarkan Printer A pada Kategori A, maka semua pesanan
+				Kategori A Hanya muncul di Printer A.)</span>
+		</div>
+		<div class="w-1/2">
+			<Toogle bind:checked={useAddsPrinter} on:change={(e) => handleChange(e, 'adds')} />
+			{#if useAddsPrinter}
+				<div transition:slide={{duration : 200, axis : 'y'}} class="flex flex-col items-start space-y-3">
+					<button on:click={handleAddPrinters} class="btn-secondary flex items-center">
+						<Icon name="plus" class="h-6 w-6" stroke={2}/>
+						Tambah Printer
+					</button>
+
+					{#each addsPrinter as printer}
+					<div class="flex items-end space-x-2">
+						<div>
+							<div class="flex items-center justify-between">
+								<span class="text-sm text-gray-500 dark:text-gray-300">{printer.displayName}</span>
+								<button class="btn font-bold text-orange-500" on:click={() => handleDeletePrinterAdd(printer._id)}>
+									Hapus
+								</button>
+							</div>
+							<div class=" flex items-start space-x-2 !mt-0">
+								<select on:change={handleChange} class="form-control !mt-0" bind:value={printer.name} id={printer._id}>
+									<option value="">--tidak ada--</option>
+									{#each listPrinter as printer}
+										<option value={printer.name}>{printer.name}</option>
+									{/each}
+								</select>
+							</div>
+						</div>
+
+						<button class="btn-secondary" disabled={isLoading || !printer.name} on:click={() => handleTestPrint(printer.name)}>Test Print</button>
+					</div>
+					{/each}
+				</div>
+			{/if}
+		</div>
+	</div>
+</div>
+<div class="py-4 pr-10">
+	<div class="flex justify-end ">
+		<button disabled={isLoading || !isChange} on:click={() => saveChange()} class="btn-primary !px-5 !py-3 flex items-center">
+			<span>Simpan</span>
+		</button>
+	</div>
+</div>
+
+
+<!-- <script>
 	import { fade } from 'svelte/transition'
-	import { failure, success } from '../../lib/toast'
 	let printersName = []
 	let configPrinter = {}
 	let addsPrinter = []
@@ -24,7 +218,7 @@
 		let newPrinter = {
 			typeOfPrinter: 'additional',
 			type: 'local',
-			_id: `printer-add-${id}`,
+			_id: `printer-adds-${id}`,
 			displayName: `Printer Tambahan ${id}`,
 			nameOfPrinter: ''
 		}
@@ -72,11 +266,11 @@
 	}
 </script>
 
-<div class="flex flex-col text-sm" in:fade={{ duration: 300 }}>
+<div class="flex flex-col" in:fade={{ duration: 300 }}>
 	<div class="flex items-start w-3/4 justify-between mb-3">
 		<div class="flex flex-col space-y-1">
 			<h1 class="">Konfigurasi Printer</h1>
-			<h2 class="text-gray-500 dark:text-gray-300 text-sm">
+			<h2 class="text-gray-500 dark:text-gray-300">
 				Konfigurasi kebutuhan printer disini
 			</h2>
 		</div>

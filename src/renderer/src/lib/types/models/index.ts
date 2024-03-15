@@ -1,6 +1,6 @@
 
 
-export type IconName = 'building' | 'printer' | 'server'| 'receipt-percent' | 'icon' |'minus' | 'question-mark' | 'home' | 'cog-8-tooth' | 'cube' | 'user-circle' | 'user' | 'ellipsis-vertical' | 'information-circle' | 'key' | 'plus' | 'trash' | 'close' | 'bell' | 'search' | 'bar' | 'refresh' | 'arrow' | 'arrow-long' | 'chevron-up-down' | 'chevron' | 'check' | 'logout' | 'bag' | 'calc' | 'wallet' | 'sun' | 'moon'
+export type IconName = 'book' | 'folder' | 'power' | 'building' | 'printer' | 'server'| 'receipt-percent' | 'icon' |'minus' | 'question-mark' | 'home' | 'cog-8-tooth' | 'cube' | 'user-circle' | 'user' | 'ellipsis-vertical' | 'information-circle' | 'key' | 'plus' | 'trash' | 'close' | 'bell' | 'search' | 'bar' | 'refresh' | 'arrow' | 'arrow-long' | 'chevron-up-down' | 'chevron' | 'check' | 'logout' | 'bag' | 'calc' | 'wallet' | 'sun' | 'moon'
 
 export type Icon = {
     name : IconName,
@@ -11,23 +11,13 @@ type Action = 'Membuat' | 'Menghapus' | 'Menambahkan' | 'Mengubah'
 
 type Status = 'tunda' | 'lunas' | 'arsip' | 'cancel'
 
-
-export interface Store {
-    _id : 'storeid'
-    name : string
-    address : string
-    phone : string
-    mobilePhone? : string
-    footerNote : string
-    norek : string | number
-    holder : string
-    bank : string
-}
+export type Connection = 'local' | 'network'
 
 export interface Printer {
     _id : string
     name : string
-    type : 'main' | 'copy' | 'adds'
+    type : 'main' | 'copy' | 'adds',
+	displayName? : string
 }
 
 export interface User {
@@ -45,6 +35,7 @@ export interface Menu {
     price? : number
 	forId? :string
 }
+
 
 export interface MenuOrder extends Menu {
     qty? : number
@@ -102,19 +93,39 @@ export interface IChips {
 }
 
 export interface ISubMenu extends IChips {
-	component : any
+	component? : any
 	icon? : IconName
 }
 
-export interface Store {
-    _id : 'storeid'
+export interface StoreInfo {
     name : string
     address : string
     phone : string
     mobilePhone? : string
     footerNote : string
-    norek : string | number
+}
+
+export interface Bank {
+    accountNumber : string | number
     holder : string
     bank : string
 }
+
+export interface Tax {
+    checked : boolean
+    name? : string
+    value? : number
+}
+
+export interface Store {
+    _id : 'storeid'
+    storeInfo : StoreInfo
+    taxInfo : Tax
+    bankInfo : Bank
+}
+export interface ServerConfig {
+	ip : string,
+	type : Connection
+}
+
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
 	import { createEventDispatcher } from 'svelte'
-	import { clickOutside, portal } from '../utils/index'
+	import { clickOutside, portal } from '../../utils/index'
 	const dispatch = createEventDispatcher()
 	export let outside = true
 	export let overlay = true
