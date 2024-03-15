@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import toast from '@teddy-error/svelte-french-toast';
-	import {server} from '../../lib/store'
-	import type { IModel } from '../../lib/types'
+	import {server} from '@store/index'
+	import type { IModel } from '@lib/types'
 	let isLoading = false
+	let isValid = false
 	let ipAddress = 'localhost'
 	let radioValue : IModel.Connection = 'local'
 	let inputEl : HTMLInputElement
@@ -19,6 +20,7 @@
 		} else {
 			inputEl.blur()
 			ipAddress = "localhost"
+			isValid = true
 
 		}
 	}
@@ -29,9 +31,16 @@
 		let url = `http://${ipAddress}:8000`
 		try {
 			await toast.promise(fetch(url), {
-				loading :'Menunggu respon dari server...',
-				success : 'Berhasil terhubung dengan server',
-				error : 'Gagal terhubung dengan server'
+				loading :'Tes koneksi..',
+				success : function () {
+					isValid = true
+					return 'Berhasil terhubung dengan server'
+				},
+				error : function(err) {
+					isValid = false
+					console.log(err)
+					return 'Gagal terhubung dengan server'
+				}
 			}, {position : 'top-right'})
 		} catch (error) {
 			console.error(error)
@@ -79,7 +88,7 @@
 			</div>
 		</div>
 		<div class="flex justify-end mt-5 ">
-			<button on:click={() => handleSave()} disabled={isLoading} class="btn-primary !px-5 !py-3 flex items-center">
+			<button on:click={() => handleSave()} disabled={!isValid||isLoading} class="btn-primary !px-5 !py-3 flex items-center">
 				<span>Simpan</span>
 			</button>
 		</div>

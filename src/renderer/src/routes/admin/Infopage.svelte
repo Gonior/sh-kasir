@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import logo from '../../assets/icons/logo.png'
-	import {IModel} from '../../lib/types'
-	import { getStoreConfig, updateStoreConfig } from '../../lib/controller/store.controller'
-	import Toogle from '../../lib/components/toggle.svelte'
+	import logo from '@assets/icons/logo.png'
+	import {IModel} from '@lib/types'
+	import { getStoreConfig, updateStoreConfig } from '@lib/controller/store.controller'
+	import Toogle from '@components/toggle.svelte'
 	import {slide} from 'svelte/transition'
-	import Title from '../../lib/components/title.svelte'
+	import Title from '@components/title.svelte'
 	let isLoadingData = false
 	let isLoading = false
 	let isValid = false

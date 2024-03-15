@@ -2,7 +2,7 @@
 	
     import { computePosition, flip, offset, shift, arrow } from '@floating-ui/dom'
     import { scale } from "svelte/transition";
-    import { clickOutside } from '../utils'
+    import { clickOutside } from '@lib/utils'
     export let title :string = ""
     
 

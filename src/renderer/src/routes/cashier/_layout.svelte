@@ -1,5 +1,5 @@
 <script>
-	import Powerbutton from '../../lib/components/buttons/powerbutton.svelte';
+	import Powerbutton from '@components/buttons/powerbutton.svelte';
 	import {link} from 'svelte-routing'
 
 </script>

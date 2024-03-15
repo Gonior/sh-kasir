@@ -1,6 +1,6 @@
 import toast from '@teddy-error/svelte-french-toast';
-import {HttpService} from '../../lib/services/http.service'
-import {IService, IModel} from '../../lib/types'
+import {HttpService} from '@lib/services/http.service'
+import {IService, IModel} from '@lib/types'
 
 const http = new HttpService()
 

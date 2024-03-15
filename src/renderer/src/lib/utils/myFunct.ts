@@ -97,7 +97,8 @@ export function httpErrorHandler(error) {
 	  //here we have a type guard check, error inside this if will be treated as AxiosError
 		const response = error?.response
 		const request = error?.request
-		const config = error?.config //here we have access the config used to make the api call (we can make a retry using this conf)
+		// const config = error?.config 
+		//here we have access the config used to make the api call (we can make a retry using this conf)
 
 		if (error.code === 'ERR_NETWORK') {
 			toast.error('Connection problems...\nPastikan anda terhubung dengan jaringan!', {position : 'top-right'})

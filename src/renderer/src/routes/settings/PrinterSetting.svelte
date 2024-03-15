@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import {slide} from 'svelte/transition'
-	import {IModel} from '../../lib/types'
-	import Toogle from '../../lib/components/toggle.svelte'
-	import Icon from '../../lib/components/Icon.svelte'
+	import {IModel} from '@lib/types'
+	import Toogle from '@components/toggle.svelte'
+	import Icon from '@components/Icon.svelte'
 	import toast from '@teddy-error/svelte-french-toast'
 	let listPrinter = []
 	let addsPrinter : IModel.Printer[] = []

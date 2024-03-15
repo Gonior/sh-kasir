@@ -1,7 +1,7 @@
 
 <script lang="ts">
-    import type {IModel} from '../types'
-    import { icons } from "../utils";
+    import type {IModel} from '@lib/types'
+    import { icons } from "@lib/utils";
 
     export let name: IModel.IconName  = "icon"
     export let stroke = 1.5

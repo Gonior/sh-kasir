@@ -12,7 +12,27 @@
     "strict": false,
     "allowJs": true,
     "checkJs": true,
-	"types": ["electron-vite/node"],
+	  "types": ["electron-vite/node"],
+    "paths": {
+      "@/*": [
+        "./src/renderer/src/*"
+      ],
+      "@lib/*": [
+        "./src/renderer/src/lib/*"
+      ],
+      "@assets/*": [
+        "./src/renderer/src/assets/*"
+      ],
+      "@routes/*": [
+        "./src/renderer/src/routes/*"
+      ],
+      "@components/*": [
+        "./src/renderer/src/lib/components/*"
+      ],
+      "@store/*": [
+        "./src/renderer/src/lib/store/*"
+      ]
+    },
     "lib": ["ESNext", "DOM", "DOM.Iterable"]
   },
   "references": [{ "path": "./tsconfig.node.json" }]

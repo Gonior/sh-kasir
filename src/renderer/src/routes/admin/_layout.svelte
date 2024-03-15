@@ -1,13 +1,13 @@
 <script lang="ts">
-	import Navbar from '../../lib/components/navbar/navbar.svelte';
+	import { dragscroll } from '@svelte-put/dragscroll';
+	import Navbar from '@/lib/components/navbar/navbar.svelte';
 	import Userpage from './userpage.svelte'
 	import Categorypage from  './categorypage.svelte'
 	import Menupage from './menupage.svelte'
 	import Infopage from './Infopage.svelte'
 	import Settingpage from '../settings/_layout.svelte'
 	import {IModel} from '../../lib/types'
-	import { dragscroll } from '@svelte-put/dragscroll';
-	import Icon from '../../lib/components/Icon.svelte'
+	import Icon from '@/lib/components/Icon.svelte'
 	let submenu : IModel.ISubMenu[]= [
 		{
 			id: 1,

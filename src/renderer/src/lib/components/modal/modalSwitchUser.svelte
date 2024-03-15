@@ -2,12 +2,12 @@
 
 	import toast from '@teddy-error/svelte-french-toast'
 	import Modal from "./modal.svelte";
-	import Icon from '../Icon.svelte'
+	import Icon from '@components/Icon.svelte'
 	import { createEventDispatcher } from 'svelte'
-	import { generateAvatar } from '../../utils/myFunct'
-	import { HttpService } from '../../services/http.service'
-	import { IModel, IService } from '../../types';
-	import { token, user } from '../../store'
+	import { generateAvatar } from '@lib/utils/myFunct'
+	import { HttpService } from '@lib/services/http.service'
+	import { IModel, IService } from '@lib/types';
+	import { token, user } from '@store/index'
 	const dispatch = createEventDispatcher()
 	const http = new HttpService()
 	let fetchUsers = http.service().get<IService.IResponse<IModel.User[]>>(`/login`);

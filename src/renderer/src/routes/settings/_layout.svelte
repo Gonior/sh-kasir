@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { IModel } from "../../lib/types"
-	import Icon from "../../lib/components/Icon.svelte";
-
+	import type { IModel } from "@lib/types"
+	import Icon from "@components/Icon.svelte";
 	import ServerSetting from './ServerSetting.svelte'
 	import PrinterSetting from './PrinterSetting.svelte'
+	import Title from "@components/title.svelte";
 	import { fade } from "svelte/transition"
 	import { onMount } from "svelte"
 	import { dragscroll } from '@svelte-put/dragscroll';
@@ -45,6 +45,7 @@
 </script>
 
 <div class="w-full flex flex-col h-full">
+	<Title title="Pengaturan" />
 	<div class="flex flex-col mb-5">
 		<div class="flex items-center overflow-x-auto space-x-2">
 			{#each submenu as sm}
@@ -61,5 +62,4 @@
 			<svelte:component this={submenu.find((menu) => menu.id === selectedId).component}></svelte:component>
 		</div>
 	{/key}
-
 </div>

@@ -1,7 +1,7 @@
 <script>
-	import Icon from "../Icon.svelte";
+	import Icon from "@components/Icon.svelte";
 	import {navigate} from 'svelte-routing'
-	import {token, user} from '../../store'
+	import {token, user} from '@store/index'
 	export let text = ""
 	export let closeApp = false
 	const handleClick = () => {

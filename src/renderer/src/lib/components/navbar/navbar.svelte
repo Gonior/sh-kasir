@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
 	// eslint-disable-next-line no-unused-vars
-	import {theme, user} from '../../store'
-	import { handleSwitchTheme } from '../../utils/myFunct'
-	import logo from '../../../assets/icons/icon.png'
-	import Icon from "../Icon.svelte";
-	import Powerbutton from '../buttons/powerbutton.svelte';
+	import {theme, user} from '@store/index'
+	import { handleSwitchTheme } from '@lib/utils/myFunct'
+	import logo from '@assets/icons/icon.png'
+	import Icon from "@components/Icon.svelte";
+	import Powerbutton from '@components/buttons/powerbutton.svelte';
 	export let openSetting = false
 	export let direction = "horizontal"
 	const dispatch = createEventDispatcher()
