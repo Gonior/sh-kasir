@@ -1,5 +1,6 @@
 node_modules
 dist
 out
+resource/config
 .DS_Store
 *.log*

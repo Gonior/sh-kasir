@@ -1,10 +1,11 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.json",
   "include": [
-    "src/renderer/src/env.d.ts",
-    "src/renderer/src/**/*",
-    "src/renderer/src/**/*.svelte",
-    "src/preload/*.d.ts"
+    "src/env.d.ts",
+    "src/**/*",
+    "src/**/*.svelte",
+    "electron/preload/*.d.ts",
+	"electron/main/**/*"
   ],
   "compilerOptions": {
     "verbatimModuleSyntax": true,
@@ -12,25 +13,25 @@
     "strict": false,
     "allowJs": true,
     "checkJs": true,
-	  "types": ["electron-vite/node"],
+	"types": ["electron-vite/node"],
     "paths": {
       "@/*": [
-        "./src/renderer/src/*"
+        "./src/*"
       ],
       "@lib/*": [
-        "./src/renderer/src/lib/*"
+        "./src/lib/*"
       ],
       "@assets/*": [
-        "./src/renderer/src/assets/*"
+        "./src/assets/*"
       ],
       "@routes/*": [
-        "./src/renderer/src/routes/*"
+        "./src/routes/*"
       ],
       "@components/*": [
-        "./src/renderer/src/lib/components/*"
+        "./src/lib/components/*"
       ],
       "@store/*": [
-        "./src/renderer/src/lib/store/*"
+        "./src/lib/store/*"
       ]
     },
     "lib": ["ESNext", "DOM", "DOM.Iterable"]

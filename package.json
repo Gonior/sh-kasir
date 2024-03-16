@@ -28,7 +28,8 @@
 		"@teddy-error/svelte-french-toast": "^1.2.2",
 		"axios": "^1.6.7",
 		"fs-jetpack": "^5.1.0",
-		"uuid": "^9.0.1"
+		"uuid": "^9.0.1",
+		"yup": "^1.4.0"
 	},
 	"devDependencies": {
 		"@electron-toolkit/eslint-config-prettier": "^2.0.0",
