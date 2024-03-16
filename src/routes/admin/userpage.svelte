@@ -10,6 +10,7 @@
 	import Errorstate from '@/lib/components/state/errorstate.svelte'
 	import ConfirmModal from '@/lib/components/modal/confirmModal.svelte'
 	import UserFormModal from '@/lib/components/modal/userFormModal.svelte';
+	import { dragscroll } from '@svelte-put/dragscroll';
 	const user = new User()
 	let listUser: IModel.User[] = []
 	let listUserDuplicate: IModel.User[] = []
@@ -18,6 +19,7 @@
 	let selectedUser : IModel.User
 	let openConfirmModal = false
 	let openFormModal = false
+	
 	onMount(async () => {
 		await loadData()
 		isLoadingData = false
@@ -50,8 +52,29 @@
 		openConfirmModal = false
 	}
 
+	function handleKeydown({ keyCode }) {
+		if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13) return
+		const current = <HTMLElement>document.activeElement
+		
+		const items =  [...document.getElementsByClassName('item')]
+		const currentIndex = items.indexOf(current)
+		let newIndex : number
+		if (currentIndex === -1) {
+			newIndex = 0 
+		} else {
+			if (keyCode === 38) newIndex = (currentIndex + items.length - 1) % items.length
+			else if (keyCode === 40) newIndex = (currentIndex + 1) % items.length
+			else if (keyCode === 13) console.log(current.id)
+
+		}
+	
+		(items[newIndex] as HTMLElement)?.focus()
+		current?.blur() 
+    }
+
 
 </script>
+<svelte:window  />
 {#if openConfirmModal}
 	<ConfirmModal title="Konfirmasi hapus pengguna" confirmText="Ya, Hapus" on:close={(e) => openConfirmModal = e.detail} on:confirm={handleDelete} >
 		<p>Apakah anda yakin akan menghapus pengguna <span class="font-bold">{selectedUser.name}</span> ?</p>
@@ -72,15 +95,15 @@
 				<Icon name="search" class="h-6 w-6 absolute left-2 top-2 text-gray-500"/>
 			</div>
 			<div>
-				<button on:click={() => openFormModal = true} class="btn-primary flex items-center space-x-1">
+				<button tabindex="0" on:click={() => openFormModal = true} class="btn-primary flex items-center space-x-1">
 					<Icon name="plus" class="h-6 w-6" stroke={3}/>
 					<span>Tambah Pengguna</span>
 				</button>
 			</div>
 		</div>
-		<div class="flex-1 overflow-y-auto scrollbar flex flex-col my-5 rounded-lg w-full">
+		<div on:keydown={handleKeydown} tabindex="0" role="button" class="flex-1 overflow-y-auto overflow-x-hidden scrollbar flex flex-col my-5 rounded-lg w-full" use:dragscroll={{axis :'y'}}>
 			{#if listUser.length > 0}
-				<table class="relative table-fixed w-full text-left rtl:text-right">
+				<table class="relative table-fixed w-full text-left rtl:text-right" style=""> 
 					<thead class=" text-gray-700 dark:text-white uppercase">
 						<tr class="text-lg">
 							<th scope="col" class="sticky top-0 py-2 pl-3 rounded-l-lg bg-gray-100 dark:bg-gray-700 w-10">No.</th>
@@ -89,9 +112,9 @@
 							<th scope="col" class="sticky top-0 py-2 pr-10 rounded-r-lg bg-gray-100 dark:bg-gray-700 w-24 text-right">ACTION</th>
 						</tr>
 					</thead>
-					<tbody class="text-gray-500 dark:text-gray-300">
+					<tbody class="text-gray-500 dark:text-gray-300" >
 						{#each listUser as user}
-							<tr class="border-b border-gray-400 dark:border-gray-700">
+							<tr id={user._id} class="transition border-b border-gray-400 dark:border-gray-700 item focus:outline-none focus:translate-x-2 focus:bg-gray-200 dark:focus:bg-gray-700" tabindex="0" >
 								<td class="p-2 text-center"></td>
 								<td class="p-2">
 									<div class="flex items-center space-x-1">
@@ -107,11 +130,97 @@
 									</div>
 								</td>
 								<td class="p-2">
-									<button class="btn-secondary !p-2" on:click={() => {selectedUser = {...user};openConfirmModal = true}}>
+									<button  class="btn-secondary !p-2" on:click={() => {selectedUser = {...user};openConfirmModal = true}}>
 										<Icon name="trash" class="h-6 w-6"/>
 									</button>
 								</td>
 							</tr>
+							<tr id={user._id} class="transition border-b border-gray-400 dark:border-gray-700 item focus:outline-none focus:translate-x-2 focus:bg-gray-200 dark:focus:bg-gray-700" tabindex="0" >
+								<td class="p-2 text-center"></td>
+								<td class="p-2">
+									<div class="flex items-center space-x-1">
+										<div class="h-10 w-10">
+											<img src={generateAvatar(user.name)}  alt={`avatar-${user.name}`}>
+										</div>
+										<span>{user.name}</span>
+									</div>
+								</td>
+								<td class="p-2">
+									<div class="flex items-center space-x-2">
+										{user.passcode}
+									</div>
+								</td>
+								<td class="p-2">
+									<button  class="btn-secondary !p-2" on:click={() => {selectedUser = {...user};openConfirmModal = true}}>
+										<Icon name="trash" class="h-6 w-6"/>
+									</button>
+								</td>
+							</tr>
+							<tr id={user._id} class="transition border-b border-gray-400 dark:border-gray-700 item focus:outline-none focus:translate-x-2 focus:bg-gray-200 dark:focus:bg-gray-700" tabindex="0" >
+								<td class="p-2 text-center"></td>
+								<td class="p-2">
+									<div class="flex items-center space-x-1">
+										<div class="h-10 w-10">
+											<img src={generateAvatar(user.name)}  alt={`avatar-${user.name}`}>
+										</div>
+										<span>{user.name}</span>
+									</div>
+								</td>
+								<td class="p-2">
+									<div class="flex items-center space-x-2">
+										{user.passcode}
+									</div>
+								</td>
+								<td class="p-2">
+									<button  class="btn-secondary !p-2" on:click={() => {selectedUser = {...user};openConfirmModal = true}}>
+										<Icon name="trash" class="h-6 w-6"/>
+									</button>
+								</td>
+							</tr>
+							<tr id={user._id} class="transition border-b border-gray-400 dark:border-gray-700 item focus:outline-none focus:translate-x-2 focus:bg-gray-200 dark:focus:bg-gray-700" tabindex="0" >
+								<td class="p-2 text-center"></td>
+								<td class="p-2">
+									<div class="flex items-center space-x-1">
+										<div class="h-10 w-10">
+											<img src={generateAvatar(user.name)}  alt={`avatar-${user.name}`}>
+										</div>
+										<span>{user.name}</span>
+									</div>
+								</td>
+								<td class="p-2">
+									<div class="flex items-center space-x-2">
+										{user.passcode}
+									</div>
+								</td>
+								<td class="p-2">
+									<button  class="btn-secondary !p-2" on:click={() => {selectedUser = {...user};openConfirmModal = true}}>
+										<Icon name="trash" class="h-6 w-6"/>
+									</button>
+								</td>
+							</tr>
+							<tr id={user._id} class="transition border-b border-gray-400 dark:border-gray-700 item focus:outline-none focus:translate-x-2 focus:bg-gray-200 dark:focus:bg-gray-700" tabindex="0" >
+								<td class="p-2 text-center"></td>
+								<td class="p-2">
+									<div class="flex items-center space-x-1">
+										<div class="h-10 w-10">
+											<img src={generateAvatar(user.name)}  alt={`avatar-${user.name}`}>
+										</div>
+										<span>{user.name}</span>
+									</div>
+								</td>
+								<td class="p-2">
+									<div class="flex items-center space-x-2">
+										{user.passcode}
+									</div>
+								</td>
+								<td class="p-2">
+									<button  class="btn-secondary !p-2" on:click={() => {selectedUser = {...user};openConfirmModal = true}}>
+										<Icon name="trash" class="h-6 w-6"/>
+									</button>
+								</td>
+							</tr>
+
+							
 						{/each}
 					</tbody>
 				</table>
