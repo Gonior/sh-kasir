@@ -3,9 +3,11 @@
 	import { userSchema } from '@lib/utils/validator'
 	import {User} from '@lib/controller/user.controller'
 	import Icon from '@/lib/components/Icon.svelte';
-	import { createEventDispatcher } from 'svelte'
+	import { focusTrap } from 'svelte-focus-trap'
+	import { createEventDispatcher, onMount } from 'svelte'
 	const dispatch = createEventDispatcher()
 	const user = new User()
+	let inputEl
 	let errors = {
 		name : "",
 		passcode : "",
@@ -17,6 +19,9 @@
 		passcode : '',
 		confirmPasscode : ''
 	}
+	onMount(() => {
+		inputEl.focus()
+	})
 
 
 
@@ -43,7 +48,7 @@
 </script>
 
 <Modal class="w-2/5" outside={false}>
-	<form on:submit|preventDefault={handleSubmit}>
+	<form on:submit|preventDefault={handleSubmit} use:focusTrap>
 		<div class="mb-2 flex items-center justify-between">
 			<h1 class="font-bold text-xl">Tambah Pengguna</h1>
 			<button type="button" class="btn text-gray-500 dark:text-gray-400" on:click={handleClose}>
@@ -53,7 +58,7 @@
 
 		<div class="my-2">
 			<p>Nama</p>
-			<input bind:value={values.name} type="text" class="form-control w-full">
+			<input bind:this={inputEl} bind:value={values.name} type="text" class="form-control w-full">
 			{#if errors.name}
 				<p class="text-red-500 text-sm">{errors.name}</p>
 			{/if}

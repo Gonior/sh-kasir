@@ -28,6 +28,7 @@
 		"@teddy-error/svelte-french-toast": "^1.2.2",
 		"axios": "^1.6.7",
 		"fs-jetpack": "^5.1.0",
+		"svelte-focus-trap": "^1.2.0",
 		"uuid": "^9.0.1",
 		"yup": "^1.4.0"
 	},
