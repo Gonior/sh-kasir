@@ -35,6 +35,8 @@ export interface User {
 	avatar? : string
 }
 
+export interface NewUser extends Omit<User, '_id' | 'avatar' > {}
+
 export interface Menu {
     _id : string
     name : string
@@ -56,6 +58,8 @@ export interface Category {
     name : string
     printer : string | Printer
 }
+
+export interface NewCategory extends Omit<Category, '_id'> {}
 
 export interface Order {
     _id : string,

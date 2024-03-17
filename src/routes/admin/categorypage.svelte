@@ -2,6 +2,7 @@
 	import { onMount } from "svelte";
 	import { dragscroll } from "@svelte-put/dragscroll";
 	import {paginate} from 'svelte-paginate'
+	import { Category } from "@/lib/controller/category.controller";
 	import Loading from "@/lib/components/state/loading.svelte";
 	import Title from "@/lib/components/navbar/title.svelte";
 	import Pagination from "@/lib/components/pagination.svelte";
@@ -12,33 +13,63 @@
 	import {DEFAULT_PAGE_SIZE} from '@lib/types/constants'
 	import { IModel } from "@/lib/types";
 	import searchHandler from "@/lib/utils/searchHandler"
+	import keyEventHandler from '@lib/utils/keyEventHandler'
+	const category = new Category()
 	let isLoadingData = false
 	let openFormModal = false
-	let isValid = true
+	let isValid = false
 	let keyword = ""
 	let currentPage = 1
+	let openConfirmModal = false
+	let selectedCategory : IModel.Category = {}
 	let pageSize = DEFAULT_PAGE_SIZE
 	let listCategories : IModel.Category[] = []
 	let listCategoriesDuplicate : IModel.Category[] = []
 
+	$: paginateItems = paginate({items : listCategories, pageSize, currentPage}) as IModel.Category[]
+
+	onMount( async () => {
+		await loadData()
+	})
+
+	const loadData = async () => {
+		isLoadingData = true
+		let isSuccess = await category.load()
+		if( isSuccess ) {
+			listCategories = category.getData()
+			listCategoriesDuplicate = [...listCategories]
+			isValid = true
+		}
+
+		isLoadingData = false
+	}
+
 	const handleSearch = () => {
 		listCategories = [...searchHandler(keyword,['name'], listCategoriesDuplicate)]
 	}
+
+	function handleKeydown({ keyCode }) {
+		keyEventHandler(keyCode, '.item')
+    }
 
 	const tableHeaderItems : IModel.ITableHeaderItem[] = [
 		{
 			value : "No.",
 			width : 'w-12',
 
-		}, {
+		}, 
+		{
 			value : "nama kategori",
-		},{
+		},
+		{
 			value : 'printer tambahan',
-			width : 'w-1/4',
+			width : 'w-1/3',
 			textAlign : 'text-center'
-		},{
+		},
+		{
 			value : 'Aksi',
 			width : 'w-36',
+			
 			textAlign : 'text-center'
 		}
 	]
@@ -46,6 +77,12 @@
 </script>
 {#if openFormModal}
 	<h1>haii</h1>
+{/if}
+
+{#if openConfirmModal}
+	<ConfirmModal confirmText="Ya, hapus" title="Konfirmasi Hapus Kategori" on:close={(e) => openConfirmModal = e.detail}>
+		<p>Apakah anda yakin akan menghapus Kategory <span class="font-bold">{selectedCategory.name}</span> ?</p>
+	</ConfirmModal>
 {/if}
 
 <div class="h-full flex flex-col w-full">
@@ -66,8 +103,53 @@
 			</div>
 		</div>
 		<Pagination totalItems={listCategories.length} {currentPage} {pageSize} on:setpage={(e) => {currentPage = e.detail.page}} on:setPageSize={(e) => pageSize = e.detail} />
-		<TableHeader marginRight={"mr-2"} textSize={'text-lg'} {tableHeaderItems} />
+		<TableHeader marginRight={"mr-3"} textSize={'text-lg'} {tableHeaderItems} />
+		<div on:keydown={handleKeydown} tabindex="0" role="button" class="flex-1 overflow-y-auto overflow-x-hidden scrollbar flex flex-col w-full" use:dragscroll={{axis :'y', cursor : false}}>
+			{#if paginateItems.length > 0}
+			<table id="table-content" class="text-gray-500 dark:text-gray-300 mr-2" style="scrollbar-gutter: stable;" >
+				{#each paginateItems as category}
+					<tr id={category._id} class="transition border-b border-gray-400 dark:border-gray-700 item focus:outline-none focus:translate-x-1 focus:bg-gray-200 dark:focus:bg-gray-700" tabindex="0" >
+						<td class="p-2 text-center w-12"></td>
+						<td class="p-2">{category.name}</td>
+						<td class="p-2 w-1/3 text-center">
+							
+							{#if category.printer && typeof category.printer === 'object' && Object.keys(category.printer).length > 0 }
+								<button class="bg-gray-200 dark:bg-gray-800 btn !px-4 !py-1">{category.printer?.name}</button>
+							{:else}
+								<span>-</span>
+							{/if}
+						</td>
+						<td class="p-2 w-36 text-center">
+							<div class="flex items-center space-x-1 justify-center">
+								<button  class="btn-secondary !p-2">
+									<Icon name="printer" class="h-6 w-6"/>
+								</button>
+								<button  class="btn-secondary !p-2" on:click={() => {selectedCategory = {...category};openConfirmModal = true}}>
+									<Icon name="trash" class="h-6 w-6"/>
+								</button>
+							</div>
+						</td>
+					</tr>
+				{/each}
+				</table>
+			{:else}
+			<Errorstate msg="Tidak ada data" icon="folder" />
+			{/if}
+		</div>
 	{:else}
 		<Errorstate icon="folder" msg="Gagal Memuat Data" />
 	{/if}
 </div>
+
+<style lang="postcss">
+	#table-content {
+		counter-reset: rowNumber;
+	}
+	#table-content tr {
+		counter-increment: rowNumber;
+	}
+	#table-content tr td:first-child:before {
+		content: counter(rowNumber);
+	}
+
+</style>

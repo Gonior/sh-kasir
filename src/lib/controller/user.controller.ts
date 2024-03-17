@@ -22,9 +22,9 @@ class User implements IModel.IClass<IModel.User> {
 
 		return false
 	};
-	save = async (payload : {name : string, passcode : string}) : Promise<boolean>=> {
+	save = async (payload : IModel.NewUser) : Promise<boolean>=> {
 		try {
-			const response = await http.push<IService.IResponse<IModel.User>, {name : string, passcode : string}>(EEndPoint.USER, payload)
+			const response = await http.push<IService.IResponse<IModel.User>, IModel.NewUser>(EEndPoint.USER, payload)
 			if (response && response.success) {
 				toast.success("Pengguna berhasil ditambahkan.", {position : 'top-right'})
 				return true

@@ -32,16 +32,17 @@
 
 	onMount(async () => {
 		await loadData()
-		isLoadingData = false
 	})
 
 	const loadData = async () => {
+		isLoadingData = true
 		let isSuccess = await user.load()
 		if(isSuccess) {
 			isValid = true
 			listUser = user.getData()
 			listUserDuplicate = listUser
 		}
+		isLoadingData = false
 	}
 
 	const handleSearch =  () => {
@@ -65,16 +66,17 @@
 		{
 			value : "No.",
 			width : 'w-12',
-
-		}, {
+		}, 
+		{
 			value : "nama pengguna",
-		},{
+		},
+		{
 			value : 'kata sandi',
 			width : 'w-44',
-		},{
+		},
+		{
 			value : 'Aksi',
 			width : 'w-24',
-
 			textAlign : 'text-center'
 		}
 	]

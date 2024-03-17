@@ -25,13 +25,7 @@
 			if(copyPrinter) useCopyPrinter = true
 			if(addsPrinter.length >0) useAddsPrinter = true
 		}
-		// listPrinter = await window.electron.ipcRenderer.invoke('list-printer')
-		// let pc : IModel.Printer[] = await window.electron.ipcRenderer.invoke('read-printer-config')
-		// mainPrinter = pc.find(p => p.type === "main")?.name ?? ""
-		// copyPrinter = pc.find(p => p.type === "copy")?.name ?? ""
-		// if(copyPrinter) useCopyPrinter = true
-		// addsPrinter = pc.filter(p => p.type === "adds") ?? []
-		// if (addsPrinter.length > 0) useAddsPrinter = true
+		
 	})
 
 	const saveChange = async () => {
@@ -49,12 +43,7 @@
 		if (response) {
 			isChange = true
 		}
-		// let response = await window.electron.ipcRenderer.invoke('write-printer-config', printers)
-		// if(response) {
-		// 	toast.success(response, {position : 'top-right'})
-		// 	isChange = false
-		// }
-		// else toast.error("Gagal menyimpan konfigurasi", {position : 'top-right'})
+		
 	}
 
 	const handleChange = (e, type?) => {
@@ -72,7 +61,7 @@
 		let id = addsPrinter.length + 1
 
 		let printer : IModel.Printer = {
-			_id: `printer-adds-${id}`,
+			_id: `printer-add-${id}`,
 			name: '',
 			type: 'adds',
 			displayName: `Printer Tambahan ${id}`,
