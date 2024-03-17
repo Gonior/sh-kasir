@@ -3,7 +3,7 @@
 	import Icon from "@components/Icon.svelte";
 	import ServerSetting from './ServerSetting.svelte'
 	import PrinterSetting from './PrinterSetting.svelte'
-	import Title from "@components/title.svelte";
+	import Title from "@/lib/components/navbar/title.svelte";
 	import { fade } from "svelte/transition"
 	import { onMount } from "svelte"
 	import { dragscroll } from '@svelte-put/dragscroll';

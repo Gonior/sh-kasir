@@ -67,7 +67,7 @@
 		{/each}
 	</Navbar>
 
-	<div use:dragscroll={{axis :'y'}} class="flex-1 h-full max-h-full overflow-y-auto p-5">
+	<div use:dragscroll={{axis :'y', cursor : false}} class="flex-1 h-full max-h-full overflow-y-auto p-5">
 		<svelte:component this={submenu.find((menu) => menu.selected).component} ></svelte:component>
 	</div>
 </div>

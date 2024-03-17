@@ -7,7 +7,7 @@
 		@apply font-poppins select-none;
 	}
 	.btn {
-		@apply rounded-lg p-2 font-semibold transform transition-all active:scale-95 disabled:active:scale-100 duration-200 ease-in-out disabled:bg-opacity-50 disabled:text-opacity-20 dark:disabled:bg-opacity-50 dark:disabled:text-opacity-20;
+		@apply rounded-lg p-2 font-semibold transform transition-all active:scale-[0.99] disabled:active:scale-100 duration-200 ease-in-out disabled:bg-opacity-50 disabled:text-opacity-20 dark:disabled:bg-opacity-50 dark:disabled:text-opacity-20;
 	}
 }
 @font-face {
@@ -37,6 +37,7 @@ body {
 	@apply transition-colors duration-300 ease-in-out text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-900;
 }
 
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -51,7 +52,7 @@ body {
 /* Handle */
 ::-webkit-scrollbar-thumb {
     background: #d97706;
-    border-radius: 5px;
+    border-radius: 2px;
 }
 
 /* Handle on hover */
@@ -68,11 +69,11 @@ input[type="checkbox"] {
 }
 
 .btn-primary {
-	@apply btn bg-amber-600 text-white;
+	@apply btn bg-amber-600 text-white ;
 }
 
 .btn-secondary {
-	@apply btn bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white;
+	@apply btn bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white ;
 }
 
 .chips {
@@ -89,4 +90,12 @@ input[type="checkbox"] {
 
 .container-placeholder {
 	@apply animate-pulse bg-gray-200 rounded-lg dark:bg-gray-700;
+}
+
+.pagination :global(.pagination-nav) {
+	@apply text-red-600;
+}
+
+.pagination :global(.option.active) {
+	background : red;
 }

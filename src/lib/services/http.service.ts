@@ -118,7 +118,7 @@ class HttpService {
 		// Set up response interceptor
 		this.http.interceptors.response.use(
 		(response) => {
-			if(!response.data) this.normalizeError('Tidak ada data!')
+			if(!response.data) return this.normalizeError('Tidak ada data!')
 			// console.log(response)
 			return response
 		},

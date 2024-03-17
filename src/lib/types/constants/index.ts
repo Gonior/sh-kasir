@@ -61,3 +61,24 @@ export const TEMPLATE_NOTE = [
 		name: 'SAMBAL IJO'
 	}
 ]
+
+export const PAGE_SIZE = [
+	{
+		value : 10
+	},
+	{
+		value : 20
+	},
+	{
+		value : 30
+	},
+	{
+		value : 40
+	},
+	{
+		value : 50
+	},
+
+]
+
+export const DEFAULT_PAGE_SIZE = 10

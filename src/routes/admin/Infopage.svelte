@@ -8,7 +8,7 @@
 	import Errorstate from '@/lib/components/state/errorstate.svelte'
 	import Toogle from '@components/toggle.svelte'
 	import {slide} from 'svelte/transition'
-	import Title from '@components/title.svelte'
+	import Title from '@/lib/components/navbar/title.svelte'
 	let store = new Store()
 	let isLoadingData = false
 	let isLoading = false

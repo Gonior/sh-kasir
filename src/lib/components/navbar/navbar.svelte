@@ -20,7 +20,7 @@
 </script>
 
 
-<div class="flex {direction === 'vertical' ? 'flex-col h-full p-4 bg-gray-100 dark:bg-gray-600' : 'flex-row w-full' } justify-between items-center">
+<div class="flex {direction === 'vertical' ? 'flex-col h-full p-4 bg-gray-100 dark:bg-gray-800' : 'flex-row w-full' } justify-between items-center">
 	<div class="flex space-x-1 items-center">
 		<img src={logo} alt="logo" class="h-10 w-10">
 		{#if direction === "horizontal"}
