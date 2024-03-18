@@ -55,6 +55,11 @@ class Printer implements IModel.IClass<IModel.Printer> {
 		return this.listPrinter.find((p) => p._id === _id) ?? null
 	}
 
+	static isValid = (printer : IModel.Printer) : boolean => {
+		if(printer.name !== "") return true
+		return false
+	}
+
 	static generateObjectPrinter = (name : string, type : any, _id?, displayName?) : IModel.Printer => {
 		let obj = {
 			name : name,
@@ -66,11 +71,14 @@ class Printer implements IModel.IClass<IModel.Printer> {
 		return obj as IModel.Printer
 	}
 	static testPrint = (name : string) => {
-		throw 'Not Implement yet'
+		console.log(name)
+
 	}
 
-	static print = (printer : IModel.Printer, data : any, options?) : Promise<boolean> => {
-		throw 'Not Implement yet'
+	static print = async (printer : IModel.Printer, data : any, options?) : Promise<boolean> => {
+		console.log({printer, data, options})
+		return false
+		// throw 'Not Implement yet'
 	}
 
 

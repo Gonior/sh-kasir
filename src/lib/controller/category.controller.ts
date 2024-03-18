@@ -2,14 +2,13 @@ import toast from '@teddy-error/svelte-french-toast'
 import {Printer} from './printer.controlle'
 import {HttpService} from '../services/http.service'
 import { type IModel, EEndPoint, type IService } from '../types'
-
-
+import { LIST_PRINTER_ADDS } from '../types/constants'
 const printer = new Printer()
 const http = new HttpService()
 
 class Category implements IModel.IClass<IModel.Category> {
     private categories : IModel.Category[] = []
-        
+
     load = async () : Promise<boolean>  => {
         try {
             await printer.load()
@@ -17,8 +16,10 @@ class Category implements IModel.IClass<IModel.Category> {
             if(response && response.success) {
                 this.categories = response.data
                 this.categories = this.categories.map((category) => {
-
-                    category.printer = printer.findPrinter(category.printer as string) ?? category.printer
+					if(category.printer) {
+						let myprinter = LIST_PRINTER_ADDS.find(p => p._id === category.printer as string)
+						category.printer = printer.findPrinter(category.printer as string) ?? (myprinter || category.printer)
+					}
                     return category
                 })
                 return true
@@ -32,7 +33,7 @@ class Category implements IModel.IClass<IModel.Category> {
     }
 
     getData = () : IModel.Category[] => {
-       
+
         return this.categories
     }
 
@@ -48,9 +49,9 @@ class Category implements IModel.IClass<IModel.Category> {
 		}
 
 		return false
-    } 
-    
-    
+    }
+
+
     dataById = async (_id: string | number) : Promise<IModel.Category|undefined> => {
         try {
             let response = await http.service().get<IService.IResponse<IModel.Category>>(EEndPoint.CATEGORY+`/${_id}`)
@@ -67,12 +68,13 @@ class Category implements IModel.IClass<IModel.Category> {
 		return this.categories.find((category) => category._id === _id) ?? null
 	}
 
-   
-    update = async (_id: string | number, payload: IModel.Category) : Promise<boolean> => {
+
+    static update = async (_id: string | number, payload: IModel.Category) : Promise<boolean> => {
         try {
-            let response = await http.service().update<IService.IResponse<IModel.Category>, IModel.Category>(EEndPoint.CATEGORY, payload)
+            let response = await http.service().update<IService.IResponse<IModel.Category>, IModel.Category>(EEndPoint.CATEGORY+'/'+_id, payload)
             if (response && response.success) {
                 toast.success("Kategori berhasil diperbarui", {position : 'top-right'})
+				return true
             }
         } catch (error) {
             console.log(error)
@@ -80,10 +82,11 @@ class Category implements IModel.IClass<IModel.Category> {
         return false
     }
 
-    delete = async (_id: string | number) : Promise<boolean> => {
+    static delete = async (_id: string | number) : Promise<boolean> => {
         try {
             let response = await http.service().remove<IService.IResponse<null>>(EEndPoint.CATEGORY+`/${_id}`)
             if (response && response.success) {
+				toast.success("Kategori berhasil dihapus", {position : 'top-right'})
                 return true
             }
         } catch (error) {
@@ -91,9 +94,9 @@ class Category implements IModel.IClass<IModel.Category> {
         }
         return false;
     }
-    
+
 }
 
 export {
-    Category 
+    Category
 }

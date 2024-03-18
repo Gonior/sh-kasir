@@ -36,9 +36,14 @@
 
 </div>
 
-<style lang="postcss">
-	.my-pagination-nav {
-		@apply flex items-center justify-between
+<style>
+	:root{
+		--text-color: #000;
+		--body-bg: #fff;
+		--primary-color : #000;
+	}
+	/* .my-pagination-nav {
+		@apply flex items-center justify-between;
 	}
 
 	.my-pagination-nav :global(.pagination-nav) {
@@ -46,7 +51,7 @@
 	}
 
 	.my-pagination-nav :global(.option) {
-		@apply btn w-9 text-center
+		@apply btn w-9 text-center;
 	}
 
 	.my-pagination-nav :global(.option.active) {
@@ -54,6 +59,7 @@
 	}
 
 	.my-pagination-nav :global(.option.disabled) {
-		@apply text-gray-500 dark:text-gray-400
-	}
+
+		@apply text-gray-500 dark:text-gray-400;
+	} */
 </style>

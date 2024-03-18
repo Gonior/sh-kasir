@@ -81,7 +81,7 @@
 
 	const handleDelete = async (e : CustomEvent) => {
 		if(e.detail) {
-			let isSuccess = await category.delete(selectedCategory._id)
+			let isSuccess = await Category.delete(selectedCategory._id)
 			if (isSuccess) await loadData()
 		}
 
@@ -90,7 +90,7 @@
 
 </script>
 {#if openFormModal}
-	<CategoryFormModal {...selectedCategory} on:close={(e) => openFormModal = e.detail}/>
+	<CategoryFormModal {...selectedCategory} on:close={(e) => {openFormModal = e.detail, loadData()}}/>
 {/if}
 
 {#if openConfirmModal}
@@ -128,14 +128,14 @@
 						<td class="p-2 w-2/5 text-center">
 
 							{#if category.printer && typeof category.printer === 'object' && Object.keys(category.printer).length > 0 }
-								<button class="bg-gray-200 dark:bg-gray-700 btn !px-4 !py-1">{category.printer?.name}</button>
+								<button class="bg-gray-200 dark:bg-gray-700 btn !px-4 !py-1">{category.printer?.displayName}</button>
 							{:else}
 								<span>-</span>
 							{/if}
 						</td>
 						<td class="p-2 w-36 text-center">
 							<div class="flex items-center space-x-1 justify-center">
-								<button  class="btn-secondary !p-2">
+								<button  class="btn-secondary !p-2" on:click={() => {selectedCategory = {...category};openFormModal = true}}>
 									<Icon name="edit" class="h-6 w-6"/>
 								</button>
 								<button  class="btn-secondary !p-2" on:click={() => {selectedCategory = {...category};openConfirmModal = true}}>

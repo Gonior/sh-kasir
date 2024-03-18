@@ -58,7 +58,7 @@
 		</div>
 	</div>
 	{#key selectedId}
-		<div use:dragscroll={{axis : 'y'}} class="flex-1 h-[50%] max-h-full overflow-y-auto pb-10" in:fade={{duration : 200}} style="scrollbar-gutter: stable;">
+		<div use:dragscroll={{axis : 'y', cursor : false}} class="flex-1 h-[50%] max-h-full overflow-y-auto pb-10" in:fade={{duration : 200}} style="scrollbar-gutter: stable;">
 			<svelte:component this={submenu.find((menu) => menu.id === selectedId).component}></svelte:component>
 		</div>
 	{/key}
