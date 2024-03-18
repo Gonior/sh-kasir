@@ -2,9 +2,9 @@
 	import Modal from '@/lib/components/modal/modal.svelte'
 	import { userSchema } from '@lib/utils/validator'
 	import {User} from '@lib/controller/user.controller'
-	import Icon from '@/lib/components/Icon.svelte';
 	import { focusTrap } from 'svelte-focus-trap'
 	import { createEventDispatcher, onMount } from 'svelte'
+	import ModalHeader from '../navbar/modalHeader.svelte'
 	const dispatch = createEventDispatcher()
 	const user = new User()
 	let inputEl
@@ -49,13 +49,7 @@
 
 <Modal class="w-2/5" outside={false}>
 	<form on:submit|preventDefault={handleSubmit} use:focusTrap>
-		<div class="mb-2 flex items-center justify-between">
-			<h1 class="font-bold text-xl">Tambah Pengguna</h1>
-			<button type="button" class="btn text-gray-500 dark:text-gray-400" on:click={handleClose}>
-				<Icon name="close" class="!h-6 !w-6" stroke={2}/>
-			</button>
-		</div>
-
+		<ModalHeader on:close={handleClose} title={'Tambah Pengguna'}/>
 		<div class="my-2">
 			<p>Nama</p>
 			<input bind:this={inputEl} bind:value={values.name} type="text" class="form-control w-full">

@@ -73,7 +73,7 @@ input[type="checkbox"] {
 }
 
 .btn-secondary {
-	@apply btn bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white ;
+	@apply btn ring-1 ring-gray-500  text-gray-800 dark:ring-0 dark:bg-gray-700 dark:text-white ;
 }
 
 .chips {
@@ -90,6 +90,10 @@ input[type="checkbox"] {
 
 .container-placeholder {
 	@apply animate-pulse bg-gray-200 rounded-lg dark:bg-gray-700;
+}
+
+.tr-item {
+	@apply transition border-b border-gray-400 dark:border-gray-700 focus:outline-none focus:bg-amber-200 dark:focus:bg-amber-900;
 }
 
 .pagination :global(.pagination-nav) {

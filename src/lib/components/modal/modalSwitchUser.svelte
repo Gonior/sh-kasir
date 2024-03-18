@@ -85,7 +85,7 @@
 		{/if}
 	</div>
 	{:else}
-	<Errorstate msg ="Gagal Memuat Data Pengguna" icon="folder" class="" />
+	<Errorstate msg ="Gagal Memuat Data Pengguna"/>
 	{/if}
 </Modal>
 

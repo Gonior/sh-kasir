@@ -60,7 +60,7 @@
 	<Navbar direction="vertical" openSetting={submenu.find((menu) => menu.id === 5 ).selected} on:openSetting={() => subMenuHandleClick(5)}>
 		{#each submenu as sm}
 			{#if sm.id !== 5}
-			<button on:click={() => subMenuHandleClick(sm.id)} class="btn-secondary !p-2 {sm.selected ? '!bg-amber-600 !text-white' : ''}">
+			<button on:click={() => subMenuHandleClick(sm.id)} class="btn-secondary !p-2 {sm.selected ? '!bg-amber-600 !text-white !ring-0' : ''}">
 				<Icon name={sm.icon} class="h-6 w-6" />
 			</button>
 			{/if}

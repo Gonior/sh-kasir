@@ -87,7 +87,7 @@ const Icons: IModel.Icon[] = [
     },
     {
         name : 'logout',
-        path : '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />'
+        path : '<path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>'
     },
     {
         name : 'minus',
@@ -148,6 +148,18 @@ const Icons: IModel.Icon[] = [
 	{
 		name : 'loading',
 		path : '<path stroke-linecap="round" stroke-linejoin="round" d="M5 3h14m-2 4V3H7v4a5 5 0 0 0 5 5h0a5 5 0 0 0 5-5ZM5 21h14m-7-9h0a5 5 0 0 0-5 5v4h10v-4a5 5 0 0 0-5-5Z"/>'
+	},
+	{
+		name : 'emoji-sad',
+		path : ' <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+	},
+	{
+		name : 'stack',
+		path : `<path stroke="none" d="M0 0h24v24H0z"/>  <polyline points="12 4 4 8 12 12 20 8 12 4" />  <polyline points="4 12 12 16 20 12" />  <polyline points="4 16 12 20 20 16" />`
+	},
+	{
+		name : 'edit',
+		path : '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />'
 	}
 
 

@@ -66,7 +66,7 @@
 		{
 			value : "No.",
 			width : 'w-12',
-		}, 
+		},
 		{
 			value : "nama pengguna",
 		},
@@ -116,7 +116,7 @@
 			{#if paginateItems.length > 0}
 			<table id="table-content" class="text-gray-500 dark:text-gray-300 mr-2" style="scrollbar-gutter: stable;" >
 				{#each paginateItems as user}
-					<tr id={user._id} class="transition border-b border-gray-400 dark:border-gray-700 item focus:outline-none focus:translate-x-2 focus:bg-gray-200 dark:focus:bg-gray-700" tabindex="0" >
+					<tr id={user._id} class="tr-item item" tabindex="0" >
 						<td class="p-2 text-center w-12 "></td>
 						<td class="p-2">
 							<div class="flex items-center space-x-1">
@@ -140,11 +140,11 @@
 				{/each}
 				</table>
 			{:else}
-			<Errorstate msg="Tidak ada data" icon="folder" />
+			<Errorstate msg="Tidak ada data" />
 			{/if}
 		</div>
 	{:else}
-		<Errorstate msg="Gagal Memuat Data Pengguna" icon="folder" />
+		<Errorstate msg="Gagal Memuat Data Pengguna" />
 	{/if}
 
 </div>

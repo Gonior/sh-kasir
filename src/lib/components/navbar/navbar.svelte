@@ -32,7 +32,7 @@
 		<slot />
 	</div>
 	<div class="flex {direction === 'vertical' ? 'flex-col space-y-2' : 'items-center flex-row-reverse space-x-1 space-x-reverse' }">
-		<button on:click={() => dispatch('openSetting')} class="btn-secondary !p-2 {openSetting ? '!bg-amber-600 !text-white' : ''}">
+		<button on:click={() => dispatch('openSetting')} class="btn-secondary !p-2 {openSetting ? '!bg-amber-600 !text-white !ring-0' : ''}">
 			<Icon name="{openSetting && direction === "horizontal" ?  'close' :'cog-8-tooth'}" class="h-6 w-6"/>
 		</button>
 		<button on:click={toogleTheme} class="btn-secondary !p-2"><Icon class="h-6 w-6" name={isDarkMode ? "sun" : 'moon'} /></button>

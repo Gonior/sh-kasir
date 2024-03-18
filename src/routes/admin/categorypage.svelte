@@ -14,6 +14,7 @@
 	import { IModel } from "@/lib/types";
 	import searchHandler from "@/lib/utils/searchHandler"
 	import keyEventHandler from '@lib/utils/keyEventHandler'
+	import CategoryFormModal from "@/lib/components/modal/categoryFormModal.svelte"
 	const category = new Category()
 	let isLoadingData = false
 	let openFormModal = false
@@ -21,7 +22,11 @@
 	let keyword = ""
 	let currentPage = 1
 	let openConfirmModal = false
-	let selectedCategory : IModel.Category = {}
+	let selectedCategory : IModel.Category = {
+		_id: "",
+		name: "",
+		printer: ""
+	}
 	let pageSize = DEFAULT_PAGE_SIZE
 	let listCategories : IModel.Category[] = []
 	let listCategoriesDuplicate : IModel.Category[] = []
@@ -57,30 +62,39 @@
 			value : "No.",
 			width : 'w-12',
 
-		}, 
+		},
 		{
 			value : "nama kategori",
 		},
 		{
 			value : 'printer tambahan',
-			width : 'w-1/3',
+			width : 'w-2/5',
 			textAlign : 'text-center'
 		},
 		{
 			value : 'Aksi',
 			width : 'w-36',
-			
+
 			textAlign : 'text-center'
 		}
 	]
 
+	const handleDelete = async (e : CustomEvent) => {
+		if(e.detail) {
+			let isSuccess = await category.delete(selectedCategory._id)
+			if (isSuccess) await loadData()
+		}
+
+		openConfirmModal = false
+	}
+
 </script>
 {#if openFormModal}
-	<h1>haii</h1>
+	<CategoryFormModal {...selectedCategory} on:close={(e) => openFormModal = e.detail}/>
 {/if}
 
 {#if openConfirmModal}
-	<ConfirmModal confirmText="Ya, hapus" title="Konfirmasi Hapus Kategori" on:close={(e) => openConfirmModal = e.detail}>
+	<ConfirmModal confirmText="Ya, hapus" on:confirm={handleDelete} title="Konfirmasi Hapus Kategori" on:close={(e) => openConfirmModal = e.detail}>
 		<p>Apakah anda yakin akan menghapus Kategory <span class="font-bold">{selectedCategory.name}</span> ?</p>
 	</ConfirmModal>
 {/if}
@@ -108,13 +122,13 @@
 			{#if paginateItems.length > 0}
 			<table id="table-content" class="text-gray-500 dark:text-gray-300 mr-2" style="scrollbar-gutter: stable;" >
 				{#each paginateItems as category}
-					<tr id={category._id} class="transition border-b border-gray-400 dark:border-gray-700 item focus:outline-none focus:translate-x-1 focus:bg-gray-200 dark:focus:bg-gray-700" tabindex="0" >
+					<tr id={category._id} class="tr-item item" tabindex="0" >
 						<td class="p-2 text-center w-12"></td>
 						<td class="p-2">{category.name}</td>
-						<td class="p-2 w-1/3 text-center">
-							
+						<td class="p-2 w-2/5 text-center">
+
 							{#if category.printer && typeof category.printer === 'object' && Object.keys(category.printer).length > 0 }
-								<button class="bg-gray-200 dark:bg-gray-800 btn !px-4 !py-1">{category.printer?.name}</button>
+								<button class="bg-gray-200 dark:bg-gray-700 btn !px-4 !py-1">{category.printer?.name}</button>
 							{:else}
 								<span>-</span>
 							{/if}
@@ -122,7 +136,7 @@
 						<td class="p-2 w-36 text-center">
 							<div class="flex items-center space-x-1 justify-center">
 								<button  class="btn-secondary !p-2">
-									<Icon name="printer" class="h-6 w-6"/>
+									<Icon name="edit" class="h-6 w-6"/>
 								</button>
 								<button  class="btn-secondary !p-2" on:click={() => {selectedCategory = {...category};openConfirmModal = true}}>
 									<Icon name="trash" class="h-6 w-6"/>
@@ -133,11 +147,11 @@
 				{/each}
 				</table>
 			{:else}
-			<Errorstate msg="Tidak ada data" icon="folder" />
+			<Errorstate msg="Tidak ada data"  />
 			{/if}
 		</div>
 	{:else}
-		<Errorstate icon="folder" msg="Gagal Memuat Data" />
+		<Errorstate msg="Gagal Memuat Data" />
 	{/if}
 </div>
 

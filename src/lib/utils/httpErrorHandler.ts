@@ -10,7 +10,7 @@ export function httpErrorHandler(error) {
 		//here we have access the config used to make the api call (we can make a retry using this conf)
 
 		if (error.code === 'ERR_NETWORK' || error.code === 'ERR_CONNECTION_REFUSED') {
-			toast.error('Tidak dapat terhubung dengan server syalala!', {position : 'top-right'})
+			toast.error('Tidak dapat terhubung dengan server!', {position : 'top-right'})
 		} else if (error.code === 'ERR_CANCELED') {
 			toast.error('Pemintaan dibatalkan', {position : 'top-right'})
 		}
