@@ -1,6 +1,6 @@
 import toast from "@teddy-error/svelte-french-toast";
 import { IModel } from "../types";
-
+import { Constant } from '../types'
 class Printer implements IModel.IClass<IModel.Printer> {
 	private listPrinterName = []
 	private listPrinter :IModel.Printer[] = []
@@ -51,9 +51,24 @@ class Printer implements IModel.IClass<IModel.Printer> {
 		return this.listPrinter.filter((p: { type: string; }) => p.type === "adds") ?? []
 	}
 
+	getListPrinterAdds = () : IModel.Printer[] => {
+		let printers : IModel.Printer[] = []
+		let addsPrinters = this.getAddsPrinter()
+		for (const i in Constant.LIST_PRINTER_ADDS) {
+			let printer = {...Constant.LIST_PRINTER_ADDS[i]}
+			let findPrinter = addsPrinters.find(p => Constant.LIST_PRINTER_ADDS[i]._id === p._id)
+			if (findPrinter) printers.push(findPrinter)
+			else printers.push(printer)
+		}
+		return printers
+		
+	}
+
 	findPrinter = (_id : string) : IModel.Printer => {
 		return this.listPrinter.find((p) => p._id === _id) ?? null
 	}
+
+	
 
 	static isValid = (printer : IModel.Printer) : boolean => {
 		if(printer.name !== "") return true

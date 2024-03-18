@@ -33,7 +33,7 @@
 			errors = {name : "", passcode : '', confirmPasscode : ""};
 			let response = await user.save({name :  values.name, passcode : values.passcode})
 			if(response) {
-				setTimeout(() => handleClose(),1000)
+				setTimeout(() => handleClose(),300)
 				values = {name : "", passcode : '', confirmPasscode : ""}
 			}
 

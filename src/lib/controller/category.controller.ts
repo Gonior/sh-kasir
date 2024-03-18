@@ -16,14 +16,22 @@ class Category implements IModel.IClass<IModel.Category> {
             if(response && response.success) {
                 this.categories = response.data
                 this.categories = this.categories.map((category) => {
-					if(category.printer) {
-						let myprinter = LIST_PRINTER_ADDS.find(p => p._id === category.printer as string)
-						category.printer = printer.findPrinter(category.printer as string) ?? (myprinter || category.printer)
+					if(category.printer.length > 0 ) {
+                        let printers : IModel.Printer[] = []
+                        for(const i in category.printer) {
+                            let myprinter = LIST_PRINTER_ADDS.find(p => p._id === category.printer[i])
+                            let findPrinter = printer.findPrinter(category.printer[i] as string) 
+                            if( findPrinter ) printers.push(findPrinter)
+                            else if (myprinter) printers.push(myprinter)
+                        }
+                        
+                        category.printer = [...printers]
 					}
                     return category
                 })
                 return true
             }
+
 
         } catch (error) {
             console.log(error)

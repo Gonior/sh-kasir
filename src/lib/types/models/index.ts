@@ -56,7 +56,7 @@ export interface MenuOrder extends Menu {
 export interface Category {
     _id : string
     name : string
-    printer : string | Printer
+    printer : string[] | Printer[]
 }
 
 export interface NewCategory extends Omit<Category, '_id'> {}
@@ -78,6 +78,9 @@ export interface Order {
     grandtotal : number,
     cash : number
     change : number
+}
+export interface NewOrder extends Omit<Order, "_id" | "createdAt" | "updateAt"> {
+    
 }
 
 export interface Record {

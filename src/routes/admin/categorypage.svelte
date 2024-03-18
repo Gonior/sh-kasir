@@ -15,6 +15,8 @@
 	import searchHandler from "@/lib/utils/searchHandler"
 	import keyEventHandler from '@lib/utils/keyEventHandler'
 	import CategoryFormModal from "@/lib/components/modal/categoryFormModal.svelte"
+	
+	// import { Printer } from "@/lib/controller/printer.controlle"
 	const category = new Category()
 	let isLoadingData = false
 	let openFormModal = false
@@ -25,7 +27,7 @@
 	let selectedCategory : IModel.Category = {
 		_id: "",
 		name: "",
-		printer: ""
+		printer: [] as IModel.Printer[]
 	}
 	let pageSize = DEFAULT_PAGE_SIZE
 	let listCategories : IModel.Category[] = []
@@ -56,6 +58,7 @@
 	function handleKeydown({ keyCode }) {
 		keyEventHandler(keyCode, '.item')
     }
+
 
 	const tableHeaderItems : IModel.ITableHeaderItem[] = [
 		{
@@ -110,7 +113,7 @@
 				<Icon name="search" class="h-6 w-6 absolute left-2 top-2 text-gray-500"/>
 			</div>
 			<div>
-				<button tabindex="0" on:click={() => openFormModal = true} class="btn-primary flex items-center space-x-1">
+				<button tabindex="0" on:click={() => {selectedCategory={...{printer : [], _id : "", name : ""}};openFormModal = true}} class="btn-primary flex items-center space-x-1">
 					<Icon name="plus" class="h-6 w-6" stroke={3}/>
 					<span>Tambah Kategori</span>
 				</button>
@@ -127,8 +130,14 @@
 						<td class="p-2">{category.name}</td>
 						<td class="p-2 w-2/5 text-center">
 
-							{#if category.printer && typeof category.printer === 'object' && Object.keys(category.printer).length > 0 }
-								<button class="bg-gray-200 dark:bg-gray-700 btn !px-4 !py-1">{category.printer?.displayName}</button>
+							{#if category.printer && category.printer.length > 0 }
+								{#each category.printer as addsPrinter  }
+									<div class="flex flex-col space-y-1 max-w-max mx-auto">
+										{#if typeof addsPrinter === "object" && Object.keys(addsPrinter) && Object.hasOwn(addsPrinter, 'displayName')}
+											<button class="bg-gray-200 dark:bg-gray-700 btn !px-4 !py-1">{addsPrinter.displayName}</button>
+										{/if}
+									</div>	
+								{/each}
 							{:else}
 								<span>-</span>
 							{/if}
