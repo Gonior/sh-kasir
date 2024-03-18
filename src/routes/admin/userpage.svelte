@@ -16,6 +16,7 @@
 	import { DEFAULT_PAGE_SIZE } from '@/lib/types/constants'
 	import searchHandler from '@lib/utils/searchHandler'
 	import keyEventHandler from '@lib/utils/keyEventHandler'
+
 	const user = new User()
 	let keyword : string = ''
 	let listUser: IModel.User[] = []
