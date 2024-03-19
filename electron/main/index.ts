@@ -27,7 +27,7 @@ function createWindow(): void {
 		return { action: 'deny' }
 	})
 
-	ipcMain.handle('list-printer', async (_event) => {
+	ipcMain.handle('get-printers-async', async (_event) => {
 		return mainWindow.webContents.getPrintersAsync()
 	})
 

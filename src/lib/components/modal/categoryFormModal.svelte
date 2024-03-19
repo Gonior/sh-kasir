@@ -6,25 +6,27 @@
 	import TextInput from '../forms/textInput.svelte';
 	import { categorySchema } from '@lib/utils/validator'
 	import { Category } from '@lib/controller/category.controller'
-	import { Printer } from '@/lib/controller/printer.controlle';
+	import { Printer } from '@/lib/controller/printer.controller';
+	import { focusTrap } from 'svelte-focus-trap'
+	// import Icon from '../Icon.svelte'
 
 	const printerClass = new Printer()
 
 	export let _id : string | number = ''
 	export let name : string = ''
-	export let printer : IModel.Printer[] | string[] = []
+	export let printer : string[] = []
 	let listPrinter : IModel.Printer[] = []
-	let selection : string []= []
+
 	onMount(async () => {
 
 		// please FIX THIS
 		let isSuccess = await printerClass.load()
 		if (isSuccess) {
-			listPrinter = printerClass.getListPrinterAdds()
-			selection = [...printer.map((p) => p._id )	]
+			listPrinter = printerClass.getListAddonPrinterSkeleton()
 		}
+		console.log({id : printer, listRaw : printerClass.getListPrinterRaw(), listValidate : printerClass.getListPrinterValidate(), listAddon : printerClass.getListAddonPrinterSkeleton()})
 	})
-	
+
 	let errors = {
 		name : ""
 	}
@@ -59,19 +61,22 @@
 	}
 </script>
 
-<Modal class="w-1/3" outside={false}>
-	<form on:submit|preventDefault={handleSubmit}>
+<Modal class="w-1/3 h-max" outside={false}>
+	<form on:submit|preventDefault={handleSubmit} use:focusTrap>
 		<ModalHeader on:close={handleClose} title={_id ? 'Ubah Kategori' :'Tambah Kategori'}/>
 		<TextInput class={'my-2'} label="Nama Kategori" bind:value={name} isFocused={true} errorMsg={errors.name} />
 		<div class="my-2">
-			<p>Printer Tambahan</p>
-			
-			{#each listPrinter as lsp}
-				<div>
-					<label><input type="checkbox" name="printer" bind:group={selection} value={lsp._id} /> {lsp.displayName} : {lsp.name}</label>
-				</div>
-			{/each}
-			
+
+			<h1>Printer Tambahan</h1>
+			<div class="space-y-1">
+				{#each listPrinter as lsp}
+					<label for={lsp._id} class="flex items-center space-x-2 ">
+						<input id={lsp._id} type="checkbox" name="printer" bind:group={printer} value={lsp._id} />
+						<p class="">{lsp.displayName} {lsp.name ? `(${lsp.name})` : ''}</p>
+					</label>
+				{/each}
+			</div>
+
 		</div>
 		<div class="flex mt-4 justify-end">
 			<div class="flex space-x-2">

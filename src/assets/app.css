@@ -65,7 +65,7 @@ input[type="radio"] {
 }
 
 input[type="checkbox"] {
-	@apply h-5 w-5 accent-amber-600;
+	@apply h-5 w-5  accent-amber-600;
 }
 
 .btn-primary {
@@ -73,7 +73,7 @@ input[type="checkbox"] {
 }
 
 .btn-secondary {
-	@apply btn ring-1 ring-gray-500  text-gray-800 dark:ring-0 dark:bg-gray-700 dark:text-white ;
+	@apply btn ring-1 ring-gray-300  text-gray-600 dark:ring-0 dark:bg-gray-700 dark:text-white ;
 }
 
 .chips {
@@ -93,7 +93,7 @@ input[type="checkbox"] {
 }
 
 .tr-item {
-	@apply transition border-b border-gray-400 dark:border-gray-700 focus:outline-none focus:bg-amber-200 dark:focus:bg-amber-900;
+	@apply transition border-b border-gray-400 dark:border-gray-700 focus:outline-none focus:bg-amber-100 dark:focus:bg-amber-900;
 }
 
 .pagination :global(.pagination-nav) {

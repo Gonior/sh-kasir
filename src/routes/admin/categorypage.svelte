@@ -15,9 +15,11 @@
 	import searchHandler from "@/lib/utils/searchHandler"
 	import keyEventHandler from '@lib/utils/keyEventHandler'
 	import CategoryFormModal from "@/lib/components/modal/categoryFormModal.svelte"
-	
-	// import { Printer } from "@/lib/controller/printer.controlle"
+	import Popover from "@/lib/components/popover.svelte";
+
+	import { Printer } from "@/lib/controller/printer.controller"
 	const category = new Category()
+	const printer = new Printer()
 	let isLoadingData = false
 	let openFormModal = false
 	let isValid = false
@@ -27,7 +29,7 @@
 	let selectedCategory : IModel.Category = {
 		_id: "",
 		name: "",
-		printer: [] as IModel.Printer[]
+		printer: ['']
 	}
 	let pageSize = DEFAULT_PAGE_SIZE
 	let listCategories : IModel.Category[] = []
@@ -40,6 +42,7 @@
 	})
 
 	const loadData = async () => {
+		await printer.load()
 		isLoadingData = true
 		let isSuccess = await category.load()
 		if( isSuccess ) {
@@ -109,7 +112,7 @@
 		<Title title="Kategori"/>
 		<div class="flex items-center justify-between">
 			<div class="relative w-1/2">
-				<input on:keyup={handleSearch} bind:value={keyword} type="text" class="form-control !pl-9 w-full placeholder:font-normal" placeholder="Cari Pengguna.." />
+				<input on:keyup={handleSearch} bind:value={keyword} type="text" class="form-control !pl-9 w-full placeholder:font-normal" placeholder="Cari Kategori.." />
 				<Icon name="search" class="h-6 w-6 absolute left-2 top-2 text-gray-500"/>
 			</div>
 			<div>
@@ -130,14 +133,22 @@
 						<td class="p-2">{category.name}</td>
 						<td class="p-2 w-2/5 text-center">
 
-							{#if category.printer && category.printer.length > 0 }
-								{#each category.printer as addsPrinter  }
-									<div class="flex flex-col space-y-1 max-w-max mx-auto">
-										{#if typeof addsPrinter === "object" && Object.keys(addsPrinter) && Object.hasOwn(addsPrinter, 'displayName')}
-											<button class="bg-gray-200 dark:bg-gray-700 btn !px-4 !py-1">{addsPrinter.displayName}</button>
+							{#if category.printer.length > 0 }
+							<div class="flex flex-col space-y-1 max-w-max mx-auto">
+								{#each category.printer as id  }
+								<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1" placement="left">
+									<svelte:fragment slot="button">{printer.findPrinter(id)?.displayName}</svelte:fragment>
+
+									<svelte:fragment slot="content">
+										{#if printer.findPrinter(id).name}
+										<span class="font-bold">{printer.findPrinter(id).name}</span>
+										{:else}
+										<span class="text-gray-500 dark:text-gray-500 font-semibold whitespace-nowrap">--Printer tidak dikonfigurasi--</span>
 										{/if}
-									</div>	
+									</svelte:fragment>
+								</Popover>
 								{/each}
+							</div>
 							{:else}
 								<span>-</span>
 							{/if}

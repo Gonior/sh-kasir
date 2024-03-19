@@ -8,13 +8,13 @@
 </script>
 
 
-<div use:portal class="fixed inset-0 flex flex-col justify-center items-center max-w-3/4 { overlay ? 'bg-gray-600  bg-opacity-20' : '' }">
+<div use:portal class="fixed inset-0 flex flex-col justify-center items-center  { overlay ? 'bg-gray-600  bg-opacity-20' : '' }">
 	<div
 		use:clickOutside
 		on:click_outside={() => outside ? dispatch('close', false) : ''}
 		in:fly={{ duration: 200, y: 100 }}
 		out:fly={{ duration: 200, y: 100 }}
-		class={`bg-gray-50 shadow dark:bg-gray-800 rounded-lg p-4 mx-auto max-h-[60vh] overflow-y-auto ${$$props.class}`}>
+		class={`bg-gray-50 shadow dark:bg-gray-800 rounded-lg p-4 mx-auto max-h-[90vh] overflow-y-auto ${$$props.class}`}>
 		<slot />
 	</div>
 </div>

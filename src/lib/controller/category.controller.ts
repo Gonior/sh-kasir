@@ -1,8 +1,8 @@
 import toast from '@teddy-error/svelte-french-toast'
-import {Printer} from './printer.controlle'
+import {Printer} from './printer.controller'
 import {HttpService} from '../services/http.service'
 import { type IModel, EEndPoint, type IService } from '../types'
-import { LIST_PRINTER_ADDS } from '../types/constants'
+
 const printer = new Printer()
 const http = new HttpService()
 
@@ -15,20 +15,20 @@ class Category implements IModel.IClass<IModel.Category> {
             let response = await http.service().get<IService.IResponse<IModel.Category[]>>(EEndPoint.CATEGORY)
             if(response && response.success) {
                 this.categories = response.data
-                this.categories = this.categories.map((category) => {
-					if(category.printer.length > 0 ) {
-                        let printers : IModel.Printer[] = []
-                        for(const i in category.printer) {
-                            let myprinter = LIST_PRINTER_ADDS.find(p => p._id === category.printer[i])
-                            let findPrinter = printer.findPrinter(category.printer[i] as string) 
-                            if( findPrinter ) printers.push(findPrinter)
-                            else if (myprinter) printers.push(myprinter)
-                        }
-                        
-                        category.printer = [...printers]
-					}
-                    return category
-                })
+                // this.categories = this.categories.map((category) => {
+				// 	if(category.printer.length > 0 ) {
+                //         let printers : IModel.Printer[] = []
+                //         for(const i in category.printer) {
+                //             let myprinter = LIST_PRINTER_ADDS.find(p => p._id === category.printer[i])
+                //             let findPrinter = printer.findPrinter(category.printer[i] as string)
+                //             if( findPrinter ) printers.push(findPrinter)
+                //             else if (myprinter) printers.push(myprinter)
+                //         }
+
+                //         category.printer = [...printers]
+				// 	}
+                //     return category
+                // })
                 return true
             }
 

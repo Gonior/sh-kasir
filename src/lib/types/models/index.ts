@@ -24,7 +24,7 @@ export type Connection = 'local' | 'network'
 export interface Printer {
     _id : string
     name : string
-    type : 'main' | 'copy' | 'adds',
+    type : 'main' | 'copy' | 'addon',
 	displayName? : string
 }
 
@@ -56,7 +56,7 @@ export interface MenuOrder extends Menu {
 export interface Category {
     _id : string
     name : string
-    printer : string[] | Printer[]
+    printer : string[]
 }
 
 export interface NewCategory extends Omit<Category, '_id'> {}
@@ -80,7 +80,7 @@ export interface Order {
     change : number
 }
 export interface NewOrder extends Omit<Order, "_id" | "createdAt" | "updateAt"> {
-    
+
 }
 
 export interface Record {

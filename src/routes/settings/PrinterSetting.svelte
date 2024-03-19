@@ -3,32 +3,37 @@
 	import {slide} from 'svelte/transition'
 	import {IModel} from '@lib/types'
 	import Toogle from '@components/toggle.svelte'
-	import { Printer } from '@/lib/controller/printer.controlle'
-	import { LIST_PRINTER_ADDS, DEFAULT_MAIN_PRINTER, DEFAULT_COPY_PRINTER } from '@/lib/types/constants'
-	let listPrinter = []
-	let listPrinterAdds = LIST_PRINTER_ADDS
+	import { Printer } from '@/lib/controller/printer.controller'
+	let listInstalledPrinter = []
+	let mainPrinter : IModel.Printer = {
+		name: '',
+		_id: '',
+		type: 'main'
+	}
+	let copyPrinter : IModel.Printer = {
+		name : '',
+		_id : '',
+		type : 'copy'
+	}
+	let listAddonPrinterSkeleton :IModel.Printer[]= []
 	let isChange = false
 	let isLoading = false
 	let useCopyPrinter = false
 	let useAddsPrinter = false
-	let mainPrinter = DEFAULT_MAIN_PRINTER
-	let copyPrinter = DEFAULT_COPY_PRINTER
+
 	const printer = new Printer()
 	onMount(async() => {
 		let isSuccess = await printer.load()
 		if (isSuccess) {
-			listPrinter = printer.getListPrinterName()
-			mainPrinter = printer.getMainPrinter() ?? DEFAULT_MAIN_PRINTER
-			copyPrinter = printer.getCopyPrinter() ?? DEFAULT_COPY_PRINTER
-			let addsPrinter = printer.getAddsPrinter()
-			listPrinterAdds = listPrinterAdds.map((printer) => {
-				printer.name = addsPrinter.find(ap => printer._id === ap._id)?.name ?? ""
-				return printer
-			})
-			if(copyPrinter) useCopyPrinter = true
-			if(addsPrinter.length >0) useAddsPrinter = true
+			listInstalledPrinter = printer.getListInstalledPrinter()
+			let mpr = printer.getMainPrinter()
+			let cpr = printer.getCopyPrinter()
+			mainPrinter = (mpr && printer.findPrinter(mpr._id))
+			copyPrinter = (cpr && printer.findPrinter(cpr._id))
+			listAddonPrinterSkeleton = printer.getListAddonPrinterSkeleton()
+			if(copyPrinter.name) useCopyPrinter = true
+			if(listAddonPrinterSkeleton.length >0) useAddsPrinter = true
 		}
-		//
 	})
 
 	const saveChange = async () => {
@@ -37,7 +42,7 @@
 		if (useCopyPrinter && copyPrinter.name) printers.push(copyPrinter)
 
 		if(useAddsPrinter) {
-			listPrinterAdds.forEach(printer => {
+			listAddonPrinterSkeleton.forEach(printer => {
 				if (printer.name) printers.push(printer)
 			})
 		}
@@ -51,9 +56,11 @@
 
 	const handleChange = (e : any, type?: string) => {
 		if(type === "copy" && !e.detail?.checked) copyPrinter.name = ""
-		if(type === "adds") {
-			if(e.detail.checked) listPrinterAdds = LIST_PRINTER_ADDS
-			else listPrinterAdds = []
+		if(type === "addon") {
+			if(e.detail.checked) {
+				listAddonPrinterSkeleton = printer.getListAddonPrinterSkeleton()
+			}
+			else listAddonPrinterSkeleton = []
 		}
 		isChange = true
 	}
@@ -85,7 +92,7 @@
 				class="form-control"
 				bind:value={mainPrinter.name}>
 				<option value="">--tidak ada--</option>
-				{#each listPrinter as printer}
+				{#each listInstalledPrinter as printer}
 					<option value={printer.name}>{printer.displayName}</option>
 				{/each}
 			</select>
@@ -112,7 +119,7 @@
 					class="form-control"
 					bind:value={copyPrinter.name}>
 					<option value="">--tidak ada--</option>
-					{#each listPrinter as printer}
+					{#each listInstalledPrinter as printer}
 						<option value={printer.name}>{printer.displayName}</option>
 					{/each}
 				</select>
@@ -132,10 +139,10 @@
 				Kategori A Hanya muncul di Printer A.)</span>
 		</div>
 		<div class="w-1/2">
-			<Toogle bind:checked={useAddsPrinter} on:change={(e) => handleChange(e, 'adds')} />
+			<Toogle bind:checked={useAddsPrinter} on:change={(e) => handleChange(e, 'addon')} />
 			{#if useAddsPrinter}
 				<div transition:slide={{duration : 200, axis : 'y'}} class="flex flex-col items-start space-y-3">
-					{#each listPrinterAdds as lpa}
+					{#each listAddonPrinterSkeleton as lpa}
 					<div class="flex items-end space-x-2">
 						<div>
 							<div class="flex items-center justify-between">
@@ -144,7 +151,7 @@
 							<div class=" flex items-start space-x-2 !mt-0">
 								<select on:change={handleChange} class="form-control !mt-0" bind:value={lpa.name} id={lpa._id}>
 									<option value="">--tidak ada--</option>
-									{#each listPrinter as printer}
+									{#each listInstalledPrinter as printer}
 										<option value={printer.name}>{printer.name}</option>
 									{/each}
 								</select>

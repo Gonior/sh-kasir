@@ -38,28 +38,45 @@
 
 <style>
 	:root{
-		--text-color: #000;
-		--body-bg: #fff;
-		--primary-color : #000;
+
+		--primary-color : #d97706;;
 	}
-	/* .my-pagination-nav {
-		@apply flex items-center justify-between;
+
+	.my-pagination-nav {
+		display : flex;
+		justify-items: center;
+		justify-content: space-between
 	}
 
 	.my-pagination-nav :global(.pagination-nav) {
-		@apply rounded-lg max-w-max flex items-center text-sm;
+		border-radius: 0.5rem;
+		max-width: max-content;
+		display: flex;
+		justify-items: center;
+		font-size: 0.875rem;
+		line-height: 1.24rem;
+	}
+	.my-pagination-nav :global(.option) {
+		width: 2.25rem;
+		text-align: center;
+		border-radius: 0.5rem;
+		padding: 0.5rem;
+		font-weight: 600;
+		transition: all 200ms;
 	}
 
-	.my-pagination-nav :global(.option) {
-		@apply btn w-9 text-center;
+	.my-pagination-nav :global(.option:active) {
+		transform: scale(0.9);
 	}
 
 	.my-pagination-nav :global(.option.active) {
-		@apply text-amber-600;
+		color: var(--primary-color);
 	}
 
 	.my-pagination-nav :global(.option.disabled) {
+		opacity: 0.5;
+	}
 
-		@apply text-gray-500 dark:text-gray-400;
-	} */
+
+
 </style>
