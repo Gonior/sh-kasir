@@ -1,4 +1,4 @@
-import type { IModel } from ".."
+
 
 export const TEMPLATE_NOTE = [
 	{
@@ -83,3 +83,5 @@ export const PAGE_SIZE = [
 ]
 
 export const DEFAULT_PAGE_SIZE = 10
+
+export const DEFAULT_CATEGORY_ID = 'defaultcategory'

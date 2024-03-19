@@ -56,6 +56,8 @@ class User implements IModel.IClass<IModel.User> {
 		return this.users
 	};
 
+
+
 	delete = async (_id: string | number) : Promise<boolean> => {
 		try {
 			let response = await http.service().remove<IService.IResponse<IModel.User>>(EEndPoint.USER+`/${_id}`);
@@ -71,4 +73,4 @@ class User implements IModel.IClass<IModel.User> {
 
 }
 
-export { User }
+export default User

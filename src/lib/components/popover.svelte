@@ -35,7 +35,7 @@
         <slot name="button"></slot>
     </button>
     {#if popoverShow}
-        <div in:scale={{start:0.9, duration:200}} out:scale={{duration:100, start:0.9}} bind:this={popoverRef} id="tooltip" role="tooltip" class="bg-gray-100 shadow dark:shadow-slate-500 dark:bg-gray-800 text-sm rounded-lg w-max max-w-lg absolute z-50 py-2 space-y-1">
+        <div in:scale={{start:0.9, duration:200}} out:scale={{duration:100, start:0.9}} bind:this={popoverRef} id="tooltip" role="tooltip" class="bg-gray-100 shadow dark:shadow-slate-500 dark:bg-gray-800 text-sm rounded-lg w-max max-w-lg absolute z-50 py-2 ">
             {#if title}
             <h1 class="text-center font-bold">{title}</h1>
             <hr class="border-gray-300 dark:border-gray-600"/>

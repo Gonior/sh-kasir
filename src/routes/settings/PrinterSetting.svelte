@@ -3,7 +3,7 @@
 	import {slide} from 'svelte/transition'
 	import {IModel} from '@lib/types'
 	import Toogle from '@components/toggle.svelte'
-	import { Printer } from '@/lib/controller/printer.controller'
+	import Printer from '@/lib/controller/printer.controller'
 	let listInstalledPrinter = []
 	let mainPrinter : IModel.Printer = {
 		name: '',

@@ -10,7 +10,7 @@
 	$: dispatch('setPageSize', pageSize)
 </script>
 
-<div class="my-pagination-nav my-2">
+<div class="flex items-center justify-between my-2">
 	<div>
 		<span class="text-gray-500">Jumlah perhalaman</span>
 		<select bind:value={pageSize} name="" id="" class="form-control !py-1">
@@ -19,20 +19,23 @@
 			{/each}
 		</select>
 	</div>
-	<PaginationNav
-		{totalItems}
-		{pageSize}
-		{currentPage}
-		limit={2}
-		showStepOptions={true}
-		on:setPage={(e) => dispatch('setpage', {page : e.detail.page})}>
-		<svelte:fragment slot="prev">
-			<Icon name="chevron" stroke={3} class="rotate-0" />
-		</svelte:fragment>
-		<svelte:fragment slot="next">
-			<Icon name="chevron" stroke={3} class="rotate-180" />
-		</svelte:fragment>
-	</PaginationNav>
+	<div class="my-pagination-nav max">
+		<PaginationNav
+			{totalItems}
+			{pageSize}
+			{currentPage}
+			limit={1}
+			showStepOptions={true}
+			on:setPage={(e) => dispatch('setpage', {page : e.detail.page})}>
+				<svelte:fragment slot="prev">
+					<Icon name="chevron" stroke={3} class="rotate-0" />
+				</svelte:fragment>
+				<svelte:fragment slot="next">
+					<Icon name="chevron" stroke={3} class="rotate-180" />
+				</svelte:fragment>
+		</PaginationNav>
+	</div>
+
 
 </div>
 
@@ -40,12 +43,6 @@
 	:root{
 
 		--primary-color : #d97706;;
-	}
-
-	.my-pagination-nav {
-		display : flex;
-		justify-items: center;
-		justify-content: space-between
 	}
 
 	.my-pagination-nav :global(.pagination-nav) {

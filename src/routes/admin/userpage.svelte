@@ -6,7 +6,7 @@
 	import Title from '../../lib/components/navbar/title.svelte'
 	import Icon from '@/lib/components/Icon.svelte';
 	import { generateAvatar } from '@/lib/utils/myFunct';
-	import {User} from '@lib/controller/user.controller'
+	import User from '@lib/controller/user.controller'
 	import Loading from '@components/state/loading.svelte'
 	import Errorstate from '@/lib/components/state/errorstate.svelte'
 	import ConfirmModal from '@/lib/components/modal/confirmModal.svelte'
@@ -43,6 +43,7 @@
 			listUser = user.getData()
 			listUserDuplicate = listUser
 		}
+		keyword = ""
 		isLoadingData = false
 	}
 
@@ -82,6 +83,10 @@
 		}
 	]
 
+	const handleClose = (e : {detail : { requireReload : boolean, openModal : boolean}}) => {
+		if(e.detail.requireReload) loadData()
+		openFormModal = e.detail.openModal
+	}
 
 </script>
 
@@ -91,7 +96,7 @@
 	</ConfirmModal>
 {/if}
 {#if openFormModal}
-	<UserFormModal on:close={(e) => {openFormModal = e.detail;loadData()}} />
+	<UserFormModal on:close={handleClose} />
 {/if}
 
 <div class="h-full flex flex-col w-full">

@@ -96,4 +96,4 @@ class Printer implements IModel.IClass<IModel.Printer> {
 
 }
 
-export {Printer}
+export default Printer

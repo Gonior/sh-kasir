@@ -2,7 +2,7 @@
 	import { onMount } from "svelte";
 	import { dragscroll } from "@svelte-put/dragscroll";
 	import {paginate} from 'svelte-paginate'
-	import { Category } from "@/lib/controller/category.controller";
+	import Category from "@/lib/controller/category.controller";
 	import Loading from "@/lib/components/state/loading.svelte";
 	import Title from "@/lib/components/navbar/title.svelte";
 	import Pagination from "@/lib/components/pagination.svelte";
@@ -17,7 +17,7 @@
 	import CategoryFormModal from "@/lib/components/modal/categoryFormModal.svelte"
 	import Popover from "@/lib/components/popover.svelte";
 
-	import { Printer } from "@/lib/controller/printer.controller"
+	import Printer from "@/lib/controller/printer.controller"
 	const category = new Category()
 	const printer = new Printer()
 	let isLoadingData = false
@@ -50,6 +50,7 @@
 			listCategoriesDuplicate = [...listCategories]
 			isValid = true
 		}
+		keyword = ""
 
 		isLoadingData = false
 	}
@@ -94,9 +95,14 @@
 		openConfirmModal = false
 	}
 
+	const handleClose = (e : {detail : { requireReload : boolean, openModal : boolean}}) => {
+		if(e.detail.requireReload) loadData()
+		openFormModal = e.detail.openModal
+	}
+
 </script>
 {#if openFormModal}
-	<CategoryFormModal {...selectedCategory} on:close={(e) => {openFormModal = e.detail, loadData()}}/>
+	<CategoryFormModal {...selectedCategory} on:close={handleClose}/>
 {/if}
 
 {#if openConfirmModal}
@@ -126,7 +132,7 @@
 		<TableHeader marginRight={"mr-3"} textSize={'text-lg'} {tableHeaderItems} />
 		<div on:keydown={handleKeydown} tabindex="0" role="button" class="flex-1 overflow-y-auto overflow-x-hidden scrollbar flex flex-col w-full" use:dragscroll={{axis :'y', cursor : false}}>
 			{#if paginateItems.length > 0}
-			<table id="table-content" class="text-gray-500 dark:text-gray-300 mr-2" style="scrollbar-gutter: stable;" >
+			<table id="table-content" class="text-gray-500 dark:text-gray-300" style="scrollbar-gutter: stable;" >
 				{#each paginateItems as category}
 					<tr id={category._id} class="tr-item item" tabindex="0" >
 						<td class="p-2 text-center w-12"></td>

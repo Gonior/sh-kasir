@@ -12,7 +12,7 @@ export const categorySchema = yup.object().shape({
 
 export const menuSchema = yup.object().shape({
 	name : yup.string().required('Nama menu harus diisi'),
-	price : yup.number().integer('Harga harus terdiri dari angka')
+	price : yup.number().required('Harga tidak boleh null').integer('Harga harus terdiri dari angka')
 })
 
 

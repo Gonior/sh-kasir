@@ -111,7 +111,6 @@ class HttpService {
 			let ip = get(server).ip
 			accessToken ? request.headers.Authorization = `Bearer ${accessToken}` : ''
 			ip ? request.baseURL = `http://${ip}:8000` : ''
-
 			return request;
 		});
 

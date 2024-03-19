@@ -11,8 +11,10 @@ const searchHandler =  <T>(keyword : string, props : string[], dataDuplicate : T
 		}
 		return false
 	})]
+
 	if (keyword === '') return dataDuplicate
 	else return filtered
+
 
 }
 

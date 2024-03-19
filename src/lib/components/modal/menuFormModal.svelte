@@ -1,53 +1,62 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte'
-	import type { IModel } from '@/lib/types'
+	import { Constant, type IModel } from '@/lib/types'
 	import Modal from './modal.svelte'
 	import ModalHeader from '../navbar/modalHeader.svelte'
 	import TextInput from '../forms/textInput.svelte';
-	import { categorySchema } from '@lib/utils/validator'
-	import Category from '@lib/controller/category.controller'
-	import Printer from '@/lib/controller/printer.controller';
+	import { menuSchema } from '@lib/utils/validator'
+	import Menu from '@lib/controller/menu.controller'
+	import Category from '@/lib/controller/category.controller';
 	import { focusTrap } from 'svelte-focus-trap'
-	// import Icon from '../Icon.svelte'
-
-	const printerClass = new Printer()
-
+	const categoryController = new Category()
 	export let _id : string | number = ''
 	export let name : string = ''
-	export let printer : string[] = []
-	let listPrinter : IModel.Printer[] = []
+	export let price : number = 0
+	export let upc : number = null
+	export let category : IModel.Category | string = null
+	let listCategories : IModel.Category[] = []
+	let selectedCategory : string = ""
 
 	onMount(async () => {
 
 		// please FIX THIS
-		let isSuccess = await printerClass.load()
+		let isSuccess = await categoryController.load()
 		if (isSuccess) {
-			listPrinter = printerClass.getListAddonPrinterSkeleton()
+			listCategories = categoryController.getData()
+			if(!category) selectedCategory = categoryController.getDefaultCategory()?._id
+			else selectedCategory = category && typeof category === 'object' && category._id || Constant.DEFAULT_CATEGORY_ID
 		}
+
 	})
 
 	let errors = {
-		name : ""
+		name : "",
+		price : "",
+
 	}
 
 	const dispatch = createEventDispatcher()
+
 	const handleClose = (requireReload:boolean = false) => {
 		dispatch('close', {requireReload, openModal : false})
 	}
 
 	const handleSubmit = async () => {
 		try {
-			await categorySchema.validate({name}, { abortEarly: false })
-			errors = {name : ""};
+			await  menuSchema.validate({name, price}, { abortEarly: false })
+			errors = {name : "", price : ""};
 			let response = false
+			let payload = {name, category : selectedCategory, price, upc, _id : _id as string}
+			if(!upc) delete payload.upc
 			if(_id === "") {
-				response = await Category.save({name :  name, printer})
-			} else response = await Category.update(_id, {name, printer, _id : _id as string})
+				delete payload._id
+				response = await Menu.save(payload)
+			} else response = await Menu.update(_id, payload)
 
 			if(response) {
 				setTimeout(() => handleClose(true),300)
 				name = ""
-				printer = []
+				selectedCategory = ""
 				_id = ""
 			}
 
@@ -60,21 +69,27 @@
 	}
 </script>
 
+
 <Modal class="w-1/3 h-max" outside={false}>
 	<form on:submit|preventDefault={handleSubmit} use:focusTrap>
 		<ModalHeader on:close={() => handleClose(false)} title={_id ? 'Ubah Kategori' :'Tambah Kategori'}/>
 		<TextInput class={'my-2'} label="Nama Kategori" bind:value={name} isFocused={true} errorMsg={errors.name} />
 		<div class="my-2">
 
-			<h1>Printer Tambahan</h1>
+			<h1>Kategori</h1>
 			<div class="space-y-1">
-				{#each listPrinter as lsp}
-					<label for={lsp._id} class="flex items-center space-x-2 ">
-						<input id={lsp._id} type="checkbox" name="printer" bind:group={printer} value={lsp._id} />
-						<p class="">{lsp.displayName} {lsp.name ? `(${lsp.name})` : ''}</p>
-					</label>
-				{/each}
+				<select bind:value={selectedCategory} class="form-control w-full">
+					{#each listCategories as lc}
+						<option value={lc._id}>{lc.name}</option>
+					{/each}
+				</select>
 			</div>
+
+		</div>
+		<div class="flex gap-2 my-2 ">
+			<TextInput class="w-1/2" typeInput="number" bind:value={upc} label={"UPC"}/>
+
+			<TextInput class="w-1/2" typeInput="number" errorMsg={errors.price} bind:value={price} label={"Harga"}/>
 
 		</div>
 		<div class="flex mt-4 justify-end">

@@ -60,4 +60,4 @@ class Store implements IModel.IClass<IModel.Store> {
 	}
 }
 
-export { Store }
+export default Store

@@ -4,7 +4,7 @@
 	import Modal from "./modal.svelte";
 	import Icon from '@components/Icon.svelte'
 	import Errorstate from '../state/errorstate.svelte'
-	import { User } from '@/lib/controller/user.controller'
+	import User from '@/lib/controller/user.controller'
 	import { createEventDispatcher } from 'svelte'
 	import { generateAvatar } from '@lib/utils/myFunct'
 	import { onMount} from 'svelte'

@@ -46,6 +46,8 @@ export interface Menu {
 	forId? :string
 }
 
+export interface NewMenu extends Omit<Menu, '_id'> {}
+
 
 export interface MenuOrder extends Menu {
     qty? : number
