@@ -3,7 +3,7 @@ import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'path'
-console.log(import.meta.url)
+
 export default defineConfig({
 	main: {
 		build : {

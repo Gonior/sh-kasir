@@ -26,10 +26,8 @@
 		let isSuccess = await printer.load()
 		if (isSuccess) {
 			listInstalledPrinter = printer.getListInstalledPrinter()
-			let mpr = printer.getMainPrinter()
-			let cpr = printer.getCopyPrinter()
-			mainPrinter = (mpr && printer.findPrinter(mpr._id))
-			copyPrinter = (cpr && printer.findPrinter(cpr._id))
+			mainPrinter = printer.getMainPrinter()
+			copyPrinter = printer.getCopyPrinter()
 			listAddonPrinterSkeleton = printer.getListAddonPrinterSkeleton()
 			if(copyPrinter.name) useCopyPrinter = true
 			if(listAddonPrinterSkeleton.length >0) useAddsPrinter = true

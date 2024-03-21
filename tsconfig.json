@@ -5,7 +5,8 @@
     "src/**/*",
     "src/**/*.svelte",
     "electron/preload/*.d.ts",
-	"electron/main/**/*"
+	  "electron/main/**/*",
+    "electron/main/lib/*"
   ],
   "compilerOptions": {
     "verbatimModuleSyntax": true,

@@ -44,6 +44,9 @@ function createWindow(): void {
 app.whenReady().then(() => {
 	if (!readConfigPrinterFile()) writeDefaultConfigPrinter()
 
+	// execute()
+	// 	.then(data => console.log(data))
+	// 	.catch(err => console.log(err))
 	electronApp.setAppUserModelId('com.electron')
 
 	app.on('browser-window-created', (_, window) => {
