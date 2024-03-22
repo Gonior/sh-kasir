@@ -1,91 +1,39 @@
 
 import type {Tailwindest} from 'tailwindest'
 
+type TAction = 'Membuat' | 'Menghapus' | 'Menambahkan' | 'Mengubah'
+
+type TStatus = 'simpan' | 'lunas' | 'arsip' | 'batal'
+
 export type IconName = 'filter' |'edit' | 'stack' | 'emoji-sad' | 'loading'|'book' | 'folder' | 'power' | 'building' | 'printer' | 'server'| 'receipt-percent' | 'icon' |'minus' | 'question-mark' | 'home' | 'cog-8-tooth' | 'cube' | 'user-circle' | 'user' | 'ellipsis-vertical' | 'information-circle' | 'key' | 'plus' | 'trash' | 'close' | 'bell' | 'search' | 'bar' | 'refresh' | 'arrow' | 'arrow-long' | 'chevron-up-down' | 'chevron' | 'check' | 'logout' | 'bag' | 'calc' | 'wallet' | 'sun' | 'moon'
 
 export type TPage = 'Home' | 'Admin' | 'Cashier'
 
-
-export type Icon = {
-    name : IconName,
-    path : string,
-}
-
-export interface ITableHeaderItem  {
-	value : string,
-	width? : Tailwindest['width'],
-	textAlign? : Tailwindest['textAlign'],
-	paddingRight? :  Tailwindest['paddingRight']
-	bgColor? : Tailwindest['backgroundColor']
-}
-type Action = 'Membuat' | 'Menghapus' | 'Menambahkan' | 'Mengubah'
-
-type Status = 'tunda' | 'lunas' | 'arsip' | 'cancel'
-
 export type Connection = 'local' | 'network'
 
-export interface Printer {
+export interface IBill {
     _id : string
-    name : string
-    type : 'main' | 'copy' | 'addon',
-	displayName? : string
+    status : TStatus
+    storeInfo : IStoreInfo,
+    billInfo : IBillInfo,
+    items : IItem[]
+    summarize : ISummarize,
+    createAt : Date,
+    updateAt : Date
 }
-
-export interface User {
-    _id : string,
-    name : string,
-    passcode : string
-	avatar? : string
-}
-
-export interface NewUser extends Omit<User, '_id' | 'avatar' > {}
-
-export interface Menu {
-    _id : string
-    name : string
-    upc? : number
-    category? : string | Category
-    price? : number
-	forId? :string
-}
-
-export interface NewMenu extends Omit<Menu, '_id'> {}
-
-
-export interface MenuOrder extends Menu {
-    qty? : number
-    total? : number
-    printed : boolean
-}
-
-export interface Category {
-    _id : string
-    name : string
-    printer : string[]
-}
-
-export interface NewCategory extends Omit<Category, '_id'> {}
-
-export interface Order {
-    _id : string,
+export interface IBillInfo {
     invoice : string,
-    createdAt : Date,
-    updateAt : Date,
-    status : Status
-    user : User,
-    customer : string,
-    orders : MenuOrder[]
-    totalitems : number,
-    subtotal : number,
-    discount : number,
-    tax : number,
-    downpayment : number,
-    grandtotal : number,
-    cash : number
-    change : number
+    customer : string | number,
+    date : string,
+    user : string
 }
-export interface NewOrder extends Omit<Order, "_id" | "createdAt" | "updateAt"> {
 
+export interface IMenu {
+    _id : string
+    name : string
+    price: number
+    upc? : number
+    category : ICategory
 }
 
 export interface IItem {
@@ -94,14 +42,55 @@ export interface IItem {
     printed : boolean
     upc? : number
     qty? : number
-    category? : Category
+    category? : ICategory
     price?: number
     total?: number
     forId?: string
 }
 
-export interface Record {
-    action : Action,
+export interface INewMenu extends Omit<IMenu, '_id' | 'category'> {
+    category : string
+}
+
+export interface ISummarize {
+    subtotal : number,
+    discount : IDiscount,
+    tax : ITax,
+    downpayment : number,
+    cash : number,
+    change : number,
+    grandtotal : number
+}
+
+
+export interface IDiscount {
+    percentage : number,
+    value : number
+}
+
+//category
+export interface ICategory {
+    _id : string,
+    name : string,
+    printer : string[]
+}
+export interface INewCategory extends Omit<ICategory, '_id'> {}
+
+// user
+export interface IUser {
+    _id : string,
+    name : string,
+    passcode : string
+	avatar? : string
+}
+
+export interface INewUser extends Omit<IUser, '_id' | 'avatar' > {}
+
+
+//activity
+export interface IRecord {
+    action : TAction,
+    createdAt : Date,
     value : any
     prefix? : 'pesanan' | 'menu' | 'catatan' | string
     props? : string
@@ -110,12 +99,72 @@ export interface Record {
 
 export interface Acitivity {
     _id?: string,
-    user : User,
+    user : IUser,
     createdAt : Date,
-    records : Record[]
+    records : IRecord[]
     orderId : string
 }
 
+//store
+export interface Store {
+    _id : 'storeid'
+    storeInfo : IStoreInfo
+    taxInfo : ITax
+    bankInfo : IBank
+}
+
+export interface IStoreInfo {
+    name : string
+    address : string
+    phone : string
+    mobilePhone? : string
+    footerNote : string
+}
+
+export interface ITax {
+    checked : boolean
+    name? : string
+    value? : number
+}
+
+export interface IBank {
+    accountNumber : string | number
+    holder : string
+    bank : string
+}
+
+// server
+export interface ServerConfig {
+	ip : string,
+	type : Connection
+}
+
+
+// printer
+
+export interface IConfigPrinter {
+    logo? : boolean,
+    storeInfo? : boolean,
+    whiteSpace? : boolean,
+    price? : boolean,
+    summarize? : boolean,
+}
+
+export interface IPrinter {
+    _id : string
+    name : string
+    type : 'main' | 'copy' | 'addon',
+	displayName? : string
+}
+
+//svelte components
+export interface ITableHeaderItem  {
+	value : string,
+	width? : Tailwindest['width'],
+	textAlign? : Tailwindest['textAlign'],
+	paddingRight? :  Tailwindest['paddingRight']
+	bgColor? : Tailwindest['backgroundColor']
+}
 
 export interface IChips {
 	id : string | number
@@ -124,42 +173,19 @@ export interface IChips {
 
 }
 
+export type IIcon = {
+    name : IconName,
+    path : string,
+}
+
 export interface ISubMenu extends IChips {
 	component? : any
 	icon? : IconName
 }
 
-export interface StoreInfo {
-    name : string
-    address : string
-    phone : string
-    mobilePhone? : string
-    footerNote : string
-}
 
-export interface Bank {
-    accountNumber : string | number
-    holder : string
-    bank : string
-}
 
-export interface Tax {
-    checked : boolean
-    name? : string
-    value? : number
-}
-
-export interface Store {
-    _id : 'storeid'
-    storeInfo : StoreInfo
-    taxInfo : Tax
-    bankInfo : Bank
-}
-export interface ServerConfig {
-	ip : string,
-	type : Connection
-}
-
+// class
 export interface LoadData<T> {
 	(params? : string) : T
 }

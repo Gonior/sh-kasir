@@ -6,12 +6,12 @@ import { token, user } from '../store';
 
 const http = new HttpService()
 
-class User implements IModel.IClass<IModel.User> {
-	private users :IModel.User[] = []
+class User implements IModel.IClass<IModel.IUser> {
+	private users :IModel.IUser[] = []
 
 	load = async () : Promise<boolean> =>  {
 		try {
-			const response = await http.service().get<IService.IResponse<IModel.User[]>>(EEndPoint.LOGIN);
+			const response = await http.service().get<IService.IResponse<IModel.IUser[]>>(EEndPoint.LOGIN);
 			if(response && response.success) {
 				this.users = response.data
 				return true
@@ -22,9 +22,9 @@ class User implements IModel.IClass<IModel.User> {
 
 		return false
 	};
-	save = async (payload : IModel.NewUser) : Promise<boolean>=> {
+	save = async (payload : IModel.INewUser) : Promise<boolean>=> {
 		try {
-			const response = await http.push<IService.IResponse<IModel.User>, IModel.NewUser>(EEndPoint.USER, payload)
+			const response = await http.push<IService.IResponse<IModel.IUser>, IModel.INewUser>(EEndPoint.USER, payload)
 			if (response && response.success) {
 				toast.success("Pengguna berhasil ditambahkan.", {position : 'top-right'})
 				return true
@@ -38,9 +38,9 @@ class User implements IModel.IClass<IModel.User> {
 
 	};
 
-	static login = async (payload : IModel.User) : Promise<boolean> => {
+	static login = async (payload : IModel.IUser) : Promise<boolean> => {
 		try {
-			let response = await http.service().push<IService.IResponse<IModel.User>, IModel.User>(EEndPoint.LOGIN, payload);
+			let response = await http.service().push<IService.IResponse<IModel.IUser>, IModel.IUser>(EEndPoint.LOGIN, payload);
 			if(response && response.success) {
 				toast.success('Login berhasil', {position : 'top-right'})
 				token.set(response.token)
@@ -52,7 +52,7 @@ class User implements IModel.IClass<IModel.User> {
 		}
 		return false
 	}
-	getData = () : IModel.User[] => {
+	getData = () : IModel.IUser[] => {
 		return this.users
 	};
 
@@ -60,7 +60,7 @@ class User implements IModel.IClass<IModel.User> {
 
 	delete = async (_id: string | number) : Promise<boolean> => {
 		try {
-			let response = await http.service().remove<IService.IResponse<IModel.User>>(EEndPoint.USER+`/${_id}`);
+			let response = await http.service().remove<IService.IResponse<IModel.IUser>>(EEndPoint.USER+`/${_id}`);
 			if(response && response.success) {
 				toast.success('Pengguna berhasil dihapus', {position : 'top-right'})
 				return true

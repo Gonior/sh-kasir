@@ -6,10 +6,10 @@ const http = new HttpService()
 
 class Store implements IModel.IClass<IModel.Store> {
 
-	private taxInfo: IModel.Tax
+	private taxInfo: IModel.ITax
 	private _id : string
-	private storeInfo : IModel.StoreInfo
-	private bankInfo : IModel.Bank
+	private storeInfo : IModel.IStoreInfo
+	private bankInfo : IModel.IBank
 
 	async load(): Promise<boolean> {
 		try {

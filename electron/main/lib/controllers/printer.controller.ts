@@ -2,18 +2,24 @@ import {ThermalPrinter, BreakLine, PrinterTypes} from 'node-thermal-printer'
 import type { IModel } from '../types'
 import logo from '../../../../resources/logo.png'
 import {isValidObject, convertToRupiah} from '../utils'
-import nodePrinter from '@woovi/node-printer'
+import nodePrinter, { type PrinterDetails } from '@woovi/node-printer'
 import child_process from 'child_process'
 import util from 'util'
 const exec = util.promisify(child_process.exec);
 class Printer {
     private _thermalPrinter : ThermalPrinter
     private _printer : IModel.IPrinter
-    private _nodePrinter
+    private _nodePrinter: { getPrinter: any; getPrinters?: () => nodePrinter.PrinterDetails[]; getPrinterDriverOptions?: (printerName: string) => nodePrinter.PrinterDriverOptions; getSelectedPaperSize?: (printerName: string) => string; getDefaultPrinterName?: () => string; printDirect?: (options: nodePrinter.PrintDirectOptions) => void; printFile?: (options: nodePrinter.PrintFileOptions) => void; getSupportedPrintFormats?: () => string[]; getJob?: (printerName: string, jobId: number) => nodePrinter.JobDetails; setJob?: (printerName: string, jobId: number, command: string) => void; getSupportedJobCommands?: () => string[] } 
     constructor(printer : IModel.IPrinter) {
-        this._thermalPrinter = new ThermalPrinter({
+        this._thermalPrinter = this.initPrinter(printer)
+        this._printer = printer
+        this._nodePrinter = nodePrinter
+    }
+
+    private initPrinter = (printer : IModel.IPrinter) => {
+        let thermalPrinter = new ThermalPrinter({
             type : PrinterTypes.EPSON,
-            interface : printer.connectivity !== "network"? `printer:${printer.name}` : `tcp://${printer.name}`,
+            interface : printer.connectivity !== "network"? `printer:${printer.name}` : `tcp://${printer.ipAdress}`,
             removeSpecialCharacters : false,
             driver : nodePrinter,
             breakLine : BreakLine.WORD,
@@ -21,34 +27,23 @@ class Printer {
                 timeout : 3000
             }
         })
-        this._printer = printer
-        this._nodePrinter = nodePrinter
+        return thermalPrinter
     }
 
-    get thermalPrinter() {
-        return this._thermalPrinter
-    }
-
-    print = async (data : IModel.IBill, options : IModel.IConfigPrinter = {
-        logo : false,
-        storeInfo : false,
-        price : false,
-        summarize : false,
-        whiteSpace : false
-    }) => {
+    print = async (data : IModel.IBill, options? : IModel.IConfigPrinter) => {
         if (options.logo) {
             this._thermalPrinter.alignCenter()
             await this._thermalPrinter.printImage(logo)
         }
         if (options.storeInfo && isValidObject(data.storeInfo)) {
-            this.thermalPrinter.newLine()
-            this.thermalPrinter.println(data.storeInfo.name)
-            this.thermalPrinter.setTextSize(0, 0)
-            this.thermalPrinter.println(data.storeInfo.address)
-            this.thermalPrinter.println(`Telp. ${data.storeInfo.phone}`)
+            this._thermalPrinter.newLine()
+            this._thermalPrinter.println(data.storeInfo.name)
+            this._thermalPrinter.setTextSize(0, 0)
+            this._thermalPrinter.println(data.storeInfo.address)
+            this._thermalPrinter.println(`Telp. ${data.storeInfo.phone}`)
             if(data.storeInfo.mobilePhone)
-            this.thermalPrinter.println(`No. Hp. ${data.storeInfo.mobilePhone}`)
-            this.thermalPrinter.drawLine()
+            this._thermalPrinter.println(`No. Hp. ${data.storeInfo.mobilePhone}`)
+            this._thermalPrinter.drawLine()
         
         }
 
@@ -128,22 +123,46 @@ class Printer {
 		}
             
     }
+    private getIpAdress = () : string => {
+        let printer = this._nodePrinter.getPrinter(this._printer.name)
+        let pattern = new RegExp(/^[ip_]+[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/,'i')
+        let ipAddress : string
+        if(printer && printer.portName && pattern.test(printer.portName)) {
+            ipAddress = printer.portName.replace('IP_','')
+        }
+    
+        return ipAddress
+    }
 
-    pingHostname = async () => {
-        try {
-            return this._thermalPrinter.isPrinterConnected
-            // let printer = this._nodePrinter.getPrinter(this._printer.name)
-            // let pattern = new RegExp(/^[ip_]+[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/,'i')
-            // let ipAddress : string
-            // if(printer && printer.portName && pattern.test(printer.portName)) {
-            //     ipAddress = printer.portName.replace('IP_','')
-            // }
+    getConnection = async () : Promise<boolean> => {
+        let ipAddress = this.getIpAdress()
         
-            // if(ipAddress) {
-            //     const {stdout} = await exec(`ping -n 5 ${ipAddress}`);
-            //     console.log(stdout)
-            //     if(stdout && stdout.toString().includes('bytes')) return true
-            // }
+        if(ipAddress) {
+            let networkPrinter = this._printer
+            networkPrinter.connectivity = 'network'
+            networkPrinter.ipAdress = ipAddress
+            let thermalPrinter = this.initPrinter(networkPrinter)
+            
+            return await thermalPrinter.isPrinterConnected()
+        }
+
+        return false
+    }
+
+    getPrinterJobs = () : [] => {
+        let printer : {jobs : []} = this._nodePrinter.getPrinter(this._printer.name)
+        return printer.jobs
+    }
+    
+    pingHostname = async () : Promise<boolean> => {
+        try {
+            
+            let ipAddress = this.getIpAdress()
+        
+            if( ipAddress ) {
+                const {stdout} = await exec(`ping -n 5 ${ipAddress}`);
+                if(stdout && stdout.toString().includes('bytes')) return true
+            }
           return false
         } catch (err) {
           // console.log(err);

@@ -1,9 +1,9 @@
 import toast from "@teddy-error/svelte-french-toast";
 import { IModel } from "../types";
 
-class Printer implements IModel.IClass<IModel.Printer> {
+class Printer implements IModel.IClass<IModel.IPrinter> {
 	private listInstalledPrinter : {name : string, displayName : string}[]= []
-	private listPrinter :IModel.Printer[] = []
+	private listPrinter :IModel.IPrinter[] = []
 
 	public load = async () : Promise<boolean> => {
 		this.listInstalledPrinter = await window.electron.ipcRenderer.invoke('get-printers-async')
@@ -11,7 +11,7 @@ class Printer implements IModel.IClass<IModel.Printer> {
 
 		return true
 	}
-	static save = async (payload: IModel.Printer[]) : Promise<boolean> => {
+	static save = async (payload: IModel.IPrinter[]) : Promise<boolean> => {
 		let response = await window.electron.ipcRenderer.invoke('write-printer-config', payload)
 		if(response) {
 			toast.success(response, {position : 'top-right'})
@@ -26,20 +26,20 @@ class Printer implements IModel.IClass<IModel.Printer> {
 		return this.listInstalledPrinter
 	}
 
-	getListPrinterRaw = () : IModel.Printer[] => {
+	getListPrinterRaw = () : IModel.IPrinter[] => {
 		return this.listPrinter
 	}
-	getListPrinterValidate = () : IModel.Printer[] => {
+	getListPrinterValidate = () : IModel.IPrinter[] => {
 		let result = []
 		this.listPrinter.forEach(printer => {
 			if(this.isValid(printer.name)) result.push(printer)
 		})
 		return result
 	}
-	getListAddonPrinterSkeleton = () : IModel.Printer[] => {
-		let ps : IModel.Printer[] = []
+	getListAddonPrinterSkeleton = () : IModel.IPrinter[] => {
+		let ps : IModel.IPrinter[] = []
 		for (let i = 0; i < 10; i++) {
-			const addonPrinter : IModel.Printer = {
+			const addonPrinter : IModel.IPrinter = {
 				_id : `addon-pr-${i+1}`,
 				name : '',
 				type : 'addon',
@@ -55,20 +55,20 @@ class Printer implements IModel.IClass<IModel.Printer> {
 		})
 	}
 
-	getMainPrinter = () : IModel.Printer => {
+	getMainPrinter = () : IModel.IPrinter => {
 		return this.getListPrinterValidate().find(p => p.type === "main") ?? {name : '', _id : 'main-pr', type : 'main', displayName : 'Printer Kasir'}
 	}
 
-	getCopyPrinter = () : IModel.Printer => {
+	getCopyPrinter = () : IModel.IPrinter => {
 		return this.getListPrinterValidate().find(p => p.type === "copy") ?? {name : '', _id : 'copy-pr', type : 'copy', displayName : 'Printer Rekap Pesanan'}
 	}
 
-	getAddonPrinters = () : IModel.Printer[] => {
+	getAddonPrinters = () : IModel.IPrinter[] => {
 
 		return this.getListPrinterValidate().filter((p: { type: string; }) => p.type === "addon") ?? []
 	}
 
-	findPrinter = (_id : string) : IModel.Printer => {
+	findPrinter = (_id : string) : IModel.IPrinter => {
 		let findPrinter = this.listPrinter.find((p) => p._id === _id)
 		if( findPrinter && this.isValid(findPrinter.name)) return findPrinter
 		else return this.getListAddonPrinterSkeleton().find(p => p._id === _id) ?? null
@@ -80,7 +80,7 @@ class Printer implements IModel.IClass<IModel.Printer> {
 		return this.getListInstalledPrinter().find(ipr => ipr.name === name) ? true : false
 	}
 
-	validatePrinterId = (id : string) : IModel.Printer => {
+	validatePrinterId = (id : string) : IModel.IPrinter => {
 		let printer = this.listPrinter.find(p => p._id === id)
 		if(printer) {
 			let isInstalled = this.getListInstalledPrinter().find(ipr => ipr.name === printer.name)
@@ -95,7 +95,7 @@ class Printer implements IModel.IClass<IModel.Printer> {
 
 	}
 
-	static print = async (printer : IModel.Printer, data : any, options?) : Promise<boolean> => {
+	static print = async (printer : IModel.IPrinter, data : any, options?) : Promise<boolean> => {
 		console.log({printer, data, options})
 		return false
 

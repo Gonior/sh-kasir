@@ -15,7 +15,7 @@
 	export let _id : string | number = ''
 	export let name : string = ''
 	export let printer : string[] = []
-	let listPrinter : IModel.Printer[] = []
+	let listPrinter : IModel.IPrinter[] = []
 
 	onMount(async () => {
 

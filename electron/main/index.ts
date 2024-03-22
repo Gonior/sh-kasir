@@ -44,8 +44,8 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
 	if (!readConfigPrinterFile()) writeDefaultConfigPrinter()
-	const printerController = new Printer({name:"Kasir 84",_id:"copy-pr",type:"copy",displayName:"Printer Kasir"})
-	printerController.pingHostname().then(result => console.log(result))
+	// const printerController = new Printer({name : 'Makanan', _id : 'copy-pr', type : 'copy' })
+	// printerController.getConnection().then(connected => console.log(connected))
 	// execute()
 	// 	.then(data => console.log(data))
 	// 	.catch(err => console.log(err))
@@ -56,11 +56,16 @@ app.whenReady().then(() => {
 	})
 
 	// IPC test
-	ipcMain.on('ping', () => console.log('pong'))
+	ipcMain.handle('ping', async (_event, printer) => {
+		const printerController = new Printer(printer)
+		let result = await printerController.pingHostname()
+		return result
+	} )
 
-	ipcMain.handle('print', (_event, data) => {
-		console.log(data)
-		return {success : true, message : "you success!!"}
+	ipcMain.handle('print', async (_event, {printer, data, options}) => {
+		const printerController = new Printer(printer)
+		let result = await printerController.print(data, options)
+		return result
 	})
 
 	ipcMain.handle('write-printer-config', async (_event, data) => {

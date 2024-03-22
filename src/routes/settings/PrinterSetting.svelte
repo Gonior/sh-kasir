@@ -5,17 +5,17 @@
 	import Toogle from '@components/toggle.svelte'
 	import Printer from '@/lib/controller/printer.controller'
 	let listInstalledPrinter = []
-	let mainPrinter : IModel.Printer = {
+	let mainPrinter : IModel.IPrinter = {
 		name: '',
 		_id: '',
 		type: 'main'
 	}
-	let copyPrinter : IModel.Printer = {
+	let copyPrinter : IModel.IPrinter = {
 		name : '',
 		_id : '',
 		type : 'copy'
 	}
-	let listAddonPrinterSkeleton :IModel.Printer[]= []
+	let listAddonPrinterSkeleton :IModel.IPrinter[]= []
 	let isChange = false
 	let isLoading = false
 	let useCopyPrinter = false
@@ -35,7 +35,7 @@
 	})
 
 	const saveChange = async () => {
-		let printers: IModel.Printer[] = []
+		let printers: IModel.IPrinter[] = []
 		if (mainPrinter.name) printers.push(mainPrinter)
 		if (useCopyPrinter && copyPrinter.name) printers.push(copyPrinter)
 

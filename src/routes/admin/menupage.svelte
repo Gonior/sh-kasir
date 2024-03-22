@@ -31,22 +31,23 @@
 	let currentPage = 1
 	let openConfirmModal = false
 
-	let selectedMenu : IModel.Menu = {
+	let selectedMenu : IModel.IMenu = {
 		_id: "",
 		name: "",
 		upc : undefined,
-		price : 0
+		price : 0,
+		category : null
 	}
 
 	let selectedCategory : string[] = []
 	let pageSize = 50
-	let listMenu : IModel.Menu[] = []
-	let listMenuDuplicate : IModel.Menu[] = []
-	let listMenuDuplicateFilter :IModel.Menu[] = []
-	let listCategories : IModel.Category[] = []
+	let listMenu : IModel.IMenu[] = []
+	let listMenuDuplicate : IModel.IMenu[] = []
+	let listMenuDuplicateFilter :IModel.IMenu[] = []
+	let listCategories : IModel.ICategory[] = []
 	
-	$: paginateItems = paginate({items : listMenu, pageSize, currentPage}) as IModel.Menu[]
-	$: listMenuDuplicateFilter = [...listMenuDuplicate.filter(menu => selectedCategory.indexOf((menu.category as IModel.Category)._id) !== -1)]
+	$: paginateItems = paginate({items : listMenu, pageSize, currentPage}) as IModel.IMenu[]
+	$: listMenuDuplicateFilter = [...listMenuDuplicate.filter(menu => selectedCategory.indexOf((menu.category as IModel.ICategory)._id) !== -1)]
 	$: listMenu = [...listMenuDuplicateFilter]
 
 	onMount( async () => {

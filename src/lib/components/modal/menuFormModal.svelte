@@ -13,8 +13,8 @@
 	export let name : string = ''
 	export let price : number = 0
 	export let upc : number = null
-	export let category : IModel.Category | string = null
-	let listCategories : IModel.Category[] = []
+	export let category : IModel.ICategory | string = null
+	let listCategories : IModel.ICategory[] = []
 	let selectedCategory : string = ""
 
 	onMount(async () => {

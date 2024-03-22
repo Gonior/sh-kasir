@@ -13,20 +13,20 @@
 	let isLoadingData = false
 	let isLoading = false
 	let isValid = false
-	let storeInfo : IModel.StoreInfo ={
+	let storeInfo : IModel.IStoreInfo ={
 		name: '',
 		address: '',
 		phone: '',
 		footerNote: '',
 		mobilePhone : ''
 	}
-	let taxInfo : IModel.Tax = {
+	let taxInfo : IModel.ITax = {
 		checked : false,
 		name : '',
 		value : 0
 	}
 
-	let bankInfo : IModel.Bank = {
+	let bankInfo : IModel.IBank = {
 		accountNumber : '',
 		holder : '',
 		bank : ''

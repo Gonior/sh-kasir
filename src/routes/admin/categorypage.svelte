@@ -25,16 +25,16 @@
 	let keyword = ""
 	let currentPage = 1
 	let openConfirmModal = false
-	let selectedCategory : IModel.Category = {
+	let selectedCategory : IModel.ICategory = {
 		_id: "",
 		name: "",
 		printer: ['']
 	}
 	let pageSize = DEFAULT_PAGE_SIZE
-	let listCategories : IModel.Category[] = []
-	let listCategoriesDuplicate : IModel.Category[] = []
+	let listCategories : IModel.ICategory[] = []
+	let listCategoriesDuplicate : IModel.ICategory[] = []
 
-	$: paginateItems = paginate({items : listCategories, pageSize, currentPage}) as IModel.Category[]
+	$: paginateItems = paginate({items : listCategories, pageSize, currentPage}) as IModel.ICategory[]
 
 	onMount( async () => {
 		await loadData()
@@ -140,10 +140,11 @@
 							{#if category.printer.length > 0 }
 							<div class="flex flex-col space-y-1 max-w-max mx-auto">
 								{#each category.printer as id  }
+								
 									<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1" placement="left">
 										<svelte:fragment slot="button">{printer.findPrinter(id)?.displayName}</svelte:fragment>
 										<svelte:fragment slot="content">
-											{#if printer.findPrinter(id).name}
+											{#if printer.findPrinter(id)?.name}
 											<div class="flex space-x-1 items-center">
 												<Icon name="printer" class="h-6 w-6"/>
 												<span class="font-bold">{printer.findPrinter(id).name}</span>

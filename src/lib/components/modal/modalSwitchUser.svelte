@@ -17,7 +17,7 @@
 	export let overlay = true
 	export let currentUser = undefined
 
-	let listUser: IModel.User[] = []
+	let listUser: IModel.IUser[] = []
 	let isLoadingData = true
 	let isValid = false
 	let isLoading = false
@@ -33,7 +33,7 @@
 
 	})
 
-	const handleSwitch = async (switcher : IModel.User) => {
+	const handleSwitch = async (switcher : IModel.IUser) => {
 		let isSuccess = await User.login(switcher)
 		if (isSuccess) dispatch('success')
 		else toast.error('Gagal Login', {position : 'top-right'})

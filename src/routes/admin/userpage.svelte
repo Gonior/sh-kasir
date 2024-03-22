@@ -19,11 +19,11 @@
 
 	const user = new User()
 	let keyword : string = ''
-	let listUser: IModel.User[] = []
-	let listUserDuplicate: IModel.User[] = []
+	let listUser: IModel.IUser[] = []
+	let listUserDuplicate: IModel.IUser[] = []
 	let isLoadingData = true
 	let isValid = false
-	let selectedUser : IModel.User
+	let selectedUser : IModel.IUser
 	let openConfirmModal = false
 	let openFormModal = false
 	let currentPage = 1
