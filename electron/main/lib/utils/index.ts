@@ -40,3 +40,23 @@ export const execute = () => {
 	})
 }
 
+export const convertToRupiah = (num : number = 0) => {
+    try {
+        let rupiah = ''
+        let angkarev = num.toString().split('').reverse().join('')
+        for (let i = 0; i < angkarev.length; i++) if (i % 3 == 0) rupiah += angkarev.substr(i, 3) + '.'
+        return rupiah
+            .split('', rupiah.length - 1)
+            .reverse()
+            .join('')    
+    } catch (error) {
+        return '0'
+    }
+	
+}
+
+export const isValidObject = (obj : any) : boolean => {
+    if (obj && typeof obj === 'object' && Object.keys(obj).length > 0) return true
+
+    return false
+}

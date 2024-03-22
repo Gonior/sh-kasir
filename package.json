@@ -25,8 +25,10 @@
 		"@dicebear/core": "^7.1.1",
 		"@electron-toolkit/preload": "^3.0.0",
 		"@electron-toolkit/utils": "^3.0.0",
+		"@woovi/node-printer": "^1.0.1",
 		"axios": "^1.6.7",
 		"fs-jetpack": "^5.1.0",
+		"node-thermal-printer": "^4.4.2",
 		"tailwindest": "^2.3.0",
 		"uuid": "^9.0.1",
 		"yup": "^1.4.0"

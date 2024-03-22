@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import Printer from './lib/controllers/printer.controller'
 import {readConfigPrinterFile, writeConfigPrinterFile, writeDefaultConfigPrinter} from './lib/utils'
 
 function createWindow(): void {
@@ -43,7 +44,8 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
 	if (!readConfigPrinterFile()) writeDefaultConfigPrinter()
-
+	const printerController = new Printer({name:"Kasir 84",_id:"copy-pr",type:"copy",displayName:"Printer Kasir"})
+	printerController.pingHostname().then(result => console.log(result))
 	// execute()
 	// 	.then(data => console.log(data))
 	// 	.catch(err => console.log(err))

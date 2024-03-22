@@ -88,6 +88,18 @@ export interface NewOrder extends Omit<Order, "_id" | "createdAt" | "updateAt"> 
 
 }
 
+export interface IItem {
+    _id : string
+    name : string
+    printed : boolean
+    upc? : number
+    qty? : number
+    category? : Category
+    price?: number
+    total?: number
+    forId?: string
+}
+
 export interface Record {
     action : Action,
     value : any

@@ -8,15 +8,6 @@
 	import { handleSwitchTheme } from '@lib/utils/myFunct'
 	// eslint-disable-next-line no-unused-vars
 	import { theme, page } from '@store/index';
-  	// export let url = "";
-
-	// const basepath = /^\/?[a-zA-Z]+:/.test(window.location.pathname)
-    // 	? window.location.pathname.substr(0, window.location.pathname.indexOf(":") + 1)
-    // 	: "/"
-	// const ipcHandle = async (): Promise<void> => {
-		// 	let response = await window.electron.ipcRenderer.invoke('print', {message : 'sayang isma'})
-		// 	console.log(response)
-		// }
 
 	onMount( async () => {
 		handleSwitchTheme($theme === 'dark')
@@ -28,7 +19,6 @@
 		{ id: "Cashier", component: Cashier },
   	];
 	
-
 	const getComponent = function () {
 		try {
 			return pages.find((p) => p.id === $page).component;
@@ -36,7 +26,6 @@
 			return NotFound;
 		}
 	}
-
 
 </script>
 

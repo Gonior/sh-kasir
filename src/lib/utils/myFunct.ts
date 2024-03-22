@@ -88,4 +88,24 @@ export const isEqual = (obj1: { [x: string]: any; }, obj2: { [x: string]: any; }
 	return true
 }
 
+export const removeDuplicates = (array) => {
+	let newArray = []
+	let uniqueObject = {}
+	for (let i in array) {
+		if (array[i]) {
+			let _id = array[i]['_id']
+			uniqueObject[_id] = array[i]
+		}
+	}
+	for (let i in uniqueObject) {
+		newArray.push(uniqueObject[i])
+	}
+	return newArray
+}
+
+export const isValidObject = (obj : any) : boolean => {
+    if (obj && typeof obj === 'object' && Object.keys(obj).length > 0) return true
+
+    return false
+}
 
