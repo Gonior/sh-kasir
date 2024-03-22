@@ -42,7 +42,7 @@ class User implements IModel.IClass<IModel.User> {
 		try {
 			let response = await http.service().push<IService.IResponse<IModel.User>, IModel.User>(EEndPoint.LOGIN, payload);
 			if(response && response.success) {
-				toast.success('Login berhasil berhasil', {position : 'top-right'})
+				toast.success('Login berhasil', {position : 'top-right'})
 				token.set(response.token)
 				user.set(response.data)
 				return true

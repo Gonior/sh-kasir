@@ -8,6 +8,7 @@ module.exports = {
   theme: {
     fontFamily: {
       poppins: ["Poppins", "sans-serif"],
+      inter: ["Inter", "sans-serif"],
     },
     extend: {
       animation: {
@@ -19,6 +20,8 @@ module.exports = {
 			}
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms')
+  ],
 }
 

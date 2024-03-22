@@ -1,21 +1,20 @@
-<script>
+<script lang="ts">
 	import Icon from "@components/Icon.svelte";
 	import ConfirmModal from '@components/modal/confirmModal.svelte';
-	import {navigate} from 'svelte-routing'
-	import {token, user} from '@store/index'
+	import {page, token, user} from '@store/index'
 	export let text = ""
 	export let closeApp = false
 	let openConfirmModal = false
 	const handleLogout = () => {
 		token.set('')
 		user.set(JSON.parse('{}'))
-		navigate('/', {replace : true})
+		page.set('Home')
 		if(closeApp) {
 			// send event to electron
 		}
 	}
 
-	const handleConfrim = (e) => {
+	const handleConfrim = (e : { detail : boolean}) => {
 		if(e.detail) handleLogout()
 
 		openConfirmModal = false

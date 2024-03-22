@@ -4,18 +4,35 @@
 @tailwind utilities;
 @layer components {
 	html * {
-		@apply font-poppins select-none;
+		@apply font-inter select-none;
 	}
 	.btn {
 		@apply rounded-lg p-2 font-semibold transform transition-all active:scale-[0.99] disabled:active:scale-100 duration-200 ease-in-out disabled:bg-opacity-50 disabled:text-opacity-20 dark:disabled:bg-opacity-50 dark:disabled:text-opacity-20;
 	}
+
+	.secondary-color {
+		@apply ring-1 ring-gray-300  text-gray-600 dark:ring-0 dark:bg-gray-700 dark:text-white;
+	}
+
+	.primary-color {
+		@apply bg-amber-600 text-white
+	}
 }
+
 @font-face {
 	font-family: "Poppins";
-	src: url("./fonts/Poppins-Regular.ttf") format("truetype");
+	src: url("./fonts/Poppins/Poppins-Regular.ttf") format("truetype");
 	font-weight: normal;
 	font-style: normal;
 }
+
+@font-face {
+	font-family: "Inter";
+	src: url("./fonts/Inter/Inter-Regular.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+
 body {
 	font-family:
 		Inter,
@@ -61,20 +78,21 @@ body {
 }
 
 input[type="radio"] {
-	@apply accent-amber-600;
+	@apply transition-all duration-200 ease-in-out	focus:border-transparent focus:ring-0 text-amber-600 ;
 }
 
 input[type="checkbox"] {
-	@apply h-5 w-5  accent-amber-600;
+	@apply transition-all duration-200 ease-in-out h-5 w-5 rounded bg-transparent border-gray-400 text-amber-600 focus:ring-1 focus:outline-none  focus:ring-offset-2 focus:ring-amber-600;
 }
 
 .btn-primary {
-	@apply btn bg-amber-600 text-white ;
+	@apply btn primary-color ;
 }
 
 .btn-secondary {
-	@apply btn ring-1 ring-gray-300  text-gray-600 dark:ring-0 dark:bg-gray-700 dark:text-white ;
+	@apply btn secondary-color ;
 }
+
 
 .chips {
 	@apply btn py-2 px-4 rounded-full flex items-center space-x-1 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white;
@@ -85,7 +103,7 @@ input[type="checkbox"] {
 }
 
 .form-control {
-	@apply text-left rounded-lg outline-none p-2 border border-gray-300 dark:border-gray-700 bg-transparent focus:outline-none focus:bg-white dark:focus:bg-gray-700 focus:border-amber-600 dark:focus:border-amber-600;
+	@apply text-left rounded-lg outline-none p-2 border-2 border-gray-300 dark:border-gray-700 bg-transparent focus:outline-none focus:border-transparent focus:bg-white dark:focus:bg-gray-700 focus:ring-2 focus:ring-amber-600;
 }
 
 .container-placeholder {

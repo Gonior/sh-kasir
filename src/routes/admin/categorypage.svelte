@@ -16,7 +16,6 @@
 	import keyEventHandler from '@lib/utils/keyEventHandler'
 	import CategoryFormModal from "@/lib/components/modal/categoryFormModal.svelte"
 	import Popover from "@/lib/components/popover.svelte";
-
 	import Printer from "@/lib/controller/printer.controller"
 	const category = new Category()
 	const printer = new Printer()
@@ -134,25 +133,29 @@
 			{#if paginateItems.length > 0}
 			<table id="table-content" class="text-gray-500 dark:text-gray-300" style="scrollbar-gutter: stable;" >
 				{#each paginateItems as category}
-					<tr id={category._id} class="tr-item item" tabindex="0" >
+					<tr id={category._id} class="tr-item item relative" tabindex="0" >
 						<td class="p-2 text-center w-12"></td>
 						<td class="p-2">{category.name}</td>
 						<td class="p-2 w-2/5 text-center">
-
 							{#if category.printer.length > 0 }
 							<div class="flex flex-col space-y-1 max-w-max mx-auto">
 								{#each category.printer as id  }
-								<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1" placement="left">
-									<svelte:fragment slot="button">{printer.findPrinter(id)?.displayName}</svelte:fragment>
-
-									<svelte:fragment slot="content">
-										{#if printer.findPrinter(id).name}
-										<span class="font-bold">{printer.findPrinter(id).name}</span>
-										{:else}
-										<span class="text-gray-500 dark:text-gray-500 font-semibold whitespace-nowrap">--Printer tidak dikonfigurasi--</span>
-										{/if}
-									</svelte:fragment>
-								</Popover>
+									<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1" placement="left">
+										<svelte:fragment slot="button">{printer.findPrinter(id)?.displayName}</svelte:fragment>
+										<svelte:fragment slot="content">
+											{#if printer.findPrinter(id).name}
+											<div class="flex space-x-1 items-center">
+												<Icon name="printer" class="h-6 w-6"/>
+												<span class="font-bold">{printer.findPrinter(id).name}</span>
+											</div>
+											{:else}
+											<div class="flex flex-col">
+												
+												<span class="text-red-600 font-bold">--Printer Tidak Dikonfigurasi--</span>
+											</div>
+											{/if}
+										</svelte:fragment>
+									</Popover>
 								{/each}
 							</div>
 							{:else}

@@ -73,6 +73,15 @@ class Menu implements IModel.IClass<IModel.Menu> {
 		})
 		return result
 	}
+	
+	sortMenuByIdCategory = (arrayCategoryId : string[] = []) : IModel.Menu[] => {
+		// let result : IModel.Menu[] = []
+		// this.menus.forEach(menu => {
+		// 	if((menu.category as IModel.Category)._id)
+		// 	result.push()
+		// })
+		return this.menus.filter(menu => arrayCategoryId.indexOf((menu.category as IModel.Category)._id) !== -1)
+	}
 
     static update = async (_id: string | number, payload: IModel.Menu) : Promise<boolean> => {
         try {

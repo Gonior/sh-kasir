@@ -8,9 +8,9 @@ export const NAME_CONFIG_PRINTER = 'config/printer.json'
 
 export const getFilePath = (nameOfFile : string) => {
 	let result : string
-	if (import.meta.env.DEV)
-		result = path.join(process.cwd(), `/resources/app.asar.unpacked/resources/${nameOfFile}`)
-	else result = path.join(process.cwd(), `resources/${nameOfFile}`)
+	if (import.meta.env.PROD)
+	result = path.join(process.cwd(), `/resources/app.asar.unpacked/resources/${nameOfFile}`)
+	else result = result = path.join(process.cwd(), `resources/${nameOfFile}`)
 	return result
 }
 

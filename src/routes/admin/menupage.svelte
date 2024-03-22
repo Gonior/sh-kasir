@@ -2,8 +2,8 @@
 	import { onMount } from "svelte";
 	import { dragscroll } from "@svelte-put/dragscroll";
 	import { paginate } from 'svelte-paginate'
-	import Menu from '@lib/controller/menu.controller'
 	import Loading from "@/lib/components/state/loading.svelte";
+	import Popover from '@components/popover.svelte'
 	import Title from "@/lib/components/navbar/title.svelte";
 	import Pagination from "@/lib/components/pagination.svelte";
 	import TableHeader from "@/lib/components/tableHeader.svelte";
@@ -15,10 +15,14 @@
 	import keyEventHandler from '@lib/utils/keyEventHandler'
 	import {convertToRupiah} from '@lib/utils/myFunct'
 	import MenuFormModal from "@/lib/components/modal/menuFormModal.svelte";
-
-	// import Popover from "@/lib/components/popover.svelte";
+	import Menu from '@lib/controller/menu.controller'
+	import Category from "@/lib/controller/category.controller"
+	import Printer from '@lib/controller/printer.controller'
+	import { scale } from "svelte/transition"
 
 	const menu = new Menu()
+	const categoryController = new Category()
+	const printerController = new Printer()
 
 	let isLoadingData = false
 	let openFormModal = false
@@ -26,18 +30,24 @@
 	let keyword = ""
 	let currentPage = 1
 	let openConfirmModal = false
+
 	let selectedMenu : IModel.Menu = {
 		_id: "",
 		name: "",
 		upc : undefined,
 		price : 0
-
 	}
+
+	let selectedCategory : string[] = []
 	let pageSize = 50
 	let listMenu : IModel.Menu[] = []
 	let listMenuDuplicate : IModel.Menu[] = []
-
+	let listMenuDuplicateFilter :IModel.Menu[] = []
+	let listCategories : IModel.Category[] = []
+	
 	$: paginateItems = paginate({items : listMenu, pageSize, currentPage}) as IModel.Menu[]
+	$: listMenuDuplicateFilter = [...listMenuDuplicate.filter(menu => selectedCategory.indexOf((menu.category as IModel.Category)._id) !== -1)]
+	$: listMenu = [...listMenuDuplicateFilter]
 
 	onMount( async () => {
 		await loadData()
@@ -46,10 +56,15 @@
 	const loadData = async () => {
 		// await printer.load()
 		isLoadingData = true
+		await categoryController.load()
+		await printerController.load()
 		let isSuccess = await menu.load()
 		if( isSuccess ) {
+			listCategories = categoryController.getData()
 			listMenu = menu.getData()
 			listMenuDuplicate = listMenu
+			listMenuDuplicateFilter = listMenu
+			selectedCategory = [...listCategories.map(c => c._id)] || []
 			isValid = true
 		}
 		keyword = ""
@@ -58,7 +73,7 @@
 	}
 
 	const handleSearch = () => {
-		listMenu = [...searchHandler(keyword,['name'], listMenuDuplicate)]
+		listMenu = [...searchHandler(keyword,['name'], listMenuDuplicateFilter)]
 	}
 
 	function handleKeydown({ keyCode }) {
@@ -112,10 +127,13 @@
 		openFormModal = e.detail.openModal
 	}
 
+	const toggleAll = (e) => {
+		selectedCategory = e.target?.checked ? [...listCategories.map(c => c._id)] : []
+	}
+
 </script>
 {#if openFormModal}
 	<MenuFormModal {...selectedMenu} on:close={handleClose} />
-	<!-- <CategoryFormModal {...selectedCategory} on:close={(e) => {openFormModal = e.detail, loadData()}}/> -->
 {/if}
 
 {#if openConfirmModal}
@@ -128,33 +146,94 @@
 	{#if isLoadingData}
 		<Loading  />
 	{:else if isValid}
-		<Title title="Kategori"/>
+		<Title title="Menu"/>
 		<div class="flex items-center justify-between">
-			<div class="relative w-1/2">
-				<input on:keyup={handleSearch} bind:value={keyword} type="text" class="form-control !pl-9 w-full placeholder:font-normal" placeholder="Cari Kategori.." />
-				<Icon name="search" class="h-6 w-6 absolute left-2 top-2 text-gray-500"/>
+			<div class="flex items-center space-x-2  w-1/2">
+				<div class="relative w-full">
+					<input on:keyup={handleSearch} bind:value={keyword} type="text" class="form-control !pl-9 w-full placeholder:font-normal" placeholder="Cari Kategori.." />
+					<Icon name="search" class="h-6 w-6 absolute left-2 top-2 text-gray-500"/>
+				</div>
+				<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700" placement="left">
+					<svelte:fragment slot="button" >
+						<div class="relative ">
+							<Icon name="filter" class="h-6 w-6"/>
+							{#key selectedCategory}
+							<div in:scale={{duration : 200}} class="w-5 h-5 flex items-center justify-center absolute bg-red-500 rounded-full -top-4 -right-4 text-white text-xs">
+								<span class="">{selectedCategory.length}</span>
+							</div>
+							{/key}
+							
+						</div>
+					</svelte:fragment>
+					
+					<svelte:fragment slot="content">
+						<p class="font-bold">Saring berdasarkan kategori</p>
+						<label for="semua" class="flex items-center space-x-1 py-1 text-base max-w-max"> 
+							<input id="semua" type="checkbox" on:change={toggleAll} name="printer" checked={listCategories.length === selectedCategory.length} value=semua />
+							<p class="">Semua</p>
+						</label>
+						{#each listCategories as lc}
+							<label for={lc._id} class="flex items-center space-x-1 py-1 text-base max-w-max">
+								<input id={lc._id} type="checkbox" name="printer" bind:group={selectedCategory} value={lc._id} />
+								<p class="">{lc.name}</p>
+							</label>
+						{/each}
+					</svelte:fragment>
+				</Popover>
+				
 			</div>
-			<div>
+			<div class="">
 				<button tabindex="0" on:click={() => {selectedMenu={...{_id : "", name : "", category :null, price : 0}};openFormModal = true}} class="btn-primary flex items-center space-x-1">
 					<Icon name="plus" class="h-6 w-6" stroke={3}/>
 					<span>Tambah Menu</span>
 				</button>
 			</div>
+			
 		</div>
 		<Pagination totalItems={listMenu.length} {currentPage} {pageSize} on:setpage={(e) => {currentPage = e.detail.page}} on:setPageSize={(e) => pageSize = e.detail} />
 		<TableHeader marginRight="mr-2.5" textSize={'text-lg'} {tableHeaderItems} />
-		<div on:keydown={handleKeydown} tabindex="0" role="button" class="flex-1 overflow-y-auto overflow-x-hidden scrollbar flex flex-col w-full" use:dragscroll={{axis :'y', cursor : false}}>
+		<div on:keydown={handleKeydown} tabindex="0" role="button" class="flex-1 overflow-y-auto overflow-x-hidden flex flex-col w-full" use:dragscroll={{axis :'y', cursor : false}}>
 			{#if paginateItems.length > 0}
 			<table id="table-content" class="text-gray-500 dark:text-gray-300" style="scrollbar-gutter: stable;" >
 				{#each paginateItems as menu}
-					<tr id={menu._id} class="tr-item item" tabindex="0" >
+					<tr id={menu._id} class="tr-item item relative	" tabindex="0" >
 						<td class="p-2 text-center w-12"></td>
 						<td class="p-2 ">{menu.name}</td>
 						<td class="p-2 w-36 text-center">{convertToRupiah(menu.price)}</td>
 						<td class="p-2 w-16 text-center ">{menu.upc ? menu.upc : '-'}</td>
-						<td class="p-2 w-1/4 text-center">
+						<td class="p-2 w-1/4 text-center ">
 							{#if menu.category && typeof menu.category === 'object' && Object.keys(menu.category).length > 0 && Object.hasOwn(menu.category, 'name')}
-							<button class="btn-secondary !px-4 !py-1 rounded-lg ">{menu.category.name}</button>
+							<div class="flex flex-col space-y-1 max-w-max mx-auto">
+								<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1 justify-center items-center" placement="left">
+									<svelte:fragment slot="button" >{menu.category?.name}</svelte:fragment>
+									<svelte:fragment slot="content">
+										{#if menu.category.printer.length > 0}
+											{#each menu.category.printer as printerId}
+												{#if printerController.findPrinter(printerId)}
+													<div class="flex items-center space-x-1 justify-start my-1">
+														<Icon name='printer' class="!w-10 !h-10"/>
+														<div class="text-left">
+															<p class="font-bold">{printerController.findPrinter(printerId)?.displayName}</p>
+															{#if printerController.findPrinter(printerId)?.name}
+															<p class="-mt-1">{printerController.findPrinter(printerId)?.name}</p>
+															{:else}
+															<span class="text-red-600 font-bold -mt-1">Printer Tidak Dikonfigurasi</span>
+															{/if}
+														</div>
+													</div>
+												{:else}
+												<div class="flex flex-col text-left">
+													<span class="text-gray-500">Tidak ada printer tambahan</span>
+												</div>
+												{/if}
+
+											{/each}
+										{:else} 
+											<span class="text-gray-500">Tidak ada printer tambahan</span>
+										{/if}
+									</svelte:fragment>
+								</Popover>
+							</div>
 							{:else}
 							<span>--tidak ada kategori--</span>
 							{/if}

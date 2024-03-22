@@ -69,7 +69,7 @@
 			<h1>Printer Tambahan</h1>
 			<div class="space-y-1">
 				{#each listPrinter as lsp}
-					<label for={lsp._id} class="flex items-center space-x-2 ">
+					<label for={lsp._id} class="flex items-center space-x-1 max-w-max ">
 						<input id={lsp._id} type="checkbox" name="printer" bind:group={printer} value={lsp._id} />
 						<p class="">{lsp.displayName} {lsp.name ? `(${lsp.name})` : ''}</p>
 					</label>

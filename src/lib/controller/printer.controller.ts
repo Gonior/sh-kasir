@@ -75,10 +75,18 @@ class Printer implements IModel.IClass<IModel.Printer> {
 	}
 
 
-
-	public isValid = (name : string) : boolean => {
+	isValid = (name : string) : boolean => {
 		if (!name) return false
 		return this.getListInstalledPrinter().find(ipr => ipr.name === name) ? true : false
+	}
+
+	validatePrinterId = (id : string) : IModel.Printer => {
+		let printer = this.listPrinter.find(p => p._id === id)
+		if(printer) {
+			let isInstalled = this.getListInstalledPrinter().find(ipr => ipr.name === printer.name)
+			if( isInstalled ) return printer
+		}
+		return null
 	}
 
 

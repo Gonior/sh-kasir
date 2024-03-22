@@ -13,7 +13,7 @@
 <div class="flex items-center justify-between my-2">
 	<div>
 		<span class="text-gray-500">Jumlah perhalaman</span>
-		<select bind:value={pageSize} name="" id="" class="form-control !py-1">
+		<select bind:value={pageSize} name="" id="" class="form-control !py-1 w-16">
 			{#each PAGE_SIZE as page}
 				<option value="{page.value}">{page.value}</option>
 			{/each}

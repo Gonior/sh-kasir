@@ -3,6 +3,7 @@
 	import toast from '@teddy-error/svelte-french-toast';
 	import {server} from '@store/index'
 	import type { IModel } from '@lib/types'
+	import { slide } from 'svelte/transition'
 	let isLoading = false
 	let isValid = false
 	let ipAddress = 'localhost'
@@ -62,30 +63,31 @@
 		<h1 class="font-bold">Konfigurasi Server</h1>
 		<h5 class="text-gray-500 dark:text-gray-400">Menghubungkan dengan komputer lain.</h5>
 	</div>
-	<div class="flex flex-col ">
+	<div class="flex flex-col w-1/3">
 		<h1 class="font-bold">Jenis Sambungan</h1>
 		<div class="flex flex-col">
 			<label>
 				<input bind:group={radioValue} name="typeOfNetwork" on:change={radioOnChange} type="radio" value="local"/> Lokal
 			</label>
-			<span class="text-gray-500 dark:text-gray-400 ml-4 -mt-1">Tidak terhubung dengan Komputer lain</span>
+			<span class="text-gray-500 dark:text-gray-400 ml-5 -mt-1">Tidak terhubung dengan Komputer lain</span>
 		</div>
 		<div class="flex flex-col">
 			<div class="flex flex-col">
 				<label>
-					<input  bind:group={radioValue} name="typeOfNetwork" on:change={radioOnChange} type="radio" value="network"/> Komputer lain
+					<input bind:group={radioValue} name="typeOfNetwork" on:change={radioOnChange} type="radio" value="network"/> 
+					<span>Komputer lain</span>
 				</label>
-				<span class="text-gray-500 dark:text-gray-400 ml-4 -mt-1">Menghubungkan dengan komputer lain</span>
+				<span class="text-gray-500 dark:text-gray-400 ml-5 -mt-1">Menghubungkan dengan komputer lain</span>
 			</div>
-			<div>
-				<div class="{radioValue === 'network' ? 'flex' : 'hidden'} flex-col ml-4 mt-3">
-					<span class="text-sm text-gray-500 dark:text-gray-200">Masukan IP Address Komputer Server</span>
-					<div class="flex space-x-1 items-center">
-						<input bind:this={inputEl} readonly={isLoading} type="text" class="form-control" placeholder="192.xxx.xxx.xxx" bind:value={ipAddress}/>
-						<button disabled={isLoading} on:click={() => testConnection()} class="btn-secondary ">Tes Koneksi</button>
-					</div>
+			{#if radioValue === 'network'}
+			<div transition:slide={{ axis : 'y', duration : 200 }} class="flex-col ml-4 mt-3">
+				<span class="text-sm text-gray-500 dark:text-gray-200">Masukan IP Address Komputer Server</span>
+				<div class="flex space-x-1 items-center">
+					<input bind:this={inputEl} readonly={isLoading} type="text" class="form-control" placeholder="192.xxx.xxx.xxx" bind:value={ipAddress}/>
+					<button disabled={isLoading} on:click={() => testConnection()} class="btn-secondary ">Tes Koneksi</button>
 				</div>
 			</div>
+			{/if}
 		</div>
 		<div class="flex justify-end mt-5 ">
 			<button on:click={() => handleSave()} disabled={!isValid||isLoading} class="btn-primary !px-5 !py-3 flex items-center">
