@@ -1,19 +1,23 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import {slide} from 'svelte/transition'
-	import {IModel} from '@lib/types'
+	import {EPrinterID, EPrinterType, IModel} from '@lib/types'
 	import Toogle from '@components/toggle.svelte'
 	import Printer from '@/lib/controller/printer.controller'
+	import {Constant} from '@lib/types'
+
+	const printer = new Printer()
+
 	let listInstalledPrinter = []
-	let mainPrinter : IModel.IPrinter = {
-		name: '',
-		_id: '',
-		type: 'main'
+	let mainPrinter : IModel.IPrinter ={
+		name: "",
+		_id: EPrinterID.MAIN_PRINTER,
+		type: EPrinterType.MAIN
 	}
 	let copyPrinter : IModel.IPrinter = {
-		name : '',
-		_id : '',
-		type : 'copy'
+		name: "",
+		_id: EPrinterID.COPY_PRINTER,
+		type: EPrinterType.COPY
 	}
 	let listAddonPrinterSkeleton :IModel.IPrinter[]= []
 	let isChange = false
@@ -21,7 +25,7 @@
 	let useCopyPrinter = false
 	let useAddsPrinter = false
 
-	const printer = new Printer()
+	
 	onMount(async() => {
 		let isSuccess = await printer.load()
 		if (isSuccess) {
@@ -63,6 +67,11 @@
 		isChange = true
 	}
 
+	const handleTestPrint = (p : IModel.IPrinter) => {
+		Printer.print(p, Constant.TEST_BILL_PRINT, {logo : true, storeInfo : true, summarize : true, price : true, whiteSpace : false} )
+		// Printer.print(p, Constant.TEST_BILL_PRINT, {whiteSpace : true} )
+	}
+
 
 </script>
 
@@ -97,7 +106,7 @@
 			<button
 				class="btn-secondary"
 				disabled={isLoading || !mainPrinter.name}
-				on:click={() => Printer.testPrint(mainPrinter.name)}>Test Print</button
+				on:click={() => handleTestPrint(mainPrinter)}>Test Print</button
 			>
 		</div>
 	</div>
@@ -121,7 +130,7 @@
 						<option value={printer.name}>{printer.displayName}</option>
 					{/each}
 				</select>
-				<button class="btn-secondary" disabled={isLoading || !copyPrinter.name} on:click={() => Printer.testPrint(copyPrinter.name)}>Test Print</button>
+				<button class="btn-secondary" disabled={isLoading || !copyPrinter.name} on:click={() => handleTestPrint(copyPrinter)}>Test Print</button>
 			</div>
 			{/if}
 		</div>
@@ -155,7 +164,7 @@
 								</select>
 							</div>
 						</div>
-						<button class="btn-secondary" disabled={isLoading || !lpa.name} on:click={() => Printer.testPrint(lpa.name)}>Test Print</button>
+						<button class="btn-secondary" disabled={isLoading || !lpa.name} on:click={() => handleTestPrint(lpa)}>Test Print</button>
 					</div>
 					{/each}
 				</div>

@@ -1,3 +1,4 @@
+import type { IModel } from ".."
 
 
 export const TEMPLATE_NOTE = [
@@ -116,3 +117,73 @@ export const DEFAULT_FORMAT_SORTING = [
 export const DEFAULT_PAGE_SIZE = 10
 
 export const DEFAULT_CATEGORY_ID = 'defaultcategory'
+
+export const TEST_BILL_PRINT : IModel.IBill = {
+	_id: "",
+	status: "simpan",
+	
+	storeInfo: {
+		name: "Nama Toko Anda",
+		address: "Jl. Kita Masih Panjang No XX  ",
+		phone: "021xxxxxxxx",
+		mobilePhone : '081xxxxxxx',
+		footerNote: "TERIMAKASIH"
+	},
+	billInfo: {
+		customer : "Test Print #1",
+		date : '23-03-2024 00:01',
+		invoice : '#202303230000',
+		user : 'Kasir'
+	},
+	items: [
+		{
+			_id : 'menu-1',
+			name : 'ITEM 1',
+			printed : false,
+			price : 10000,
+			qty : 1,
+			total : 10000,
+		},
+		{
+			_id : 'menu-2',
+			name : 'ITEM 2',
+			printed : false,
+			price : 5000,
+			qty : 2,
+			total : 10000,
+		},
+		{
+			_id : 'menu-3',
+			name : 'ITEM 3',
+			printed : false,
+			price : 15000,
+			qty : 2,
+			total : 30000,
+		},
+		{
+			_id : 'note-3',
+			name : 'Catatan 1',
+			printed : false,
+			forId : 'menu-3'
+		},
+		{
+			_id : 'menu-4',
+			name : 'ITEM 4',
+			printed : false,
+			price : 10000,
+			qty : 1,
+			total : 10000,
+		},
+	],
+	summarize: {
+		cash: 100000,
+		subtotal: 60000,
+		discount: undefined,
+		tax: undefined,
+		downpayment: 0,
+		change: 40000,
+		grandtotal: 60000
+	},
+	createAt: undefined,
+	updateAt: undefined
+} as const

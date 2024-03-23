@@ -1,9 +1,10 @@
 import {ThermalPrinter, BreakLine, PrinterTypes} from 'node-thermal-printer'
 import type { IModel } from '../types'
-import logo from '../../../../resources/logo.png'
+import logo from '../../../../resources/logo.png?asset'
 import {isValidObject, convertToRupiah} from '../utils'
-import nodePrinter, { type PrinterDetails } from '@woovi/node-printer'
+import nodePrinter from '@woovi/node-printer'
 import child_process from 'child_process'
+
 import util from 'util'
 const exec = util.promisify(child_process.exec);
 class Printer {
@@ -18,7 +19,7 @@ class Printer {
 
     private initPrinter = (printer : IModel.IPrinter) => {
         let thermalPrinter = new ThermalPrinter({
-            type : PrinterTypes.EPSON,
+            // type : PrinterTypes.EPSON,
             interface : printer.connectivity !== "network"? `printer:${printer.name}` : `tcp://${printer.ipAdress}`,
             removeSpecialCharacters : false,
             driver : nodePrinter,
@@ -44,7 +45,6 @@ class Printer {
             if(data.storeInfo.mobilePhone)
             this._thermalPrinter.println(`No. Hp. ${data.storeInfo.mobilePhone}`)
             this._thermalPrinter.drawLine()
-        
         }
 
         if(isValidObject(data.billInfo)) {
@@ -66,7 +66,6 @@ class Printer {
         let totalitems = 0
         for (const item of data.items) {
             if(isValidObject(item)) {
-                
                 if (Object.hasOwn(item, 'qty') && Object.hasOwn(item, 'price') && Object.hasOwn(item, 'total')) {
                     if(options.price) {
                         this._thermalPrinter.println(`${item.qty} x ${item.name}`)
@@ -84,7 +83,8 @@ class Printer {
 
         if(totalitems) {
             this._thermalPrinter.alignCenter()
-            this._thermalPrinter.println(`${totalitems}`)
+            this._thermalPrinter.println(`TOTAL ITEM ${totalitems}`)
+            this._thermalPrinter.drawLine()
             this._thermalPrinter.alignLeft()
         }
         
@@ -96,8 +96,8 @@ class Printer {
                 else str = 'DISKON'
                 this._thermalPrinter.leftRight(str, `-${convertToRupiah(data.summarize?.discount?.value)}`)
             }
-            if (data.summarize.tax.checked && isValidObject(data.summarize.tax) && data.summarize.tax.value) this._thermalPrinter.leftRight(`${data.summarize.tax.name} ${data.summarize.tax.value}%`, `${convertToRupiah(data.summarize.tax.value)}`)
-            else if (data.summarize.tax.value) this._thermalPrinter.leftRight(`Pajak`, `${convertToRupiah(data.summarize.tax.value)}`)
+            if (isValidObject(data.summarize.tax) && data.summarize.tax.checked && data.summarize.tax.value) this._thermalPrinter.leftRight(`${data.summarize.tax.name} ${data.summarize.tax.value}%`, `${convertToRupiah(data.summarize.tax.value)}`)
+            else if (isValidObject(data.summarize.tax) && data.summarize.tax.value) this._thermalPrinter.leftRight(`Pajak`, `${convertToRupiah(data.summarize.tax.value)}`)
             if (data.summarize.downpayment) this._thermalPrinter.leftRight('DP', `-${convertToRupiah(data.summarize.downpayment)}`)
             this._thermalPrinter.drawLine()
             this._thermalPrinter.bold(true)
@@ -114,6 +114,8 @@ class Printer {
             this._thermalPrinter.print(data.storeInfo.footerNote)
         }
 
+        this._thermalPrinter.cut()
+        this._thermalPrinter.getStatus()
         try {
 			let status = await this._thermalPrinter.execute({ waitForResponse: true , docname : data.billInfo.invoice})
 			return {printer : this._printer, status}

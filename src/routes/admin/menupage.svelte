@@ -3,13 +3,14 @@
 	import { dragscroll } from "@svelte-put/dragscroll";
 	import { paginate } from 'svelte-paginate'
 	import Loading from "@/lib/components/state/loading.svelte";
-	import Popover from '@components/popover.svelte'
+	import Popover from '@/lib/components/popover/popover.svelte'
 	import Title from "@/lib/components/navbar/title.svelte";
 	import Pagination from "@/lib/components/pagination.svelte";
 	import TableHeader from "@/lib/components/tableHeader.svelte";
 	import ConfirmModal from "@/lib/components/modal/confirmModal.svelte";
 	import Errorstate from "@/lib/components/state/errorstate.svelte";
 	import Icon from "@/lib/components/Icon.svelte";
+	import PrinterComponent from "@/lib/components/printerComponent/printerComponent.svelte";
 	import { IModel } from "@/lib/types";
 	import searchHandler from "@/lib/utils/searchHandler"
 	import keyEventHandler from '@lib/utils/keyEventHandler'
@@ -19,6 +20,7 @@
 	import Category from "@/lib/controller/category.controller"
 	import Printer from '@lib/controller/printer.controller'
 	import { scale } from "svelte/transition"
+	import { isValidObject } from "@/lib/utils"
 
 	const menu = new Menu()
 	const categoryController = new Category()
@@ -203,38 +205,23 @@
 						<td class="p-2 w-36 text-center">{convertToRupiah(menu.price)}</td>
 						<td class="p-2 w-16 text-center ">{menu.upc ? menu.upc : '-'}</td>
 						<td class="p-2 w-1/4 text-center ">
-							{#if menu.category && typeof menu.category === 'object' && Object.keys(menu.category).length > 0 && Object.hasOwn(menu.category, 'name')}
-							<div class="flex flex-col space-y-1 max-w-max mx-auto">
-								<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1 justify-center items-center" placement="left">
-									<svelte:fragment slot="button" >{menu.category?.name}</svelte:fragment>
-									<svelte:fragment slot="content">
-										{#if menu.category.printer.length > 0}
-											{#each menu.category.printer as printerId}
-												{#if printerController.findPrinter(printerId)}
-													<div class="flex items-center space-x-1 justify-start my-1">
-														<Icon name='printer' class="!w-10 !h-10"/>
-														<div class="text-left">
-															<p class="font-bold">{printerController.findPrinter(printerId)?.displayName}</p>
-															{#if printerController.findPrinter(printerId)?.name}
-															<p class="-mt-1">{printerController.findPrinter(printerId)?.name}</p>
-															{:else}
-															<span class="text-red-600 font-bold -mt-1">Printer Tidak Dikonfigurasi</span>
-															{/if}
-														</div>
-													</div>
-												{:else}
-												<div class="flex flex-col text-left">
-													<span class="text-gray-500">Tidak ada printer tambahan</span>
-												</div>
-												{/if}
-
-											{/each}
-										{:else} 
-											<span class="text-gray-500">Tidak ada printer tambahan</span>
-										{/if}
-									</svelte:fragment>
-								</Popover>
-							</div>
+							{#if isValidObject(menu.category) && Object.hasOwn(menu.category,'name')}
+								<div class="flex flex-col space-y-1 max-w-max mx-auto">
+									<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1 justify-center items-center" placement="left">
+										<svelte:fragment slot="button" >{menu.category.name}</svelte:fragment>
+										<svelte:fragment slot="content">
+											{#if printerController.findPrinterByMenu(menu).length > 0}
+												{#each menu.category.printer as printerId}
+													{#if printerController.findPrinterById(printerId)}
+														<PrinterComponent printer={printerController.findPrinterById(printerId)} />
+													{/if}
+												{/each}
+											{:else}
+											<span class="text-gray-500 -mt-1">--Tidak ada printer Tambahan--</span>
+											{/if}
+										</svelte:fragment>
+									</Popover>
+								</div>
 							{:else}
 							<span>--tidak ada kategori--</span>
 							{/if}

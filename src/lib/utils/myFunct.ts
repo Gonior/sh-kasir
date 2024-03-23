@@ -103,9 +103,5 @@ export const removeDuplicates = (array) => {
 	return newArray
 }
 
-export const isValidObject = (obj : any) : boolean => {
-    if (obj && typeof obj === 'object' && Object.keys(obj).length > 0) return true
 
-    return false
-}
 

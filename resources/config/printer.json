@@ -1,1 +1,1 @@
-[{"name":"Makanan","_id":"copy-pr","type":"copy","displayName":"Printer Rekap Pesanan"}]
+[{"name":"Kasir 79","_id":"main-pr","type":"main","displayName":"Printer Kasir"},{"name":"Makanan","_id":"copy-pr","type":"copy","displayName":"Printer Rekap Pesanan"},{"_id":"addon-pr-1","name":"Minuman","type":"addon","displayName":"Printer Tambahan 1"},{"_id":"addon-pr-2","name":"Dapur","type":"addon","displayName":"Printer Tambahan 2"}]

@@ -20,3 +20,20 @@ export enum EEndPoint {
 	ORDER_BATCH = '/order/batch'
 }
 
+export enum EPrinterType {
+	MAIN = 'main',
+	COPY = 'copy',
+	ADDON = 'addon'
+}
+
+export enum EPrinterID {
+	MAIN_PRINTER = 'main-pr',
+	COPY_PRINTER = 'copy-pr',
+	ADDON_PRINTER = 'addon-pr-'
+}
+
+export enum EPrinterDisplayName {
+	MAIN_PRINTER = 'Printer Kasir',
+	COPY_PRINTER = 'Printer Rekap Pesanan',
+	ADDON_PRINTER = 'Printer Tambahan '
+}
