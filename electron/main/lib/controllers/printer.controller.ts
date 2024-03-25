@@ -19,7 +19,7 @@ class Printer {
 
     private initPrinter = (printer : IModel.IPrinter) => {
         let thermalPrinter = new ThermalPrinter({
-            // type : PrinterTypes.EPSON,
+            type : PrinterTypes.EPSON,
             interface : printer.connectivity !== "network"? `printer:${printer.name}` : `tcp://${printer.ipAdress}`,
             removeSpecialCharacters : false,
             driver : nodePrinter,
@@ -32,25 +32,50 @@ class Printer {
     }
 
     print = async (data : IModel.IBill, options? : IModel.IConfigPrinter) => {
+
+        /** 
+         * Mencetak logo 
+        */
         if (options.logo) {
             this._thermalPrinter.alignCenter()
-            await this._thermalPrinter.printImage(logo)
+            await this._thermalPrinter.printImage(logo).catch(err => console.log(err))
         }
+
+        /**
+         * mencetak informasi toko, contoh :
+         *          NAMA TOKO ANDA
+         *    JL. KITA MASIH PANJANG NO.X
+         *       Telp. 021-XXXXXXXXX
+         *      No. Hp. 081xxxxxxxxxx
+         * ------------------------------------
+         */
         if (options.storeInfo && isValidObject(data.storeInfo)) {
             this._thermalPrinter.newLine()
             this._thermalPrinter.println(data.storeInfo.name)
             this._thermalPrinter.setTextSize(0, 0)
+            if(data.storeInfo.address)
             this._thermalPrinter.println(data.storeInfo.address)
+            if(data.storeInfo.phone)
             this._thermalPrinter.println(`Telp. ${data.storeInfo.phone}`)
             if(data.storeInfo.mobilePhone)
             this._thermalPrinter.println(`No. Hp. ${data.storeInfo.mobilePhone}`)
             this._thermalPrinter.drawLine()
         }
 
+        // mencetak informasi Bill
+        //
+        // #202425030001
+        // TANGGAL         25-03-2024 14:00
+        // KASIR                    KASIR 1
+        // ---------------------------------
+        //             PELANGGAN
+        //                 7
+        // ---------------------------------
+
         if(isValidObject(data.billInfo)) {
             this._thermalPrinter.alignLeft()
+            this._thermalPrinter.println(data.billInfo.invoice)
             this._thermalPrinter.leftRight('TANGGAL', data.billInfo.date)
-            this._thermalPrinter.leftRight('INVOICE', data.billInfo.invoice)
             this._thermalPrinter.leftRight('KASIR', data.billInfo.user as string)
             this._thermalPrinter.drawLine()
             this._thermalPrinter.alignCenter()
@@ -88,6 +113,15 @@ class Printer {
             this._thermalPrinter.alignLeft()
         }
         
+
+        // mencetak ringkasan pembayaran
+        //
+        // subtotal         25-03-2024 14:00
+        // KASIR                    KASIR 1
+        // ---------------------------------
+        //             PELANGGAN
+        //                 7
+        // ---------------------------------
         if (options.summarize && isValidObject(data.summarize)) {
             this._thermalPrinter.leftRight('SUBTOTAL', `${convertToRupiah(data.summarize.subtotal)}`)
             if (isValidObject(data.summarize.discount) && data.summarize.discount.value !== 0) {
@@ -151,12 +185,22 @@ class Printer {
         return false
     }
 
-    getPrinterJobs = () : [] => {
-        let printer : {jobs : []} = this._nodePrinter.getPrinter(this._printer.name)
-        return printer.jobs
+    getPrinterJobs = () : any[] => {
+        let printer : {jobs : unknown} = this._nodePrinter.getPrinter(this._printer.name)
+        /**
+         * merubah properti nodepriter.jobs {[]|null|undefined} menjadi []
+         */
+        if (printer && printer.jobs && typeof printer.jobs === 'object' && Array.isArray(printer.jobs)) return printer.jobs
+        
+        
+        return []
     }
+
+    
     
     pingHostname = async () : Promise<boolean> => {
+        
+        
         try {
             
             let ipAddress = this.getIpAdress()
@@ -165,12 +209,12 @@ class Printer {
                 const {stdout} = await exec(`ping -n 5 ${ipAddress}`);
                 if(stdout && stdout.toString().includes('bytes')) return true
             }
-          return false
+          
         } catch (err) {
-          // console.log(err);
-          return false
+          console.log(err);
         }
-      }
+        return false
+    }
 
 }
 
