@@ -12,8 +12,8 @@
 	import Icon from "@/lib/components/Icon.svelte";
 	import {DEFAULT_PAGE_SIZE} from '@lib/types/constants'
 	import { IModel } from "@/lib/types";
-	import searchHandler from "@/lib/utils/searchHandler"
-	import keyEventHandler from '@lib/utils/keyEventHandler'
+	import searchHandler from "@/lib/utils/handler/searchHandler"
+	import keyEventHandler from '@/lib/utils/handler/keydownHandler'
 	import CategoryFormModal from "@/lib/components/modal/categoryFormModal.svelte"
 	import Popover from "@/lib/components/popover/popover.svelte";
 	import Printer from "@/lib/controller/printer.controller"

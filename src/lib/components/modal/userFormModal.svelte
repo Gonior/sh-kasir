@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Modal from '@/lib/components/modal/modal.svelte'
-	import { userSchema } from '@lib/utils/validator'
+	import { userSchema } from '@/lib/utils/logic/validator'
 	import User from '@lib/controller/user.controller'
 	import { focusTrap } from 'svelte-focus-trap'
 	import { createEventDispatcher, onMount } from 'svelte'

@@ -4,7 +4,7 @@
 	import Modal from './modal.svelte'
 	import ModalHeader from '../navbar/modalHeader.svelte'
 	import TextInput from '../forms/textInput.svelte';
-	import { categorySchema } from '@lib/utils/validator'
+	import { categorySchema } from '@/lib/utils/logic/validator'
 	import Category from '@lib/controller/category.controller'
 	import Printer from '@/lib/controller/printer.controller';
 	import { focusTrap } from 'svelte-focus-trap'

@@ -1,4 +1,4 @@
-function handleKeydown(keyCode : number, selector : string, cb?) {
+function keydownHandler(keyCode : number, selector : string, cb?) {
 	if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13) return
 	const current = <HTMLElement>document.activeElement
 
@@ -18,4 +18,4 @@ function handleKeydown(keyCode : number, selector : string, cb?) {
 	current?.blur()
 }
 
-export default handleKeydown
+export default keydownHandler

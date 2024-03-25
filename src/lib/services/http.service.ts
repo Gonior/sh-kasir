@@ -4,7 +4,7 @@ import { token, server } from "@lib/store";
 import { get } from 'svelte/store'
 // TYPES
 import { IService, EHttpMethod } from "@lib/types";
-import { httpErrorHandler } from "@lib/utils/httpErrorHandler";
+import {httpErrorHandler}  from "@/lib/utils";
 
 class HttpService {
 	private http: AxiosInstance;

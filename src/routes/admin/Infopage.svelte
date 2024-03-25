@@ -33,7 +33,7 @@
 	}
 
 	onMount(async () => {
-		let isSuccess = await store.load()
+		let isSuccess = await store.init()
 		if( isSuccess ) {
 			isValid = true
 			taxInfo = store.getTaxInfo()

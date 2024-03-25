@@ -1,7 +1,7 @@
 import toast from "@teddy-error/svelte-french-toast";
 import axios from "axios";
 
-export function httpErrorHandler(error) {
+function httpErrorHandler(error) {
 	if (axios.isAxiosError(error)) {
 	  //here we have a type guard check, error inside this if will be treated as AxiosError
 		const response = error?.response
@@ -35,3 +35,5 @@ export function httpErrorHandler(error) {
 	console.log(error)
 	return error
 }
+
+export default httpErrorHandler

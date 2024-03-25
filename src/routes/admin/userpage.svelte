@@ -14,8 +14,8 @@
 	import TableHeader from '@/lib/components/tableHeader.svelte';
 	import Pagination from '@/lib/components/pagination.svelte'
 	import { DEFAULT_PAGE_SIZE } from '@/lib/types/constants'
-	import searchHandler from '@lib/utils/searchHandler'
-	import keyEventHandler from '@lib/utils/keyEventHandler'
+	import searchHandler from '@/lib/utils/handler/searchHandler'
+	import keyEventHandler from '@/lib/utils/handler/keydownHandler'
 
 	const user = new User()
 	let keyword : string = ''

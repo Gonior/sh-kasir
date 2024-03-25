@@ -1,28 +1,4 @@
 
-import { createAvatar } from "@dicebear/core";
-import { thumbs } from "@dicebear/collection";
-import { theme } from "../store";
-
-
-export const convertToRupiah = (num : number = 0) => {
-	let rupiah = ''
-	let angkarev = num.toString().split('').reverse().join('')
-	for (let i = 0; i < angkarev.length; i++) if (i % 3 == 0) rupiah += angkarev.substr(i, 3) + '.'
-	return rupiah
-		.split('', rupiah.length - 1)
-		.reverse()
-		.join('')
-}
-export const handleSwitchTheme = (isDarkMode : boolean ) : void => {
-	if(isDarkMode) {
-		document.documentElement.classList.add('dark')
-		theme.set('dark')
-	} else {
-		document.documentElement.classList.remove('dark')
-		theme.set('light')
-	}
-}
-
 export const dateFormat = (date : Date, optDate :Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', weekday:'long', year:"numeric" }, optHours : Intl.DateTimeFormatOptions = { hour: '2-digit', minute: 'numeric', second:'numeric', hour12: false }) => {
 	const myDate = new Date(date)
 	let datestring: string
@@ -46,11 +22,7 @@ export const scrollToElement = async (elementId : string, options : ScrollIntoVi
 	el.scrollIntoView(options)
 }
 
-export const generateAvatar = (seed = "") => {
-	return createAvatar(thumbs, {
-		seed, radius:50, size : 64
-	}).toDataUriSync()
-}
+
 
 export const parsingDate = (array=[]) => {
 	return array.map((a) => {
@@ -88,20 +60,7 @@ export const isEqual = (obj1: { [x: string]: any; }, obj2: { [x: string]: any; }
 	return true
 }
 
-export const removeDuplicates = (array) => {
-	let newArray = []
-	let uniqueObject = {}
-	for (let i in array) {
-		if (array[i]) {
-			let _id = array[i]['_id']
-			uniqueObject[_id] = array[i]
-		}
-	}
-	for (let i in uniqueObject) {
-		newArray.push(uniqueObject[i])
-	}
-	return newArray
-}
+
 
 
 

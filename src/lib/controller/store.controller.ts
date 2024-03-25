@@ -2,19 +2,21 @@ import toast from '@teddy-error/svelte-french-toast';
 import {HttpService} from '@lib/services/http.service'
 import {IService, IModel} from '@lib/types'
 import { EEndPoint } from '@lib/types'
+import { isValidObject } from '../utils';
+
 const http = new HttpService()
 
-class Store implements IModel.IClass<IModel.Store> {
+class Store {
 
 	private taxInfo: IModel.ITax
 	private _id : string
 	private storeInfo : IModel.IStoreInfo
 	private bankInfo : IModel.IBank
 
-	async load(): Promise<boolean> {
+	async init(): Promise<boolean> {
 		try {
-			const response = await http.service().get<IService.IResponse<IModel.Store>>(EEndPoint.STORE);
-			if(response && response.success) {
+			const response = await http.service().get<{data : Store, success : boolean}>(EEndPoint.STORE);
+			if( isValidObject(response) && isValidObject(response.data)) {
 				this.taxInfo = response.data?.taxInfo
 				this._id = response.data?._id
 				this.storeInfo = response.data?.storeInfo
@@ -33,7 +35,7 @@ class Store implements IModel.IClass<IModel.Store> {
 				toast.success(response.message, {position : 'top-right'})
 			}
 		} catch(err) {
-			toast.error('ERROR: \nsee the console for informastion', {position : 'top-right'})
+			toast.error('ERROR: \nsee the console for information', {position : 'top-right'})
 			console.log(err)
 		}
 	};

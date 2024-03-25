@@ -1,7 +1,7 @@
 import toast from "@teddy-error/svelte-french-toast";
-import { IModel, EPrinterID, EPrinterDisplayName, EEndPoint, EPrinterType } from "../types";
+import { IModel, EPrinterID, EPrinterDisplayName, EPrinterType } from "../types";
 
-class Printer implements IModel.IClass<IModel.IPrinter> {
+class Printer {
 	private listInstalledPrinter : {name : string, displayName : string}[]= []
 	private listConfigPrinter :IModel.IPrinter[] = []
 
@@ -81,29 +81,29 @@ class Printer implements IModel.IClass<IModel.IPrinter> {
 		return null
 	}
 
-	findPrinterByCategory = (category : IModel.ICategory) : IModel.IPrinter[] => {
-		let result = []
-		if(category && category.printer && category.printer.length > 0) {
-			category.printer.forEach(printer => {
-				let findPrinter = this.getListConfigPrinterValidate().find((p) => p._id === printer)
-				if( findPrinter && this.isValid(findPrinter.name)) result.push(findPrinter)
-			})
-		}
+	// findPrinterByCategory = (category : IModel.ICategory) : IModel.IPrinter[] => {
+	// 	let result = []
+	// 	if(category && category.printer && category.printer.length > 0) {
+	// 		category.printer.forEach(printer => {
+	// 			let findPrinter = this.getListConfigPrinterValidate().find((p) => p._id === printer)
+	// 			if( findPrinter && this.isValid(findPrinter.name)) result.push(findPrinter)
+	// 		})
+	// 	}
 		
-		return result
-	}
+	// 	return result
+	// }
 
-	findPrinterByMenu = (menu : IModel.IMenu) : IModel.IPrinter[] => {
-		let result = []
-		if (menu && menu.category && menu.category.printer && menu.category.printer.length > 0) {
-			menu.category.printer.forEach(printer => {
-				let findPrinter = this.getListConfigPrinterValidate().find((p) => p._id === printer)
-				if( findPrinter && this.isValid(findPrinter.name)) result.push(findPrinter)
-			})
-		}
+	// findPrinterByMenu = (menu : IModel.IMenu) : IModel.IPrinter[] => {
+	// 	let result = []
+	// 	if (menu && menu.category && menu.category.printer && menu.category.printer.length > 0) {
+	// 		menu.category.printer.forEach(printer => {
+	// 			let findPrinter = this.getListConfigPrinterValidate().find((p) => p._id === printer)
+	// 			if( findPrinter && this.isValid(findPrinter.name)) result.push(findPrinter)
+	// 		})
+	// 	}
 		
-		return result
-	}
+	// 	return result
+	// }
 
 	validatePrinterId = (id : string) : IModel.IPrinter => {
 		let printer = this.getListConfigPrinterValidate().find(p => p._id === id)

@@ -1,4 +1,4 @@
-import {removeDuplicates} from './myFunct'
+import removeDuplicates from './removeDuplicateArrat'
 import {Constant} from '@lib/types'
 
 const letsSorting = (orders= [], format = Constant.DEFAULT_FORMAT_SORTING ) => {

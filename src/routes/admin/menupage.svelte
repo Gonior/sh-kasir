@@ -11,9 +11,9 @@
 	import Errorstate from "@/lib/components/state/errorstate.svelte";
 	import Icon from "@/lib/components/Icon.svelte";
 	import PrinterComponent from "@/lib/components/printerComponent/printerComponent.svelte";
-	import { IModel } from "@/lib/types";
+	import { IModel } from "@/l@/lib/utils/logic/searchHandler
 	import searchHandler from "@/lib/utils/searchHandler"
-	import keyEventHandler from '@lib/utils/keyEventHandler'
+	import keyEventHandler from '@/lib/utils/handler/keydownHandler'
 	import {convertToRupiah} from '@lib/utils/myFunct'
 	import MenuFormModal from "@/lib/components/modal/menuFormModal.svelte";
 	import Menu from '@lib/controller/menu.controller'

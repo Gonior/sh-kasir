@@ -6,6 +6,7 @@ type TStatus = 'simpan' | 'lunas' | 'arsip' | 'batal'
 export interface IBill {
     _id : string
     status : TStatus
+    invoice : string
     storeInfo : IStoreInfo,
     billInfo : IBillInfo,
     items : IItem[]
@@ -14,7 +15,6 @@ export interface IBill {
     updateAt : Date
 }
 export interface IBillInfo {
-    invoice : string,
     customer : string | number,
     date : string,
     user : string
