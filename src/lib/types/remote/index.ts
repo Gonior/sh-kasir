@@ -1,13 +1,6 @@
+import { IModel } from ".."
+
 type TAction = 'Membuat' | 'Menghapus' | 'Menambahkan' | 'Mengubah'
-
-export interface IUser {
-    _id : string,
-    name : string,
-    passcode : string
-	avatar? : string
-}
-
-export interface INewUser extends Omit<IUser, '_id' | 'avatar' > {}
 
 export interface IPrinter {
     _id : string
@@ -15,6 +8,14 @@ export interface IPrinter {
     type : 'main' | 'copy' | 'addon',
 	displayName : string
 }
+
+export interface IUser {
+    _id : string,
+    name : string,
+    passcode : string
+}
+
+export interface INewUser extends Omit<IUser, '_id' | 'avatar' > {}
 
 export interface ICategory {
     _id : string,
@@ -31,7 +32,52 @@ export interface IMenu {
     upc? : number
     category : string
 }
+
+export interface IItemMenu extends IMenu {
+    printed : boolean
+    qty : number
+    total : number
+}
+
+export interface IItemNote {
+    _id : string
+    name : string
+    forId : string
+    printed : boolean
+}
+
+export type IItem = IItemMenu | IItemNote
+
 export interface INewMenu extends Omit<IMenu, '_id'> {}
+
+export interface IBill {
+    _id : string
+    status : IModel.TStatus
+    storeInfo : IModel.IStoreInfo,
+    billInfo : IBillInfo,
+    items : IItem[]
+    summarize : ISummarize,
+    createAt : Date,
+    updateAt : Date
+}
+
+export interface IBillInfo {
+    customer : string | number,
+    date : string,
+    user : string,
+    invoice : string
+}
+
+
+export interface ISummarize {
+    subtotal : number,
+    discount : IModel.IDiscount,
+    tax : IModel.ITax,
+    downpayment : number,
+    cash : number,
+    change : number,
+    grandtotal : number
+}
 
 export interface Acitivity {
     _id?: string,
@@ -43,10 +89,19 @@ export interface Acitivity {
 
 export interface IRecord {
     action : TAction,
-    createdAt : Date,
     value : any
     prefix? : 'pesanan' | 'menu' | 'catatan' | string
     props? : string
     item? : 'pesanan' | string
 }
+
+export interface IConfigPrinter {
+    logo? : boolean,
+    storeInfo? : boolean,
+    whiteSpace? : boolean,
+    price? : boolean,
+    summarize? : boolean,
+}
+
+
 

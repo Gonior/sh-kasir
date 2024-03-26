@@ -8,14 +8,14 @@
 	// import typescriptLogo from '@assets/icons/typescript-plain.svg'
 	// import tailwindLogo from '@assets/icons/tailwindcss-mark.3c5441fc7a190fb1800d4a5c7f07ba4b1345a9c8.svg'
 	import ModalSwitchUser from '@components/modal/modalSwitchUser.svelte'
-	import {IModel} from '@lib/types'
+	import type { TPage } from '@lib/types'
 	import {page} from '@lib/store'
 	import Footer from "@components/footer.svelte"
 	import Navbar from "@components/navbar/navbar.svelte"
 	import SettingLayout from '@routes/settings/_layout.svelte'
 	let openModalSwithUser = false
 	let openSetting = false
-	let loginInto : IModel.TPage = "Cashier"
+	let loginInto : TPage = "Cashier"
 	const handleSuccess = () => {
 		openModalSwithUser = false
 		page.set(loginInto)

@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { onMount } from "svelte";
 	import { dragscroll } from "@svelte-put/dragscroll";
 	import { paginate } from 'svelte-paginate'
@@ -11,20 +11,16 @@
 	import Errorstate from "@/lib/components/state/errorstate.svelte";
 	import Icon from "@/lib/components/Icon.svelte";
 	import PrinterComponent from "@/lib/components/printerComponent/printerComponent.svelte";
-	import { IModel } from "@/l@/lib/utils/logic/searchHandler
-	import searchHandler from "@/lib/utils/searchHandler"
-	import keyEventHandler from '@/lib/utils/handler/keydownHandler'
-	import {convertToRupiah} from '@lib/utils/myFunct'
-	import MenuFormModal from "@/lib/components/modal/menuFormModal.svelte";
+	import MenuFormModal from "./components/menuFormModal.svelte";
 	import Menu from '@lib/controller/menu.controller'
-	import Category from "@/lib/controller/category.controller"
-	import Printer from '@lib/controller/printer.controller'
+	import {IModel}	 from '@lib/types'
 	import { scale } from "svelte/transition"
 	import { isValidObject } from "@/lib/utils"
+	import PrinterService from "@lib/services/printer.service";
 
 	const menu = new Menu()
-	const categoryController = new Category()
-	const printerController = new Printer()
+	
+	const printerService = new PrinterService()
 
 	let isLoadingData = false
 	let openFormModal = false
@@ -59,11 +55,11 @@
 	const loadData = async () => {
 		// await printer.load()
 		isLoadingData = true
-		await categoryController.load()
-		await printerController.load()
+		// await categoryController.load()
+		await printerService.load()
 		let isSuccess = await menu.load()
 		if( isSuccess ) {
-			listCategories = categoryController.getData()
+			// listCategories = categoryController.getData()
 			listMenu = menu.getData()
 			listMenuDuplicate = listMenu
 			listMenuDuplicateFilter = listMenu
@@ -210,10 +206,10 @@
 									<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1 justify-center items-center" placement="left">
 										<svelte:fragment slot="button" >{menu.category.name}</svelte:fragment>
 										<svelte:fragment slot="content">
-											{#if printerController.findPrinterByMenu(menu).length > 0}
+											{#if printerService.findPrinterByMenu(menu).length > 0}
 												{#each menu.category.printer as printerId}
-													{#if printerController.findPrinterById(printerId)}
-														<PrinterComponent printer={printerController.findPrinterById(printerId)} />
+													{#if printerService.findPrinterById(printerId)}
+														<PrinterComponent printer={printerService.findPrinterById(printerId)} />
 													{/if}
 												{/each}
 											{:else}
@@ -259,4 +255,4 @@
 		content: counter(rowNumber);
 	}
 
-</style>
+</style> -->

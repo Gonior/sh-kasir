@@ -1,4 +1,4 @@
-import toast from "@teddy-error/svelte-french-toast";
+import { toast } from "svelte-sonner";
 import axios from "axios";
 
 function httpErrorHandler(error) {
@@ -18,18 +18,19 @@ function httpErrorHandler(error) {
 			//The request was made and the server responded with a status code that falls out of the range of 2xx the http status code mentioned above
 			const statusCode = response?.status
 			if (statusCode === 404) {
-				toast.error('Data tidak ada dalam database atau sudah dihapus' , {position : 'top-right'})
+				if(response.data && response.data?.message) toast.error(response.data?.message)
+				else toast.error('Data tidak ada dalam database atau sudah dihapus')
 			} else if (statusCode === 401 || statusCode === 403) {
-				toast.error('Akses ditolak, silakan login terlebih dahulu' , {position : 'top-right'})
+				toast.error('Akses ditolak, silakan login terlebih dahulu')
 			} else if (statusCode === 400 || statusCode === 500) {
-				if(response.data && response.data?.message) toast.error(response.data?.message , {position : 'top-right'})
+				if(response.data && response.data?.message) toast.error(response.data?.message)
 				else toast.error(`ERROR : Tidak diketahui!!!
-			Lihat console untuk info lebih lanjut.` , {position : 'top-right'})
+			Lihat console untuk info lebih lanjut.`)
 
 			}
 		} else if (request) {
 			// toast.error(`Terjadi kesalahan!!
-			// silakan periksa console untuk informasi lebih lanjut!` , {position : 'top-right'})
+			// silakan periksa console untuk informasi lebih lanjut!`)
 		}
 	}
 	console.log(error)

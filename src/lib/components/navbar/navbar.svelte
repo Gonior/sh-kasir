@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from 'svelte'
 	// eslint-disable-next-line no-unused-vars
 	import {theme, user} from '@store/index'
-	import { handleSwitchTheme } from '@lib/utils/myFunct'
+	import { switchTheme } from '@lib/utils'
 	import logo from '@assets/icons/icon.png'
 	import Icon from "@components/Icon.svelte";
 
@@ -14,7 +14,7 @@
 
 	const toogleTheme = () => {
 		isDarkMode = !isDarkMode
-		handleSwitchTheme(isDarkMode)
+		switchTheme(isDarkMode)
 
 	}
 </script>

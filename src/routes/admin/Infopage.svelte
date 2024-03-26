@@ -2,13 +2,12 @@
 	import { onMount } from 'svelte'
 	import logo from '@assets/icons/logo.png'
 	import {IModel} from '@lib/types'
-	// import { getStoreConfig, updateStoreConfig } from '@lib/controller/store.controller'
 	import Store from '@lib/controller/store.controller'
 	import Loading from '@components/state/loading.svelte'
-	import Errorstate from '@/lib/components/state/errorstate.svelte'
-	import Toogle from '@components/toggle.svelte'
+	import Errorstate from '@components/state/errorstate.svelte'
+	import Toogle from '@components/forms/toggle.svelte'
 	import {slide} from 'svelte/transition'
-	import Title from '@/lib/components/navbar/title.svelte'
+	import Title from '@components/navbar/title.svelte'
 	let store = new Store()
 	let isLoadingData = false
 	let isLoading = false
@@ -53,7 +52,7 @@
 			bankInfo
 		}
 		await store.update("", updateStore)
-		// await updateStoreConfig(updateStore)
+		
 		isLoading = false
 	}
 </script>

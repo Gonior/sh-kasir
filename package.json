@@ -29,6 +29,7 @@
 		"axios": "^1.6.7",
 		"fs-jetpack": "^5.1.0",
 		"node-thermal-printer": "^4.4.2",
+		"svelte-sonner": "^0.3.19",
 		"tailwindest": "^2.3.0",
 		"uuid": "^9.0.1",
 		"yup": "^1.4.0"

@@ -151,8 +151,8 @@ class Printer {
         this._thermalPrinter.cut()
         this._thermalPrinter.getStatus()
         try {
-			let status = await this._thermalPrinter.execute({ waitForResponse: true , docname : data.billInfo.invoice})
-			return {printer : this._printer, status}
+			await this._thermalPrinter.execute({ waitForResponse: true , docname : data.billInfo?.invoice ?? 'doc'})
+			return `Data berhasil dikirim ke ${this._printer.displayName}`
 		} catch (error) {
 
 			return new Error(error)

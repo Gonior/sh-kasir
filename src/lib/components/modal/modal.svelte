@@ -8,7 +8,7 @@
 </script>
 
 
-<div use:portal class="fixed inset-0 flex flex-col justify-center items-center  { overlay ? 'bg-gray-600  bg-opacity-20' : '' }">
+<div use:portal class="fixed inset-0 flex flex-col justify-center items-center z-10  { overlay ? 'bg-gray-600  bg-opacity-20' : '' }">
 	<div
 		use:clickOutside
 		on:click_outside={() => outside ? dispatch('close', false) : ''}

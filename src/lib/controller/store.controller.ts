@@ -1,4 +1,4 @@
-import toast from '@teddy-error/svelte-french-toast';
+import { toast } from 'svelte-sonner';
 import {HttpService} from '@lib/services/http.service'
 import {IService, IModel} from '@lib/types'
 import { EEndPoint } from '@lib/types'
@@ -32,10 +32,10 @@ class Store {
 		try {
 			const response = await http.service().update<IService.IResponse<IModel.Store>, IModel.Store>(EEndPoint.STORE, payload);
 			if(response && response.success) {
-				toast.success(response.message, {position : 'top-right'})
+				toast.success(response.message)
 			}
 		} catch(err) {
-			toast.error('ERROR: \nsee the console for information', {position : 'top-right'})
+			toast.error('ERROR: \nsee the console for information')
 			console.log(err)
 		}
 	};

@@ -1,13 +1,12 @@
 <script lang="ts">
-	import Modal from '@/lib/components/modal/modal.svelte'
+	import Modal from '@components/modal/modal.svelte'
 	import { userSchema } from '@/lib/utils/logic/validator'
-	import User from '@lib/controller/user.controller'
+	import User from '@lib/models/user.model'
 	import { focusTrap } from 'svelte-focus-trap'
 	import { createEventDispatcher, onMount } from 'svelte'
-	import ModalHeader from '../navbar/modalHeader.svelte'
-	import TextInput from '@/lib/components/forms/textInput.svelte';
+	import ModalHeader from '@components/navbar/modalHeader.svelte'
+	import TextInput from '@components/forms/textInput.svelte';
 	const dispatch = createEventDispatcher()
-	const user = new User()
 
 	let errors = {
 		name : "",
@@ -25,13 +24,12 @@
 
 	})
 
-
-
 	const handleSubmit = async () => {
 		try {
 			await userSchema.validate(values, { abortEarly: false })
 			errors = {name : "", passcode : '', confirmPasscode : ""};
-			let response = await user.save({name :  values.name, passcode : values.passcode})
+			let user = new User({name : values.name, passcode : values.passcode})
+			let response = await user.save()
 			if(response) {
 				setTimeout(() => handleClose(true),300)
 				values = {name : "", passcode : '', confirmPasscode : ""}

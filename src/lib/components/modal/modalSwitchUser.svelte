@@ -4,14 +4,15 @@
 	import Modal from "./modal.svelte";
 	import Icon from '@components/Icon.svelte'
 	import Errorstate from '../state/errorstate.svelte'
-	import User from '@/lib/controller/user.controller'
+	import User from '@lib/models/user.model'
+	import UserService from '@lib/services/user.service';
 	import { createEventDispatcher } from 'svelte'
-	import { generateAvatar } from '@lib/utils/myFunct'
+	import { generateAvatar } from '@lib/utils/'
 	import { onMount} from 'svelte'
-	import { IModel } from '@lib/types';
-
-	const user = new User()
+	import type { IModel } from '@/lib/types'
+	// import { IModel } from '@lib/types';
 	const dispatch = createEventDispatcher()
+	const userService = new UserService()
 
 	export let outside = true
 	export let overlay = true
@@ -23,10 +24,10 @@
 	let isLoading = false
 	onMount( async () => {
 
-		let isSuccess = await user.load()
+		let isSuccess = await userService.load()
 		if (isSuccess) {
 			isValid = true
-			listUser = user.getData()
+			listUser = userService.getData()
 		}
 
 		isLoadingData = false
@@ -34,7 +35,8 @@
 	})
 
 	const handleSwitch = async (switcher : IModel.IUser) => {
-		let isSuccess = await User.login(switcher)
+		let user = new User(switcher)
+		let isSuccess = await user.login()
 		if (isSuccess) dispatch('success')
 		else toast.error('Gagal Login', {position : 'top-right'})
 
@@ -62,6 +64,7 @@
 		<div class="grid grid-flow-row gap-1 grid-cols-4">
 			{#each listUser as user}
 				{#if user._id !== (currentUser && currentUser?._id)}
+				
 				<button on:click={() => handleSwitch(user)} disabled={isLoading} class="btn flex flex-col rounded-lg bg-gray-200 !py-2 dark:bg-gray-700 items-center space-y-1">
 					<img src={generateAvatar(user.name)} alt={`avatar-${user.name}`} class="">
 					<span class="">{user.name}</span>

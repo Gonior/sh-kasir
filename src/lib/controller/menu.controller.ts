@@ -1,12 +1,12 @@
 import toast from '@teddy-error/svelte-french-toast'
-import Category from './category.controller'
+import Category from '../services/category.service'
 import {HttpService} from '../services/http.service'
 import { type IModel, EEndPoint, type IService } from '../types'
 
 const http = new HttpService()
 const category = new Category()
 
-class Menu implements IModel.IClass<IModel.IMenu> {
+class Menu{
 	private menus : IModel.IMenu[] = []
 	private categories : IModel.ICategory[] = []
 

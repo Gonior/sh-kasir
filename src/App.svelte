@@ -5,12 +5,13 @@
 	import Admin from "@routes/admin/_layout.svelte";
 	import Cashier from "@routes/cashier/_layout.svelte";
 	import NotFound from '@routes/404.svelte'
-	import { handleSwitchTheme } from '@lib/utils/myFunct'
+	import {Toaster as ToasterSonner } from 'svelte-sonner'
+	import { switchTheme } from '@lib/utils'
 	// eslint-disable-next-line no-unused-vars
 	import { theme, page } from '@store/index';
 
 	onMount( async () => {
-		handleSwitchTheme($theme === 'dark')
+		switchTheme($theme === 'dark')
 	})
 
 	const pages = [
@@ -26,16 +27,16 @@
 			return NotFound;
 		}
 	}
+	$: t = $theme as 'dark' | 'light' | 'system'	
 
 </script>
 
+<ToasterSonner expand={true} visibleToasts={5} theme={t} position="top-right" />
 <Toaster toastOptions={{
 	position : 'top-left',
 	style : `
-		font-size: 1rem;
-		line-height : 1.5rem;
+		font-size: 0.875rem;
 		font-weight : 500;
-		background: #333;color: #fff;
 	`
 }}/>
 

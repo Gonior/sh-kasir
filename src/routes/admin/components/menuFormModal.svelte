@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte'
 	import { Constant, type IModel } from '@/lib/types'
-	import Modal from './modal.svelte'
-	import ModalHeader from '../navbar/modalHeader.svelte'
-	import TextInput from '../forms/textInput.svelte';
-	import { menuSchema } from '@/lib/utils/logic/validator'
+	import Modal from '@components/modal/modal.svelte'
+	import ModalHeader from '@components/navbar/modalHeader.svelte'
+	import TextInput from '@components/forms/textInput.svelte';
+	import { validator } from '@lib/utils'
 	import Menu from '@lib/controller/menu.controller'
 	import Category from '@/lib/controller/category.controller';
 	import { focusTrap } from 'svelte-focus-trap'
@@ -43,7 +43,7 @@
 
 	const handleSubmit = async () => {
 		try {
-			await  menuSchema.validate({name, price}, { abortEarly: false })
+			await validator.menuSchema.validate({name, price}, { abortEarly: false })
 			errors = {name : "", price : ""};
 			let response = false
 			let payload = {name, category : selectedCategory, price, upc, _id : _id as string}

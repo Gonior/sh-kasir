@@ -2,36 +2,30 @@
 	import { onMount } from "svelte";
 	import { dragscroll } from "@svelte-put/dragscroll";
 	import {paginate} from 'svelte-paginate'
-	import Category from "@/lib/controller/category.controller";
-	import Loading from "@/lib/components/state/loading.svelte";
-	import Title from "@/lib/components/navbar/title.svelte";
-	import Pagination from "@/lib/components/pagination.svelte";
-	import TableHeader from "@/lib/components/tableHeader.svelte";
-	import ConfirmModal from "@/lib/components/modal/confirmModal.svelte";
-	import Errorstate from "@/lib/components/state/errorstate.svelte";
-	import Icon from "@/lib/components/Icon.svelte";
-	import {DEFAULT_PAGE_SIZE} from '@lib/types/constants'
-	import { IModel } from "@/lib/types";
-	import searchHandler from "@/lib/utils/handler/searchHandler"
-	import keyEventHandler from '@/lib/utils/handler/keydownHandler'
-	import CategoryFormModal from "@/lib/components/modal/categoryFormModal.svelte"
-	import Popover from "@/lib/components/popover/popover.svelte";
-	import Printer from "@/lib/controller/printer.controller"
+	import CategoryService from "@lib/services/category.service";
+	import Loading from "@components/state/loading.svelte";
+	import Title from "@components/navbar/title.svelte";
+	import Pagination from "@components/pagination.svelte";
+	import TableHeader from "@components/tableHeader.svelte";
+	import ConfirmModal from "@components/modal/confirmModal.svelte";
+	import Errorstate from "@components/state/errorstate.svelte";
+	import Icon from "@components/Icon.svelte";
+	import Popover from "@components/popover/popover.svelte";
 	import PrinterComponent from '@components/printerComponent/printerComponent.svelte'
-	const category = new Category()
-	const printer = new Printer()
+	import { type ITableHeaderItem, Constant, IModel } from "@lib/types";
+	import { searchHandler, keydownHandler }from "@lib/utils"
+	
+	import CategoryFormModal from "./components/categoryFormModal.svelte"
+	
+	const categoryService = new CategoryService()
 	let isLoadingData = false
 	let openFormModal = false
 	let isValid = false
 	let keyword = ""
 	let currentPage = 1
 	let openConfirmModal = false
-	let selectedCategory : IModel.ICategory = {
-		_id: "",
-		name: "",
-		printer: ['']
-	}
-	let pageSize = DEFAULT_PAGE_SIZE
+	let selectedCategory : any = {}
+	let pageSize = Constant.DEFAULT_PAGE_SIZE
 	let listCategories : IModel.ICategory[] = []
 	let listCategoriesDuplicate : IModel.ICategory[] = []
 
@@ -42,11 +36,11 @@
 	})
 
 	const loadData = async () => {
-		await printer.load()
+		// await printer.load()
 		isLoadingData = true
-		let isSuccess = await category.load()
+		let isSuccess = await categoryService.load()
 		if( isSuccess ) {
-			listCategories = category.getData()
+			listCategories = categoryService.getData()
 			listCategoriesDuplicate = [...listCategories]
 			isValid = true
 		}
@@ -60,11 +54,11 @@
 	}
 
 	function handleKeydown({ keyCode }) {
-		keyEventHandler(keyCode, '.item')
+		keydownHandler(keyCode, '.item')
     }
 
 
-	const tableHeaderItems : IModel.ITableHeaderItem[] = [
+	const tableHeaderItems : ITableHeaderItem[] = [
 		{
 			value : "No.",
 			width : 'w-12',
@@ -88,7 +82,7 @@
 
 	const handleDelete = async (e : CustomEvent) => {
 		if(e.detail) {
-			let isSuccess = await Category.delete(selectedCategory._id)
+			let isSuccess = await CategoryService.delete(selectedCategory._id)
 			if (isSuccess) await loadData()
 		}
 
@@ -138,24 +132,21 @@
 						<td class="p-2 text-center w-12"></td>
 						<td class="p-2">{category.name}</td>
 						<td class="p-2 w-2/5 text-center">
-							{#if category.printer && category.printer.length > 0 && printer.findPrinterByCategory(category).length > 0 }
-							<div class="flex flex-col space-y-1 max-w-max mx-auto">
-								{#each category.printer as id  }
-									{#if printer.validatePrinterId(id) }
-									<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1" placement="left">
-										<svelte:fragment slot="button">{printer.findPrinterById(id)?.displayName}</svelte:fragment>
-										<svelte:fragment slot="content">
-											{#if printer.findPrinterById(id)}
-												<PrinterComponent printer={printer.findPrinterById(id)} />
-											
-											{/if}
-										</svelte:fragment>
-									</Popover>
-									{/if}
-								{/each}
-							</div>
+							{#if category.printer && category.printer.length > 0}
+								<div class="flex flex-col space-y-1">
+									{#each category.printer as printer}
+										<div class="max-w-max mx-auto">
+											<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1" placement="left">
+												<svelte:fragment slot="button">{printer.displayName}</svelte:fragment>
+												<svelte:fragment slot="content">
+													<PrinterComponent {printer} />
+												</svelte:fragment>
+											</Popover>
+										</div>
+									{/each}
+								</div>
 							{:else}
-								<span>-</span>
+								<span class="text-sm text-gray-400 dark:text-gray-500">--Tidak ada Printer Tambahan--</span>
 							{/if}
 						</td>
 						<td class="p-2 w-36 text-center">

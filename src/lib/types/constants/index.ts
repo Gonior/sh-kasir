@@ -1,4 +1,4 @@
-import type { IModel } from ".."
+import type { IModel, IRemote } from ".."
 import type { IIcon } from "../index"
 
 export const TEMPLATE_NOTE = [
@@ -118,10 +118,9 @@ export const DEFAULT_PAGE_SIZE = 10
 
 export const DEFAULT_CATEGORY_ID = 'defaultcategory'
 
-export const TEST_BILL_PRINT : IModel.IBill = {
+export const TEST_BILL_PRINT : IRemote.IBill = {
 	_id: "",
 	status: "simpan",
-	invoice : '#202303230000',
 	storeInfo: {
 		name: "Nama Toko Anda",
 		address: "Jl. Kita Masih Panjang No XX  ",
@@ -130,6 +129,7 @@ export const TEST_BILL_PRINT : IModel.IBill = {
 		footerNote: "TERIMAKASIH"
 	},
 	billInfo: {
+		invoice : '#202303230000',
 		customer : "Test Print #1",
 		date : '23-03-2024 00:01',
 		user : 'Kasir'
@@ -140,6 +140,7 @@ export const TEST_BILL_PRINT : IModel.IBill = {
 			name : 'ITEM 1',
 			printed : false,
 			price : 10000,
+			category : undefined,
 			qty : 1,
 			total : 10000,
 		},
@@ -148,6 +149,7 @@ export const TEST_BILL_PRINT : IModel.IBill = {
 			name : 'ITEM 2',
 			printed : false,
 			price : 5000,
+			category : undefined,
 			qty : 2,
 			total : 10000,
 		},
@@ -156,6 +158,7 @@ export const TEST_BILL_PRINT : IModel.IBill = {
 			name : 'ITEM 3',
 			printed : false,
 			price : 15000,
+			category : undefined,
 			qty : 2,
 			total : 30000,
 		},
@@ -169,6 +172,7 @@ export const TEST_BILL_PRINT : IModel.IBill = {
 			_id : 'menu-4',
 			name : 'ITEM 4',
 			printed : false,
+			category : undefined,
 			price : 10000,
 			qty : 1,
 			total : 10000,

@@ -2,22 +2,23 @@
 	import { onMount } from 'svelte'
 	import { dragscroll } from '@svelte-put/dragscroll';
 	import { paginate } from 'svelte-paginate'
-	import { IModel } from '@/lib/types'
-	import Title from '../../lib/components/navbar/title.svelte'
-	import Icon from '@/lib/components/Icon.svelte';
-	import { generateAvatar } from '@/lib/utils/myFunct';
-	import User from '@lib/controller/user.controller'
+	import { IModel } from '@lib/types'
+	import Title from '@components/navbar/title.svelte'
+	import Icon from '@components/Icon.svelte';
+	import { generateAvatar } from '@lib/utils';
 	import Loading from '@components/state/loading.svelte'
-	import Errorstate from '@/lib/components/state/errorstate.svelte'
-	import ConfirmModal from '@/lib/components/modal/confirmModal.svelte'
-	import UserFormModal from '@/lib/components/modal/userFormModal.svelte';
-	import TableHeader from '@/lib/components/tableHeader.svelte';
-	import Pagination from '@/lib/components/pagination.svelte'
-	import { DEFAULT_PAGE_SIZE } from '@/lib/types/constants'
-	import searchHandler from '@/lib/utils/handler/searchHandler'
-	import keyEventHandler from '@/lib/utils/handler/keydownHandler'
+	import Errorstate from '@components/state/errorstate.svelte'
+	import ConfirmModal from '@components/modal/confirmModal.svelte'
+	import UserFormModal from '@/routes/admin/components/userFormModal.svelte';
+	import TableHeader from '@components/tableHeader.svelte';
+	import Pagination from '@components/pagination.svelte'
+	import { Constant, type ITableHeaderItem } from '@lib/types'
+	import {searchHandler, keydownHandler} from '@/lib/utils'
+	import UserService from '@lib/services/user.service'
+	import User from '@lib/models/user.model'
 
-	const user = new User()
+	const userService = new UserService()
+
 	let keyword : string = ''
 	let listUser: IModel.IUser[] = []
 	let listUserDuplicate: IModel.IUser[] = []
@@ -27,7 +28,7 @@
 	let openConfirmModal = false
 	let openFormModal = false
 	let currentPage = 1
-	let pageSize = DEFAULT_PAGE_SIZE
+	let pageSize = Constant.DEFAULT_PAGE_SIZE
 
 	$: paginateItems = paginate({items : listUser, pageSize, currentPage})
 
@@ -37,10 +38,10 @@
 
 	const loadData = async () => {
 		isLoadingData = true
-		let isSuccess = await user.load()
+		let isSuccess = await userService.load()
 		if(isSuccess) {
 			isValid = true
-			listUser = user.getData()
+			listUser = userService.getData()
 			listUserDuplicate = listUser
 		}
 		keyword = ""
@@ -53,7 +54,8 @@
 
 	const handleDelete = async (e : CustomEvent) => {
 		if(e.detail) {
-			let isSuccess = await user.delete(selectedUser._id)
+			let user = new User(selectedUser)
+			let isSuccess = await user.delete()
 			if (isSuccess) await loadData()
 		}
 
@@ -61,10 +63,10 @@
 	}
 
 	function handleKeydown({ keyCode }) {
-		keyEventHandler(keyCode, '.item')
+		keydownHandler(keyCode, '.item')
     }
 
-	const tableHeaderItems : IModel.ITableHeaderItem[] = [
+	const tableHeaderItems : ITableHeaderItem[] = [
 		{
 			value : "No.",
 			width : 'w-12',

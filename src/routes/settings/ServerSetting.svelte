@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import toast from '@teddy-error/svelte-french-toast';
+	import {toast} from 'svelte-sonner';
 	import {server} from '@store/index'
-	import type { IModel } from '@lib/types'
+	import type { Connection } from '@lib/types'
 	import { slide } from 'svelte/transition'
 	let isLoading = false
 	let isValid = false
 	let ipAddress = 'localhost'
-	let radioValue : IModel.Connection = 'local'
+	let radioValue : Connection = 'local'
 	let inputEl : HTMLInputElement
 	onMount(async () => {
 		ipAddress = $server.ip
@@ -26,45 +26,50 @@
 		}
 	}
 
-	const testConnection = async () => {
+	const testConnection = () => {
 
 		isLoading = true
 		let url = `http://${ipAddress}:8000`
-		try {
-			await toast.promise(fetch(url), {
-				loading :'Tes koneksi..',
-				success : function () {
-					isValid = true
-					return 'Berhasil terhubung dengan server'
-				},
-				error : function(err) {
-					isValid = false
-					console.log(err)
-					return 'Gagal terhubung dengan server'
-				}
-			}, {position : 'top-right'})
-		} catch (error) {
-			console.error(error)
-		}
+		
+		toast.promise(fetch(url), {
+			loading :'Tes koneksi..',
+			success : function () {
+				isValid = true
+				isLoading = false
+				return 'Berhasil terhubung dengan server'
+			},
+			error : function(err) {
+				isValid = false
+				isLoading = false
+				console.log(err)
 
-		isLoading = false
-
+				return 'Gagal terhubung dengan server'
+			}
+		})
 	}
 
 	const handleSave = async () => {
 		server.set({type : radioValue , ip : ipAddress})
-		toast.success('Berhasil menyimpan Konfigurasi Server', {position : 'top-right'})
+		toast.success('Berhasil menyimpan Konfigurasi Server')
 	}
 </script>
 
 
-<div class="flex">
-	<div class="flex flex-col w-1/2">
+<div class="flex items-start w-full sticky top-0 justify-between pb-5 pr-7 bg-gray-50 dark:bg-gray-900 " style="z-index: 1;">
+	<div class="flex flex-col space-y-1">
 		<h1 class="font-bold">Konfigurasi Server</h1>
 		<h5 class="text-gray-500 dark:text-gray-400">Menghubungkan dengan komputer lain.</h5>
 	</div>
-	<div class="flex flex-col w-1/3">
+	<button on:click={() => handleSave()} disabled={!isValid||isLoading} class="btn-primary !px-5 !py-3 flex items-center">
+		<span>Simpan</span>
+	</button>
+</div>
+<div class="flex py-4 items-start w-full ">
+	<div class="w-1/2">	
 		<h1 class="font-bold">Jenis Sambungan</h1>
+	</div>
+	<div class="flex flex-col w-1/2">
+		
 		<div class="flex flex-col">
 			<label>
 				<input bind:group={radioValue} name="typeOfNetwork" on:change={radioOnChange} type="radio" value="local"/> Lokal
@@ -89,10 +94,6 @@
 			</div>
 			{/if}
 		</div>
-		<div class="flex justify-end mt-5 ">
-			<button on:click={() => handleSave()} disabled={!isValid||isLoading} class="btn-primary !px-5 !py-3 flex items-center">
-				<span>Simpan</span>
-			</button>
-		</div>
+		
 	</div>
 </div>

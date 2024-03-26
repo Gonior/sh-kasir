@@ -2,11 +2,11 @@
 	import { onMount } from 'svelte'
 	import {slide} from 'svelte/transition'
 	import {EPrinterID, EPrinterType, IModel} from '@lib/types'
-	import Toogle from '@components/toggle.svelte'
-	import Printer from '@/lib/controller/printer.controller'
-	import {Constant} from '@lib/types'
+	import Toogle from '@components/forms/toggle.svelte'
+	import PrinterService from '@lib/services/printer.service'
+	import PrinterModel from '@lib/models/printer.model'
 
-	const printer = new Printer()
+	const printerService = new PrinterService()
 
 	let listInstalledPrinter = []
 	let mainPrinter : IModel.IPrinter ={
@@ -27,12 +27,12 @@
 
 	
 	onMount(async() => {
-		let isSuccess = await printer.load()
+		let isSuccess = await printerService.load()
 		if (isSuccess) {
-			listInstalledPrinter = printer.getListInstalledPrinter()
-			mainPrinter = printer.getMainPrinter()
-			copyPrinter = printer.getCopyPrinter()
-			listAddonPrinterSkeleton = printer.getListAddonPrinterSkeleton()
+			listInstalledPrinter = printerService.getListInstalledPrinter()
+			mainPrinter = printerService.getMainPrinter()
+			copyPrinter = printerService.getCopyPrinter()
+			listAddonPrinterSkeleton = printerService.getListAddonPrinterSkeleton()
 			if(copyPrinter.name) useCopyPrinter = true
 			if(listAddonPrinterSkeleton.length >0) useAddsPrinter = true
 		}
@@ -49,7 +49,7 @@
 			})
 		}
 
-		let response = await Printer.save(printers)
+		let response = await PrinterService.save(printers)
 		if (response) {
 			isChange = true
 		}
@@ -60,7 +60,7 @@
 		if(type === "copy" && !e.detail?.checked) copyPrinter.name = ""
 		if(type === "addon") {
 			if(e.detail.checked) {
-				listAddonPrinterSkeleton = printer.getListAddonPrinterSkeleton()
+				listAddonPrinterSkeleton = printerService.getListAddonPrinterSkeleton()
 			}
 			else listAddonPrinterSkeleton = []
 		}
@@ -68,15 +68,15 @@
 	}
 
 	const handleTestPrint = (p : IModel.IPrinter) => {
-		Printer.print(p, Constant.TEST_BILL_PRINT, {logo : true, storeInfo : true, summarize : true, price : true, whiteSpace : false} )
-		// Printer.print(p, Constant.TEST_BILL_PRINT, {whiteSpace : true} )
+		let printerModel = new PrinterModel(p)
+		printerModel.testPrint()
 	}
 
 
 </script>
 
 
-<div class="flex items-start w-11/12 sticky top-0 justify-between pb-5 bg-gray-50 dark:bg-gray-900 z-10">
+<div class="flex items-start w-full sticky top-0 justify-between pb-5 pr-7 bg-gray-50 dark:bg-gray-900" style="z-index: 1;">
 	<div class="flex flex-col space-y-1">
 		<h1 class="font-bold">Konfigurasi Printer</h1>
 		<h2 class="text-gray-500 dark:text-gray-400">
@@ -93,10 +93,10 @@
 			<h1 class="font-semibold">Printer Kasir</h1>
 			<span class="text-sm text-gray-500 dark:text-gray-400">Lakukan Test Print untuk memastikan printer mencetak Struk</span>
 		</div>
-		<div class="w-1/2 flex items-start space-x-2">
+		<div class="w-1/2 flex items-center	 space-x-2">
 			<select
 				on:change={(e) => handleChange(e, "main")}
-				class="form-control"
+				class="form-control w-3/4"
 				bind:value={mainPrinter.name}>
 				<option value="">--tidak ada--</option>
 				{#each listInstalledPrinter as printer}
@@ -123,7 +123,7 @@
 			<div transition:slide={{axis : 'y', duration : 200}} class="flex items-start space-x-2">
 				<select
 					on:change={handleChange}
-					class="form-control"
+					class="form-control w-3/4"
 					bind:value={copyPrinter.name}>
 					<option value="">--tidak ada--</option>
 					{#each listInstalledPrinter as printer}
@@ -148,16 +148,16 @@
 		<div class="w-1/2">
 			<Toogle bind:checked={useAddsPrinter} on:change={(e) => handleChange(e, 'addon')} />
 			{#if useAddsPrinter}
-				<div transition:slide={{duration : 200, axis : 'y'}} class="flex flex-col items-start space-y-3">
+				<div transition:slide={{duration : 200, axis : 'y'}} class="flex flex-col items-start space-y-3 w-full 	">
 					{#each listAddonPrinterSkeleton as lpa}
-					<div class="flex items-end space-x-2">
-						<div>
+					<div class="flex items-end space-x-2 w-full ">
+						<div class="w-3/4">
 							<div class="flex items-center justify-between">
 								<span class="text-sm text-gray-500 dark:text-gray-300">{lpa.displayName}</span>
 							</div>
-							<div class=" flex items-start space-x-2 !mt-0">
-								<select on:change={handleChange} class="form-control !mt-0" bind:value={lpa.name} id={lpa._id}>
-									<option value="">--tidak ada--</option>
+							<div class=" flex items-start space-x-2 !mt-0 ">
+								<select on:change={handleChange} class="form-control w-full !mt-0" bind:value={lpa.name} id={lpa._id}>
+									<option  value="">--tidak ada--</option>
 									{#each listInstalledPrinter as printer}
 										<option value={printer.name}>{printer.name}</option>
 									{/each}

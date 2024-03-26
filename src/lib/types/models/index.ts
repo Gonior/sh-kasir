@@ -1,23 +1,24 @@
 
-type TStatus = 'simpan' | 'lunas' | 'arsip' | 'batal'
-
+export type TStatus = 'simpan' | 'lunas' | 'arsip' | 'batal'
 
 
 export interface IBill {
     _id : string
     status : TStatus
+    user : string, 
     invoice : string
-    storeInfo : IStoreInfo,
-    billInfo : IBillInfo,
-    items : IItem[]
-    summarize : ISummarize,
-    createAt : Date,
-    updateAt : Date
-}
-export interface IBillInfo {
-    customer : string | number,
-    date : string,
-    user : string
+    createdAt : Date,
+    updatedAt : Date,
+    customer : string,
+    orders : IItem[],
+    totalitems : number,
+    subtotal : number,
+    discount : number,
+    tax : number, 
+    downpayment : number,  
+    grandtotal : number, 
+    cash : number, 
+    change : number 
 }
 
 export interface IMenu {
@@ -45,21 +46,6 @@ export interface IItem {
     total?: number
     forId?: string
 }
-
-export interface INewMenu extends Omit<IMenu, '_id' | 'category'> {
-    category : string
-}
-
-export interface ISummarize {
-    subtotal : number,
-    discount : IDiscount,
-    tax : ITax,
-    downpayment : number,
-    cash : number,
-    change : number,
-    grandtotal : number
-}
-
 
 export interface IDiscount {
     percentage : number,
@@ -102,50 +88,12 @@ export interface IBank {
     bank : string
 }
 
-// printer
-
-export interface IConfigPrinter {
-    logo? : boolean,
-    storeInfo? : boolean,
-    whiteSpace? : boolean,
-    price? : boolean,
-    summarize? : boolean,
-}
 
 export interface IPrinter {
-    _id : string
+    readonly _id : string
     name : string
     type : 'main' | 'copy' | 'addon',
-	displayName? : string
+	readonly displayName? : string
 }
 
-
-// class
-// export interface LoadData<T> {
-// 	(params? : string) : T
-// }
-
-// export interface GetData<T> {
-// 	(_id : string|number):T
-// }
-// export interface InsertData<T> {
-// 	(payload : T) : any
-// }
-
-// export interface DeleteData {
-// 	(_id : string|number) : any
-// }
-
-// export interface UpdateData<T> {
-// 	(_id:string|number, payload:T ) : any
-// }
-
-// export interface IClass<T> {
-// 	load : () => Promise<boolean>
-// 	save? : (payload : any|T) => Promise<T|any|void>
-// 	getData? : (params? : string) => T[]
-// 	dataById? : (_id : string | number) => Promise<T|undefined>
-// 	delete? : (_id : string | number) => Promise<any|void>
-// 	update? : (_id:string|number, payload : T) =>  Promise<any|void>
-// }
 
