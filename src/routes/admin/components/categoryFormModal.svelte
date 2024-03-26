@@ -5,10 +5,10 @@
 	import ModalHeader from '@components/navbar/modalHeader.svelte'
 	import TextInput from '@components/forms/textInput.svelte';
 	import { validator } from '@lib/utils'
-	import CategoryService from '@lib/services/category.service'
+	// import CategoryService from '@lib/services/category.service'
+	import Category from '@lib/models/category.model';
 	import PrinterService from '@lib/services/printer.service';
 	import { focusTrap } from 'svelte-focus-trap'
-	// import Icon from '../Icon.svelte'
 
 	const printerService = new PrinterService()
 
@@ -42,9 +42,10 @@
 			await validator.categorySchema.validate({name}, { abortEarly: false })
 			errors = {name : ""};
 			let response = false
+			let category = new Category({name, printer : selectedPrinter, _id})
 			if(_id === "") {
-				response = await CategoryService.save({name :  name, printer : selectedPrinter})
-			} else response = await CategoryService.update(_id, {name, printer : selectedPrinter, _id : _id as string})
+				response = await category.save()
+			} else response = await category.update()
 
 			if(response) {
 				setTimeout(() => handleClose(true),300)

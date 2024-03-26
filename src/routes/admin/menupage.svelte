@@ -1,4 +1,4 @@
-<!-- <script lang="ts">
+<script lang="ts">
 	import { onMount } from "svelte";
 	import { dragscroll } from "@svelte-put/dragscroll";
 	import { paginate } from 'svelte-paginate'
@@ -12,16 +12,15 @@
 	import Icon from "@/lib/components/Icon.svelte";
 	import PrinterComponent from "@/lib/components/printerComponent/printerComponent.svelte";
 	import MenuFormModal from "./components/menuFormModal.svelte";
-	import Menu from '@lib/controller/menu.controller'
-	import {IModel}	 from '@lib/types'
+	import MenuService from '@lib/services/menu.service'
+	import CategoryService from "@lib/services/category.service";
+	import Menu from '@lib/models/menu.model'
+	import { IModel , type ITableHeaderItem } from '@lib/types'
 	import { scale } from "svelte/transition"
-	import { isValidObject } from "@/lib/utils"
-	import PrinterService from "@lib/services/printer.service";
+	import { isValidObject, keydownHandler, searchHandler,formatCurrency } from "@/lib/utils"
 
-	const menu = new Menu()
-	
-	const printerService = new PrinterService()
-
+	const menuService = new MenuService()
+	const categoryService = new CategoryService()
 	let isLoadingData = false
 	let openFormModal = false
 	let isValid = false
@@ -34,7 +33,7 @@
 		name: "",
 		upc : undefined,
 		price : 0,
-		category : null
+		category : undefined
 	}
 
 	let selectedCategory : string[] = []
@@ -55,12 +54,11 @@
 	const loadData = async () => {
 		// await printer.load()
 		isLoadingData = true
-		// await categoryController.load()
-		await printerService.load()
-		let isSuccess = await menu.load()
+		await categoryService.load()
+		let isSuccess = await menuService.load()
 		if( isSuccess ) {
-			// listCategories = categoryController.getData()
-			listMenu = menu.getData()
+			listCategories = categoryService.getData()
+			listMenu = menuService.getData()
 			listMenuDuplicate = listMenu
 			listMenuDuplicateFilter = listMenu
 			selectedCategory = [...listCategories.map(c => c._id)] || []
@@ -72,15 +70,15 @@
 	}
 
 	const handleSearch = () => {
-		listMenu = [...searchHandler(keyword,['name'], listMenuDuplicateFilter)]
+		listMenu = [...searchHandler(keyword,['name', "upc"], listMenuDuplicateFilter)]
 	}
 
 	function handleKeydown({ keyCode }) {
-		keyEventHandler(keyCode, '.item')
+		keydownHandler(keyCode, '.item')
     }
 
 
-	const tableHeaderItems : IModel.ITableHeaderItem[] = [
+	const tableHeaderItems : ITableHeaderItem[] = [
 		{
 			value : "No.",
 			width : 'w-12',
@@ -114,7 +112,8 @@
 
 	const handleDelete = async (e : CustomEvent) => {
 		if(e.detail) {
-			let isSuccess = await Menu.delete(selectedMenu._id)
+			let menu = new Menu(selectedMenu)
+			let isSuccess = await menu.delete()
 			if (isSuccess) await loadData()
 		}
 
@@ -182,7 +181,7 @@
 				
 			</div>
 			<div class="">
-				<button tabindex="0" on:click={() => {selectedMenu={...{_id : "", name : "", category :null, price : 0}};openFormModal = true}} class="btn-primary flex items-center space-x-1">
+				<button tabindex="0" on:click={() => {selectedMenu={...{_id : "", name : "", category :undefined, price : 0}};openFormModal = true}} class="btn-primary flex items-center space-x-1">
 					<Icon name="plus" class="h-6 w-6" stroke={3}/>
 					<span>Tambah Menu</span>
 				</button>
@@ -198,7 +197,7 @@
 					<tr id={menu._id} class="tr-item item relative	" tabindex="0" >
 						<td class="p-2 text-center w-12"></td>
 						<td class="p-2 ">{menu.name}</td>
-						<td class="p-2 w-36 text-center">{convertToRupiah(menu.price)}</td>
+						<td class="p-2 w-36 text-center">{formatCurrency(menu.price)}</td>
 						<td class="p-2 w-16 text-center ">{menu.upc ? menu.upc : '-'}</td>
 						<td class="p-2 w-1/4 text-center ">
 							{#if isValidObject(menu.category) && Object.hasOwn(menu.category,'name')}
@@ -206,15 +205,11 @@
 									<Popover class="ring-1 ring-gray-300 dark:ring-0 dark:bg-gray-700 !px-4 !py-1 justify-center items-center" placement="left">
 										<svelte:fragment slot="button" >{menu.category.name}</svelte:fragment>
 										<svelte:fragment slot="content">
-											{#if printerService.findPrinterByMenu(menu).length > 0}
-												{#each menu.category.printer as printerId}
-													{#if printerService.findPrinterById(printerId)}
-														<PrinterComponent printer={printerService.findPrinterById(printerId)} />
-													{/if}
-												{/each}
+											{#each menu.category.printer as printer}
+												<PrinterComponent {printer} />
 											{:else}
-											<span class="text-gray-500 -mt-1">--Tidak ada printer Tambahan--</span>
-											{/if}
+											<span class="text-sm text-gray-400 dark:text-gray-500">--Tidak ada Printer Tambahan--</span>
+											{/each}
 										</svelte:fragment>
 									</Popover>
 								</div>
@@ -255,4 +250,4 @@
 		content: counter(rowNumber);
 	}
 
-</style> -->
+</style>

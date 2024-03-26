@@ -51,7 +51,7 @@
 
 		let response = await PrinterService.save(printers)
 		if (response) {
-			isChange = true
+			isChange = false
 		}
 
 	}

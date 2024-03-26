@@ -35,7 +35,7 @@
         "./src/lib/store/*"
       ]
     },
-    "lib": ["ESNext", "DOM", "DOM.Iterable"]
+    "lib": ["ESNext", "es2022", "DOM", "DOM.Iterable"]
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

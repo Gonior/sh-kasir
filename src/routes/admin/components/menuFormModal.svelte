@@ -5,25 +5,26 @@
 	import ModalHeader from '@components/navbar/modalHeader.svelte'
 	import TextInput from '@components/forms/textInput.svelte';
 	import { validator } from '@lib/utils'
-	import Menu from '@lib/controller/menu.controller'
-	import Category from '@/lib/controller/category.controller';
+	import Menu from '@lib/models/menu.model'
+	import CategoryService from '@lib/services/category.service';
 	import { focusTrap } from 'svelte-focus-trap'
-	const categoryController = new Category()
-	export let _id : string | number = ''
+
+	const categoryService = new CategoryService()
+
+	export let _id : string = ''
 	export let name : string = ''
 	export let price : number = 0
 	export let upc : number = null
-	export let category : IModel.ICategory | string = null
+	export let category : IModel.ICategory
 	let listCategories : IModel.ICategory[] = []
 	let selectedCategory : string = ""
 
 	onMount(async () => {
 
-		// please FIX THIS
-		let isSuccess = await categoryController.load()
+		let isSuccess = await categoryService.load()
 		if (isSuccess) {
-			listCategories = categoryController.getData()
-			if(!category) selectedCategory = categoryController.getDefaultCategory()?._id
+			listCategories = categoryService.getData()
+			if(!category) selectedCategory = categoryService.getDefaultCategory()?._id
 			else selectedCategory = category && typeof category === 'object' && category._id || Constant.DEFAULT_CATEGORY_ID
 		}
 
@@ -46,12 +47,11 @@
 			await validator.menuSchema.validate({name, price}, { abortEarly: false })
 			errors = {name : "", price : ""};
 			let response = false
-			let payload = {name, category : selectedCategory, price, upc, _id : _id as string}
-			if(!upc) delete payload.upc
+			let menu = new Menu({name, category : selectedCategory, price, upc, _id})
+			// if (!upc) delete payload.upc
 			if(_id === "") {
-				delete payload._id
-				response = await Menu.save(payload)
-			} else response = await Menu.update(_id, payload)
+				response = await menu.save()
+			} else response = await menu.update()
 
 			if(response) {
 				setTimeout(() => handleClose(true),300)

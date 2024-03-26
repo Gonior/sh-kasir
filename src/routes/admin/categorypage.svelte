@@ -3,6 +3,7 @@
 	import { dragscroll } from "@svelte-put/dragscroll";
 	import {paginate} from 'svelte-paginate'
 	import CategoryService from "@lib/services/category.service";
+	import Category from "@lib/models/category.model";
 	import Loading from "@components/state/loading.svelte";
 	import Title from "@components/navbar/title.svelte";
 	import Pagination from "@components/pagination.svelte";
@@ -82,10 +83,10 @@
 
 	const handleDelete = async (e : CustomEvent) => {
 		if(e.detail) {
-			let isSuccess = await CategoryService.delete(selectedCategory._id)
+			let category = new Category(selectedCategory)
+			let isSuccess = await category.delete()
 			if (isSuccess) await loadData()
 		}
-
 		openConfirmModal = false
 	}
 

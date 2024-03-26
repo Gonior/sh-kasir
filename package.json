@@ -30,7 +30,6 @@
 		"fs-jetpack": "^5.1.0",
 		"node-thermal-printer": "^4.4.2",
 		"svelte-sonner": "^0.3.19",
-		"tailwindest": "^2.3.0",
 		"uuid": "^9.0.1",
 		"yup": "^1.4.0"
 	},
@@ -42,8 +41,6 @@
 		"@svelte-put/dragscroll": "^3.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.1",
 		"@tailwindcss/forms": "^0.5.7",
-		"@teddy-error/svelte-french-toast": "^1.2.2",
-		"@types/escpos": "^2.5.5",
 		"@types/node": "^18.19.22",
 		"@types/uuid": "^9.0.8",
 		"autoprefixer": "^10.4.18",

@@ -1,4 +1,3 @@
-import { toast } from 'svelte-sonner'
 import Printer from './printer.service'
 import {HttpService} from './http.service'
 import { type IModel, EEndPoint, type IService, Constant, IRemote } from '../types'
@@ -69,30 +68,13 @@ class CategoryService {
         return http.push<{success : boolean, data? : any, message? : string}, IRemote.INewCategory>(EEndPoint.CATEGORY, payload)
     }
 
-    static update = async (_id: string, payload: IRemote.ICategory) : Promise<boolean> => {
-        try {
-            let response = await http.service().update<{success : boolean}, IRemote.ICategory>(EEndPoint.CATEGORY+'/'+_id, payload)
-            if (response && response.success) {
-                toast.success("Kategori berhasil diperbarui")
-				return true
-            }
-        } catch (error) {
-            console.log(error)
-        }
-        return false
+    static update = async (_id: string, payload: IRemote.ICategory) : Promise<{success : boolean}> => {
+        return http.service().update<{success : boolean}, IRemote.ICategory>(EEndPoint.CATEGORY+'/'+_id, payload)
     }
 
-    static delete = async (_id: string) : Promise<boolean> => {
-        try {
-            let response = await http.service().remove<{success : boolean}>(EEndPoint.CATEGORY+`/${_id}`)
-            if (response && response.success) {
-				toast.success("Kategori berhasil dihapus")
-                return true
-            }
-        } catch (error) {
-            console.log(error)
-        }
-        return false;
+    static delete = async (_id: string) : Promise<{success : boolean}> => {
+        return http.service().remove<{success : boolean}>(EEndPoint.CATEGORY+`/${_id}`)
+        
     }
 
 }
