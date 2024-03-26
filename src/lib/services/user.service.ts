@@ -1,4 +1,3 @@
-import toast from '@teddy-error/svelte-french-toast';
 import {HttpService} from '@lib/services/http.service'
 import {IService, IModel, IRemote} from '@lib/types'
 import { EEndPoint } from '@lib/types'

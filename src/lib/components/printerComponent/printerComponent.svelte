@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Icon from "../Icon.svelte";
+    import Icon from "../ui/Icon.svelte";
     import {IModel} from '@lib/types'
     export let printer : IModel.IPrinter 
 </script>

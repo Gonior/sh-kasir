@@ -6,11 +6,11 @@
 	import Category from "@lib/models/category.model";
 	import Loading from "@components/state/loading.svelte";
 	import Title from "@components/navbar/title.svelte";
-	import Pagination from "@components/pagination.svelte";
-	import TableHeader from "@components/tableHeader.svelte";
+	import Pagination from "@/lib/components/ui/pagination.svelte";
+	import TableHeader from "@/lib/components/ui/tableHeader.svelte";
 	import ConfirmModal from "@components/modal/confirmModal.svelte";
 	import Errorstate from "@components/state/errorstate.svelte";
-	import Icon from "@components/Icon.svelte";
+	import Icon from "@components/ui/Icon.svelte";
 	import Popover from "@components/popover/popover.svelte";
 	import PrinterComponent from '@components/printerComponent/printerComponent.svelte'
 	import { type ITableHeaderItem, Constant, IModel } from "@lib/types";

@@ -1,14 +1,13 @@
 <script lang="ts">
 
-	import toast from '@teddy-error/svelte-french-toast'
+	import { onMount } from 'svelte'
 	import Modal from "./modal.svelte";
-	import Icon from '@components/Icon.svelte'
-	import Errorstate from '../state/errorstate.svelte'
+	import Icon from '@components/ui/Icon.svelte'
+	import Errorstate from '@components/state/errorstate.svelte'
 	import User from '@lib/models/user.model'
 	import UserService from '@lib/services/user.service';
 	import { createEventDispatcher } from 'svelte'
 	import { generateAvatar } from '@lib/utils/'
-	import { onMount} from 'svelte'
 	import type { IModel } from '@/lib/types'
 	// import { IModel } from '@lib/types';
 	const dispatch = createEventDispatcher()
@@ -38,7 +37,6 @@
 		let user = new User(switcher)
 		let isSuccess = await user.login()
 		if (isSuccess) dispatch('success')
-		else toast.error('Gagal Login', {position : 'top-right'})
 
 	}
 </script>

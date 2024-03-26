@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type {Tailwindest} from 'tailwindest'
-	import { IModel } from '../types';
+	import {type ITableHeaderItem} from '../../types';
 	export let textSize : Tailwindest['fontSize'] = 'text-base'
 	export let marginRight : Tailwindest['marginRight'] = 'mr-2'
 
-	export let tableHeaderItems : IModel.ITableHeaderItem[] = []
+	export let tableHeaderItems : ITableHeaderItem[] = []
 
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icon from "../Icon.svelte";
+	import Icon from "../ui/Icon.svelte";
 
 	// export let icon : IModel.IconName = "icon"
 	export let msg : string = "Tidak ada data"

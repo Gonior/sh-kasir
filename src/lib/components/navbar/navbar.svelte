@@ -4,7 +4,7 @@
 	import {theme, user} from '@store/index'
 	import { switchTheme } from '@lib/utils'
 	import logo from '@assets/icons/icon.png'
-	import Icon from "@components/Icon.svelte";
+	import Icon from "@components/ui/Icon.svelte";
 
 	import Powerbutton from '@components/buttons/powerbutton.svelte';
 	export let openSetting = false

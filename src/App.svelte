@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-	import { Toaster} from '@teddy-error/svelte-french-toast'
 	import Home from "@routes/_layout.svelte";
 	import Admin from "@routes/admin/_layout.svelte";
 	import Cashier from "@routes/cashier/_layout.svelte";
@@ -31,14 +30,10 @@
 
 </script>
 
-<ToasterSonner expand={true} visibleToasts={5} theme={t} position="top-right" />
-<Toaster toastOptions={{
-	position : 'top-left',
-	style : `
-		font-size: 0.875rem;
-		font-weight : 500;
-	`
-}}/>
+<ToasterSonner expand={true} visibleToasts={5} theme={t} position="top-right" toastOptions={{
+	style : 'font-size: 0.875rem;'
+}} />
+
 
 <div class="h-screen select-none">
 	<svelte:component this={getComponent()}/>

@@ -1,7 +1,7 @@
 <script lang="ts">
 
 	import Modal from "./modal.svelte"
-	import Icon from "@components/Icon.svelte";
+	import Icon from "@/lib/components/ui/Icon.svelte";
 	import {createEventDispatcher} from 'svelte'
 	const dispatch = createEventDispatcher()
 

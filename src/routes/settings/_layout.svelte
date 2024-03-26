@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { IModel } from "@lib/types"
-	import Icon from "@components/Icon.svelte";
+	import type { ISubMenu } from "@lib/types"
+	import Icon from "@/lib/components/ui/Icon.svelte";
 	import ServerSetting from './ServerSetting.svelte'
 	import PrinterSetting from './PrinterSetting.svelte'
 	import Title from "@/lib/components/navbar/title.svelte";
@@ -8,7 +8,7 @@
 	import { onMount } from "svelte"
 	import { dragscroll } from '@svelte-put/dragscroll';
 
-	let submenu : IModel.ISubMenu[]= [
+	let submenu : ISubMenu[]= [
 		{
 			id: 1,
 			name: 'Server',

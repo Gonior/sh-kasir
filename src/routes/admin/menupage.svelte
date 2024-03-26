@@ -1,23 +1,23 @@
 <script lang="ts">
 	import { onMount } from "svelte";
+	import { scale } from "svelte/transition"
 	import { dragscroll } from "@svelte-put/dragscroll";
 	import { paginate } from 'svelte-paginate'
-	import Loading from "@/lib/components/state/loading.svelte";
-	import Popover from '@/lib/components/popover/popover.svelte'
-	import Title from "@/lib/components/navbar/title.svelte";
-	import Pagination from "@/lib/components/pagination.svelte";
-	import TableHeader from "@/lib/components/tableHeader.svelte";
-	import ConfirmModal from "@/lib/components/modal/confirmModal.svelte";
-	import Errorstate from "@/lib/components/state/errorstate.svelte";
-	import Icon from "@/lib/components/Icon.svelte";
-	import PrinterComponent from "@/lib/components/printerComponent/printerComponent.svelte";
-	import MenuFormModal from "./components/menuFormModal.svelte";
 	import MenuService from '@lib/services/menu.service'
 	import CategoryService from "@lib/services/category.service";
-	import Menu from '@lib/models/menu.model'
 	import { IModel , type ITableHeaderItem } from '@lib/types'
-	import { scale } from "svelte/transition"
-	import { isValidObject, keydownHandler, searchHandler,formatCurrency } from "@/lib/utils"
+	import { isValidObject, keydownHandler, searchHandler,formatCurrency } from "@lib/utils"
+	import Loading from "@components/state/loading.svelte";
+	import Popover from '@components/popover/popover.svelte'
+	import Title from "@components/navbar/title.svelte";
+	import Pagination from "@components/ui/pagination.svelte";
+	import TableHeader from "@components/ui/tableHeader.svelte";
+	import ConfirmModal from "@components/modal/confirmModal.svelte";
+	import Errorstate from "@components/state/errorstate.svelte";
+	import Icon from "@components/ui/Icon.svelte";
+	import PrinterComponent from "@components/printerComponent/printerComponent.svelte";
+	import MenuFormModal from "./components/menuFormModal.svelte";
+	import Menu from '@lib/models/menu.model'
 
 	const menuService = new MenuService()
 	const categoryService = new CategoryService()

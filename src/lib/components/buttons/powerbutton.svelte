@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Icon from "@components/Icon.svelte";
+	import Icon from "@components/ui/Icon.svelte";
 	import ConfirmModal from '@components/modal/confirmModal.svelte';
 	import {page, token, user} from '@store/index'
 	export let text = ""

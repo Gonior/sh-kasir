@@ -2,7 +2,7 @@
 
 	import {createEventDispatcher} from 'svelte'
 	const dispatch = createEventDispatcher()
-	import Icon from "../Icon.svelte";
+	import Icon from "../ui/Icon.svelte";
 	export let title = ""
 </script>
 

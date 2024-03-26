@@ -1,16 +1,16 @@
 <script lang="ts">
 	import {fade} from 'svelte/transition'
 	// import { navigate } from 'svelte-routing'
-	import Icon from "@components/Icon.svelte";
 	// import nedbLogo from '@assets/icons/nedb.png'
 	// import nodeJsLogo from '@assets/icons/nodejs-original.svg'
 	// import svelteLogo from '@assets/icons/svelte-icon.svg'
 	// import typescriptLogo from '@assets/icons/typescript-plain.svg'
 	// import tailwindLogo from '@assets/icons/tailwindcss-mark.3c5441fc7a190fb1800d4a5c7f07ba4b1345a9c8.svg'
-	import ModalSwitchUser from '@components/modal/modalSwitchUser.svelte'
 	import type { TPage } from '@lib/types'
 	import {page} from '@lib/store'
-	import Footer from "@components/footer.svelte"
+	import Icon from "@components/ui/Icon.svelte";
+	import ModalSwitchUser from '@components/modal/modalSwitchUser.svelte'
+	import Footer from "@components/ui/footer.svelte"
 	import Navbar from "@components/navbar/navbar.svelte"
 	import SettingLayout from '@routes/settings/_layout.svelte'
 	let openModalSwithUser = false
