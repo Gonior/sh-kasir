@@ -61,14 +61,17 @@ class User {
 
     delete = async () : Promise<boolean> => {
         try {
-            if(!this._id) throw new Error('ID Penggunan tidak diketahui!')
+            if(!this._id) {
+                toast.error('ID Penggunan tidak diketahui!')
+                return false
+            }
             let response = await UserService.delete(this.__id)
             if( response && response.success ) {
                 toast.success('Pengguna berhasil dihapus.')
                 return true
             }
         } catch (error) {
-            toast.error(error.message)
+
             console.log(error)
         }
         return false
