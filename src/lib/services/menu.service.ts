@@ -5,6 +5,8 @@ import { IModel, EEndPoint, IService, IRemote } from '@lib/types'
 const http = new HttpService()
 
 const categoryService = new CategoryService()
+
+
 class MenuService {
     private listMenus : IModel.IMenu[] = []
     private listCategories : IModel.ICategory[] = []
@@ -47,10 +49,11 @@ class MenuService {
 		return this.listMenus.filter(menu => menu.category._id === _id)
 	}
 
-    getDataByCategory = () : {category : IModel.ICategory, data : IModel.IMenu[]}[] => {
-        let result : {category : IModel.ICategory, data : IModel.IMenu[]}[] = []
+    getDataByCategory = () : IModel.ILayoutBData[] => {
+        let result : IModel.ILayoutBData[] = []
         this.listCategories.forEach((c) => {
             let menus = this.getDataByIdCategory(c._id)
+            c.selected = false
             result.push({category : c, data : menus})
         })
         return result

@@ -2,6 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer components {
 	html * {
 		@apply font-inter select-none;
@@ -112,12 +113,4 @@ input[type="checkbox"] {
 
 .tr-item {
 	@apply transition border-b border-gray-400 dark:border-gray-700 focus:outline-none focus:bg-amber-100 dark:focus:bg-amber-900;
-}
-
-.pagination :global(.pagination-nav) {
-	@apply text-red-600;
-}
-
-.pagination :global(.option.active) {
-	background : red;
 }

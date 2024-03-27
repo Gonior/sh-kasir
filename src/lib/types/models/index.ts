@@ -32,7 +32,13 @@ export interface IMenu {
 export interface ICategory {
     _id : string
     name : string
-    printer : IPrinter[]
+    printer : IPrinter[],
+    selected ? : boolean
+}
+
+export interface ILayoutBData {
+    category : ICategory,
+    data : IMenu[]
 }
 
 export interface IItem {
