@@ -3,10 +3,9 @@ import { IModel } from ".."
 type TAction = 'Membuat' | 'Menghapus' | 'Menambahkan' | 'Mengubah'
 
 export interface IPrinter {
-    _id : string
+    readonly _id : string
     name : string
-    type : 'main' | 'copy' | 'addon',
-	displayName : string
+	readonly displayName : string
 }
 
 export interface IUser {
@@ -95,7 +94,7 @@ export interface IRecord {
     item? : 'pesanan' | string
 }
 
-export interface IConfigPrinter {
+export interface IConfigPrint {
     logo? : boolean,
     storeInfo? : boolean,
     whiteSpace? : boolean,
@@ -103,5 +102,12 @@ export interface IConfigPrinter {
     summarize? : boolean,
 }
 
+export interface IConfigPrinterFile {
+    useCopyPrinter : boolean
+    useAddonPrinter : boolean
+    main : IPrinter,
+    copy : IPrinter,
+    addon : IPrinter[]
+}
 
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import {slide} from 'svelte/transition'
-	import {EPrinterID, EPrinterType, IModel} from '@lib/types'
+	import {IModel} from '@lib/types'
 	import Toogle from '@components/forms/toggle.svelte'
 	import PrinterService from '@lib/services/printer.service'
 	import PrinterModel from '@lib/models/printer.model'
@@ -9,21 +9,13 @@
 	const printerService = new PrinterService()
 
 	let listInstalledPrinter = []
-	let mainPrinter : IModel.IPrinter ={
-		name: "",
-		_id: EPrinterID.MAIN_PRINTER,
-		type: EPrinterType.MAIN
-	}
-	let copyPrinter : IModel.IPrinter = {
-		name: "",
-		_id: EPrinterID.COPY_PRINTER,
-		type: EPrinterType.COPY
-	}
-	let listAddonPrinterSkeleton :IModel.IPrinter[]= []
+	let mainPrinter : any = {}
+	let copyPrinter : any = {}
+	let listAddonPrinter :IModel.IPrinter[]= []
 	let isChange = false
 	let isLoading = false
 	let useCopyPrinter = false
-	let useAddsPrinter = false
+	let useAddonPrinter = false
 
 	
 	onMount(async() => {
@@ -32,10 +24,11 @@
 			listInstalledPrinter = printerService.getListInstalledPrinter()
 			mainPrinter = printerService.getMainPrinter()
 			copyPrinter = printerService.getCopyPrinter()
-			listAddonPrinterSkeleton = printerService.getListAddonPrinterSkeleton()
-			if(copyPrinter.name) useCopyPrinter = true
-			if(listAddonPrinterSkeleton.length >0) useAddsPrinter = true
+			listAddonPrinter = printerService.getAddonPrinters()
+			useAddonPrinter = printerService.useAddonPrinter()
+			useCopyPrinter = printerService.useCopyPrinter()
 		}
+		
 	})
 
 	const saveChange = async () => {
@@ -43,26 +36,23 @@
 		if (mainPrinter.name) printers.push(mainPrinter)
 		if (useCopyPrinter && copyPrinter.name) printers.push(copyPrinter)
 
-		if(useAddsPrinter) {
-			listAddonPrinterSkeleton.forEach(printer => {
-				if (printer.name) printers.push(printer)
-			})
-		}
 
-		let response = await PrinterService.save(printers)
+		let response = await PrinterService.save({main : mainPrinter, copy : copyPrinter, addon : listAddonPrinter, useCopyPrinter, useAddonPrinter})
 		if (response) {
 			isChange = false
 		}
 
 	}
 
-	const handleChange = (e : any, type?: string) => {
+	const handleChange = (e : any, type? : string) => {
 		if(type === "copy" && !e.detail?.checked) copyPrinter.name = ""
 		if(type === "addon") {
-			if(e.detail.checked) {
-				listAddonPrinterSkeleton = printerService.getListAddonPrinterSkeleton()
+			if(!e.detail.checked) {
+				listAddonPrinter = listAddonPrinter.map(addonp => {
+					addonp.name = ""
+					return addonp
+				})	
 			}
-			else listAddonPrinterSkeleton = []
 		}
 		isChange = true
 	}
@@ -146,10 +136,10 @@
 				Kategori A Hanya muncul di Printer A.)</span>
 		</div>
 		<div class="w-1/2">
-			<Toogle bind:checked={useAddsPrinter} on:change={(e) => handleChange(e, 'addon')} />
-			{#if useAddsPrinter}
+			<Toogle bind:checked={useAddonPrinter} on:change={(e) => handleChange(e, 'addon')} />
+			{#if useAddonPrinter}
 				<div transition:slide={{duration : 200, axis : 'y'}} class="flex flex-col items-start space-y-3 w-full 	">
-					{#each listAddonPrinterSkeleton as lpa}
+					{#each listAddonPrinter as lpa}
 					<div class="flex items-end space-x-2 w-full ">
 						<div class="w-3/4">
 							<div class="flex items-center justify-between">

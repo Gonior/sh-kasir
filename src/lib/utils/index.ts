@@ -7,6 +7,7 @@ import removeDuplicateArray from "./logic/removeDuplicateArrat";
 import sorting from './logic/sorting'
 import * as validator from './logic/validator'
 import clickOutside from "./ui/clickoutside";
+import scrollToBottom from './ui/scrollToBottom';
 import generateAvatar from "./ui/generateAvatar";
 import portal from "./ui/portal";
 import switchTheme from './ui/switchTheme';
@@ -24,5 +25,6 @@ export {
     needToPrint,
     keydownHandler,
     switchTheme,
-    formatCurrency
+    formatCurrency,
+    scrollToBottom
 }

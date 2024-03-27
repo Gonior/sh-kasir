@@ -23,7 +23,7 @@
 		// please FIX THIS : done
 		let isSuccess = await printerService.load()
 		if (isSuccess) {
-			listPrinter = printerService.getListAddonPrinterSkeleton()
+			listPrinter = printerService.getAddonPrinters()
 			if (printer.length > 0) selectedPrinter = printer.map(p => p._id)
 		}
 	})

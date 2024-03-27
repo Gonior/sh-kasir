@@ -92,8 +92,11 @@ export interface IBank {
 export interface IPrinter {
     readonly _id : string
     name : string
-    type : 'main' | 'copy' | 'addon',
-	readonly displayName? : string
+	readonly displayName : string
 }
 
+export interface ISortItem {
+    value : string,
+    id : string
+}
 

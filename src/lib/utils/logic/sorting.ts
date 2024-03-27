@@ -1,41 +1,48 @@
+import type { IModel } from '@lib/types'
 import removeDuplicates from './removeDuplicateArrat'
-import {Constant} from '@lib/types'
+import SortFormat from '@lib/models/sortFormat.model'
+const sortFormat = new SortFormat()
+const letsSorting = async (orders= []) => {
+	let format : IModel.ISortItem[] = []
+	let isSuccess = await sortFormat.load()
+	if( isSuccess) {
+		format = sortFormat.values
+	}
 
-const letsSorting = (orders= [], format = Constant.DEFAULT_FORMAT_SORTING ) => {
-    
 	let menus = orders.filter(order => !order.forId)
 	let notes = orders.filter(order => order.forId)
 	let sortedOrders = []
 	let sortedFormat = []
 	for( const f of format) {
-		switch(f.type)  {
-			case "category"  : {
-				let result = menus.filter(menu => menu.category._id === f._id)
-				let obj = {
-					format : f,
-					data : result
-				}
-				sortedFormat.push(obj)
-				break;
-			}
-			case "printer"  : {
-				let result = menus.filter(menu => menu.category.printer._id === f._id)
-				let obj = {
-					format : f,
-					data : result
-				}
-				sortedFormat.push(obj)
-				break;
-			}
-			default : {
-
-				let obj = {
-					format : f,
-					data : menus
-				}
-				sortedFormat.push(obj)
-			}
+		let result = menus.filter(menu => menu.category._id === f.value)
+		let obj = {
+			format : f,
+			data : result
 		}
+		// sortedFormat.push(obj)
+		// switch(f.type)  {
+		// 	case "category"  : {
+				
+		// 		break;
+		// 	}
+		// 	case "printer"  : {
+		// 		let result = menus.filter(menu => menu.category.printer._id === f.id)
+		// 		let obj = {
+		// 			format : f,
+		// 			data : result
+		// 		}
+		// 		sortedFormat.push(obj)
+		// 		break;
+		// 	}
+		// 	default : {
+
+		// 		let obj = {
+		// 			format : f,
+		// 			data : menus
+		// 		}
+		// 		sortedFormat.push(obj)
+		// 	}
+		// }
 	}
 	let sortedOrdersID = []
 	for(const i in sortedFormat) {

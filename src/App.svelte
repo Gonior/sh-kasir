@@ -30,7 +30,7 @@
 
 </script>
 
-<ToasterSonner expand={true} visibleToasts={5} theme={t} position="top-right" toastOptions={{
+<ToasterSonner richColors expand={true} visibleToasts={5} theme={t} position="top-right" toastOptions={{
 	style : 'font-size: 0.875rem;'
 }} />
 

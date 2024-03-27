@@ -13,7 +13,6 @@ class Printer  {
         this._id = props._id
         this.name = props.name
         this.displayName = props.displayName
-        this.type = props.type
     }
 
     isValidPrinter = async () : Promise<boolean> => {
@@ -41,7 +40,7 @@ class Printer  {
         } else toast.error('Printer tidak valid!')
     }
 
-    print = async (data : any, options? : IRemote.IConfigPrinter) : Promise<void> => {
+    print = async (data : any, options? : IRemote.IConfigPrint) : Promise<void> => {
         // co print options { whiteSpace : true }
         // bill print options {logo : true, storeInfo : true, summarize : true, price : true, whiteSpace : false}
         if(await this.isValidPrinter()) {

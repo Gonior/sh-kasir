@@ -17,16 +17,16 @@ declare global {
 		}
 	}
 
-	
-}
-
-import axios from 'axios'
-
-declare module 'axios' {
-	export interface InternalAxiosRequestConfig {
-		raw?: boolean
-		silent?: boolean
+	declare type Item = import('svelte-dnd-action').Item
+	declare type DndEvent<ItemType = Item>= import('svelte-dnd-action').DndEvent<ItemType>
+	declare namespace svelte.JSX {
+		interface HTMLAttributes<T> {
+			onconsider? : (event : CustomEvent<DndEvent<ItemType>> & { targer : EventTarget & T }) => void
+			oncfinalize : (event : CustomEvent<DndEvent<ItemType>> & { targer : EventTarget & T }) => void
+		}
 	}
+
+	
 }
 
 

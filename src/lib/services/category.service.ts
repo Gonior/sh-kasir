@@ -22,7 +22,8 @@ class CategoryService {
                     category.name = c.name
                     category._id = c._id
                     c.printer.forEach(p =>{ 
-                        let findP = printer.findPrinterById(p)
+
+                        let findP = printer.findAddonPrinterById(p)
                         if (findP) category.printer.push(findP)
                     })
                     return category

@@ -1,4 +1,4 @@
-import type { IModel, IRemote } from ".."
+import type { IRemote } from ".."
 import type { IIcon } from "../index"
 
 export const TEMPLATE_NOTE = [
@@ -279,7 +279,7 @@ export const ListIcon: IIcon[] = [
     },
     {
         name : 'logout',
-        path : '<path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>'
+        path : '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>'
     },
     {
         name : 'minus',
@@ -356,5 +356,14 @@ export const ListIcon: IIcon[] = [
     {
         name : 'filter',
         path : '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />'
-    }
+    },
+	{
+		name : 'receipt',
+		path : '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M14 8H8"/><path d="M16 12H8"/><path d="M13 16H8"/>'
+	}, 
+	{
+		name : 'grip-vertical',
+		path : '<circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/>'
+	}
 ]
+

@@ -13,6 +13,7 @@ export enum EEndPoint {
 	MENU_SEARCH = '/menu/search',
 	ACTIVITY = '/activity',
 	STORE = '/store',
+	SORT_FORMAT = '/sortFormat',
 	TEMP = '/temp',
 	ORDER = '/order',
 	ORDER_LAST = '/order/last',

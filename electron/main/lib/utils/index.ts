@@ -1,9 +1,11 @@
 import jetpack from 'fs-jetpack'
 import process from 'process'
 import path from 'path'
+import {DEFAULT_PRINTER_CONFIG} from '../types/index'
 // import exec from 'child_process'
 // import bin from '../../../resources/server/sh-server.exe?asset&asarUnpack'
 export const NAME_CONFIG_PRINTER = 'config/printer.json'
+
 
 
 export const getFilePath = (nameOfFile : string) => {
@@ -20,7 +22,7 @@ export const writeConfigPrinterFile = (configFile) => {
 }
 
 export const writeDefaultConfigPrinter = () => {
-	jetpack.write(getFilePath(NAME_CONFIG_PRINTER), JSON.stringify([]), {
+	jetpack.write(getFilePath(NAME_CONFIG_PRINTER), JSON.stringify(DEFAULT_PRINTER_CONFIG), {
 		jsonIndent: 2
 	})
 	return 'initial config printer written'
