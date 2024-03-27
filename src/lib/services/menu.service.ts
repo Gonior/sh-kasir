@@ -3,6 +3,7 @@ import { HttpService } from "./http.service";
 import { IModel, EEndPoint, IService, IRemote } from '@lib/types'
 
 const http = new HttpService()
+
 const categoryService = new CategoryService()
 class MenuService {
     private listMenus : IModel.IMenu[] = []
@@ -41,10 +42,20 @@ class MenuService {
 		return this.listMenus
 	}
 
-    sortMenuByIdCategory = (arrayCategoryId : string[] = []) : IModel.IMenu[] => {
+    getDataByIdCategory = (_id : string) : IModel.IMenu[] => {
 		
-		return this.listMenus.filter(menu => arrayCategoryId.indexOf((menu.category as IModel.ICategory)._id) !== -1)
+		return this.listMenus.filter(menu => menu.category._id === _id)
 	}
+
+    getDataByCategory = () : {category : IModel.ICategory, data : IModel.IMenu[]}[] => {
+        let result : {category : IModel.ICategory, data : IModel.IMenu[]}[] = []
+        this.listCategories.forEach((c) => {
+            let menus = this.getDataByIdCategory(c._id)
+            result.push({category : c, data : menus})
+        })
+        return result
+    }
+    
 
     static save = async (payload: IRemote.INewMenu) : Promise<{success : boolean, data? : any, message? : string}> => {
         return http.push<{success : boolean, data? : any, message? : string}, IRemote.INewMenu>(EEndPoint.MENU, payload)

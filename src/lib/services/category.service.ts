@@ -1,15 +1,16 @@
 import Printer from './printer.service'
 import {HttpService} from './http.service'
+
 import { type IModel, EEndPoint, type IService, Constant, IRemote } from '../types'
 const printer = new Printer()
 const http = new HttpService()
 
 class CategoryService {
     private categories : IModel.ICategory[] = []
-
     load = async () : Promise<boolean>  => {
         try {
             await printer.load()
+            
             let response = await http.service().get<IService.IResponse<IRemote.ICategory[]>>(EEndPoint.CATEGORY)
             if(response && response.success) {
                 let dataMap = response.data.map((c) => {
@@ -44,6 +45,7 @@ class CategoryService {
 
         return this.categories
     }
+
 
 	getDefaultCategory = () => {
 		return this.categories.find(c =>  c._id === Constant.DEFAULT_CATEGORY_ID)

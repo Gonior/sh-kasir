@@ -5,10 +5,11 @@
 	import { switchTheme } from '@lib/utils'
 	import logo from '@assets/icons/icon.png'
 	import Icon from "@components/ui/Icon.svelte";
-
 	import Powerbutton from '@components/buttons/powerbutton.svelte';
+
 	export let openSetting = false
 	export let direction = "horizontal"
+	export let showSetting = true
 	const dispatch = createEventDispatcher()
 	let isDarkMode = $theme === 'dark'
 
@@ -32,9 +33,11 @@
 		<slot />
 	</div>
 	<div class="flex {direction === 'vertical' ? 'flex-col space-y-2' : 'items-center flex-row-reverse space-x-1 space-x-reverse' }">
+		{#if showSetting}
 		<button on:click={() => dispatch('openSetting')} class="btn-secondary !p-2 {openSetting ? '!bg-amber-600 !text-white !ring-0' : ''}">
 			<Icon name="{openSetting && direction === "horizontal" ?  'close' :'cog-8-tooth'}" class="h-6 w-6"/>
 		</button>
+		{/if}
 		<button on:click={toogleTheme} class="btn-secondary !p-2"><Icon class="h-6 w-6" name={isDarkMode ? "sun" : 'moon'} /></button>
 		{#if typeof $user === "object" &&  Object.keys($user).length > 0 && Object.hasOwn($user,'passcode')}
 			<Powerbutton />
