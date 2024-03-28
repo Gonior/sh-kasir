@@ -3,19 +3,24 @@
     import { dragscroll } from "@svelte-put/dragscroll";
 	import { fade } from 'svelte/transition'
     import { addedEffect, formatCurrency, scrollToElement } from '@lib/utils'
-	import type { IModel, ITableHeaderItem } from '@/lib/types'
+	import { type IModel, Constant } from '@/lib/types'
 	import Icon from '@components/ui/Icon.svelte'
 	import TableHeader from '@components/ui/tableHeader.svelte'
     import ConfirmModal from '@components/modal/confirmModal.svelte'
+    import SearchMenuModal from '@components/modal/searcMenuModal.svelte'
 
+    // eslint-disable-next-line no-unused-vars
+    export let handleAddMenu : (_params : IModel.IMenu, qty? : number) => void
     export let items : IModel.IItem[] = []
     export let listMenu : IModel.IMenu[] = []
     export let addedId : string
-    // eslint-disable-next-line no-unused-vars
-    export let handleAddMenu : (_params : IModel.IMenu, qty? : number) => void
     export let inputElement : HTMLInputElement
     export let selectedMenu = items.find(i => i.selected) ?? null
     export let resetSelect : () => void
+
+    onMount(() => {
+        inputElement.focus()
+    })
 
     $: selectedMenu = items.find(i => i.selected) ?? null
     $: {
@@ -25,12 +30,11 @@
         })
     }
     
-    onMount(() => {
-        inputElement.focus()
-    })
-    
+    const tableHeaderItems = Constant.tableHeaderItemsLayoutB
+
     let keyword : string = ""
     let openConfirmModalDelete = false
+    let openSearchMenuModal = false
 
     const watchChange = async (id : string) : Promise<void> =>  {
         await tick()        
@@ -80,7 +84,9 @@
                 keyword = ""
                 inputElement.focus()
             } else {
-                alert('menu tidak ditemukan')
+                setTimeout(() => {
+                    openSearchMenuModal = true
+                }, 100)
             }
         }
     }
@@ -93,6 +99,7 @@
         }
         openConfirmModalDelete = false
     }
+
     const handleKeydown = (e : KeyboardEvent) => {
         let key = e.key
         if (key !== 'ArrowUp' && key !== 'ArrowDown' && key !== 'Enter') return
@@ -107,44 +114,27 @@
                 console.log('enter detected')
             }
         }
-
         handleClickMenu(items[newIndex]._id)
-        // (items[newIndex] as HTMLElement)?.focus()
-	    // current?.blur()
     }
 
-    const tableHeaderItems : ITableHeaderItem[] = [
-		{
-			value : "KTS",
-			width : 'w-14',
-            textAlign : 'text-center',
-		},{
-			value : "nama Menu",
-		},{
-			value : 'harga',
-			textAlign : 'text-right',
-			width : 'w-20',
-            
-		},{
-			value : 'total',
-			width : 'w-28',
-			textAlign : 'text-right',
-            // paddingRight : 'pr-2'
-		},
-        {
-			value : '',
-			width : 'w-2',
-			textAlign : '',
-            paddingRight : ''
-		},
-		
-	]
+    const handleSubmit = (e : CustomEvent<{menu : IModel.IMenu}>) => {
+        if (e.detail && e.detail.menu) {
+            handleAddMenu({...e.detail.menu})
+            keyword = ""
+        }
+        inputElement.focus()
+        openSearchMenuModal = false
+    }
+    
+
 </script>
 {#if openConfirmModalDelete}
-    <ConfirmModal title="Konfirmasi Hapus Pesanan" confirmText="Ya, Hapus" on:close={() => openConfirmModalDelete = false} on:confirm={handleDelete} >
+    <ConfirmModal title="Konfirmasi Hapus Pesanan" confirmText="Ya, Hapus" on:close={() => {openConfirmModalDelete = false; inputElement.focus()}} on:confirm={handleDelete} >
         <p>Apakah anda yakin akan menghapus <span class="font-bold uppercase">{selectedMenu.name}?</span></p>
     </ConfirmModal>
-
+{/if}
+{#if openSearchMenuModal}
+    <SearchMenuModal {listMenu} {keyword} on:close={() => {openSearchMenuModal = false; inputElement.focus()}} on:submit={handleSubmit}></SearchMenuModal>
 {/if}
 
 <div class="row-span-10 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden max-h-full grid grid-cols-1 grid-rows-12 p-2">
@@ -178,8 +168,7 @@
         </div>
     </div>
     <div class="grid items-start">
-        <TableHeader {tableHeaderItems} textSize={'text-sm'} class="w-full " />
-
+        <TableHeader {tableHeaderItems} textSize={'text-sm'} class="w-full"/>
     </div>
     <div tabindex="0" role="button" class="overflow-y-auto row-span-11 overflow-x-hidden outline-none cursor-default " on:keydown={handleKeydown} on:click={handleClickDiv} use:dragscroll={{cursor : false, axis : 'y'}} style="scrollbar-gutter: stable;" >
         <div >

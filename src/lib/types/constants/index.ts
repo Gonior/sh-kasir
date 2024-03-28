@@ -1,4 +1,4 @@
-import type { IRemote } from ".."
+import type { IRemote, ITableHeaderItem } from ".."
 import type { IIcon } from "../index"
 
 export const TEMPLATE_NOTE = [
@@ -190,6 +190,31 @@ export const TEST_BILL_PRINT : IRemote.IBill = {
 	createAt: undefined,
 	updateAt: undefined
 } as const
+
+export const tableHeaderItemsLayoutB : ITableHeaderItem[] = [
+	{
+		value : "KTS",
+		width : 'w-14',
+		textAlign : 'text-center',
+	},{
+		value : "nama Menu",
+	},{
+		value : 'harga',
+		textAlign : 'text-right',
+		width : 'w-20',
+		
+	},{
+		value : 'total',
+		width : 'w-28',
+		textAlign : 'text-right',
+	},
+	{
+		value : '',
+		width : 'w-2',
+		textAlign : '',
+		paddingRight : ''
+	},
+]
 
 export const ListIcon: IIcon[] = [
     {

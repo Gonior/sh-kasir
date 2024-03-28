@@ -31,6 +31,10 @@
         dispatch('focus')
         openFormCustomer = false
     }
+
+    const handlePay = () => {
+        console.log({items, customer, subtotal : $tSubtotal})
+    }
 </script>
 {#if openConfirmModal}
 	<ConfirmModal title={"Konfirmasi Hapus Semua Pesanan"} confirmText={"Ya, Hapus"} on:close={(e) => openConfirmModal = e.detail} on:confirm={handleConfirm}>
@@ -69,7 +73,7 @@
             <button disabled={items.length === 0 && !customer} on:click={() => openConfirmModal = true} class="btn-secondary disabled:!bg-opacity-50 disabled:!text-opacity-50 !ring-0 !bg-red-600 !text-white !p-2">
                 <Icon name="eraser" class="h-6 w-6" />
             </button>
-            <button disabled={items.length === 0} class="btn-primary !p-2">
+            <button disabled={items.length === 0} on:click={() => handlePay()}  class="btn-primary !p-2">
                 <Icon name="wallet" class="h-6 w-6" />
             </button>
         </div>

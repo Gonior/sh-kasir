@@ -4,10 +4,11 @@
     import Icon from '../ui/Icon.svelte'
     import TextInput from '../forms/textInput.svelte'
     import ButtonUser from '../buttons/buttonUser.svelte';
+    import { focusTrap } from 'svelte-focus-trap';
     const dispatch = createEventDispatcher()
 
     export let customer = ""
-
+    export let showButtonUser = true
     const handleClose = () => {
         dispatch('close', false)
     }
@@ -19,7 +20,7 @@
 </script>
 
 <Modal outside={false}  on:close={() => handleClose()} class="w-3/4 md:w-1/2 lg:w-1/3 bg-red-600">
-    <form on:submit|preventDefault={handleSubmit}>
+    <form on:submit|preventDefault={handleSubmit} use:focusTrap>
         <div class="grid grid-cols-1 grid-rows-4 ">
             <div class="flex justify-between items-center">
                 <h1 class="font-bold text-xl">Pelanggan</h1>
@@ -30,7 +31,9 @@
             </div>
             <div class="grid grid-cols-2 items-end">
                 <div class="justify-end ">
-                    <ButtonUser/>
+                    {#if showButtonUser}
+                        <ButtonUser/>
+                    {/if}
                 </div>
                 <div class="grid justify-end">
                     <button type="submit" class="btn-primary !px-5 !py-3">Simpan</button>

@@ -14,7 +14,7 @@
     const pageSizeMenu = 14
 
     // eslint-disable-next-line no-unused-vars
-    export let handleAddMenu : (_params : IModel.IMenu) => void
+    export let handleAddMenu : (_params : IModel.IMenu, qty? : number) => void
 
     let listData : IModel.ILayoutBData[] = []
     let isLoading = true
@@ -40,15 +40,12 @@
     })
 
     const handleSelectCategory = (_id : string) => {
-        
         if (listData.find(d => d.category.selected).category._id !== _id) currentPageMenu = 1
-        
         listData = [...listData.map((data) => {
             if (data.category._id === _id) data.category.selected = true
             else data.category.selected = false
             return data
         })]
-        
     }
 
     const addMenu = (menu : IModel.IMenu) => {
@@ -58,12 +55,12 @@
         m.category = {...c}
         handleAddMenu(m)
     }
+
 </script>
 
 {#if isLoading}
     <LayoutBLoadingState />
 {:else if isValid}
-
 <div class="grid grid-rows-12 grid-cols-1 gap-1 h-full ">
     <div class="grid grid-cols-3 gap-2 row-span-11">
         <div class="grid grid-cols-1 grid-rows-8 gap-2">
