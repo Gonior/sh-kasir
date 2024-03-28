@@ -1,5 +1,5 @@
 <script>
-    import Icon from './Icon.svelte';
+    import Icon from '../ui/Icon.svelte';
     import { generateAvatar } from '@lib/utils'
 	import { user } from '@lib/store'
 	import ModalSwitchUser from '../modal/modalSwitchUser.svelte'

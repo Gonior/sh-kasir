@@ -1,10 +1,25 @@
 <script lang="ts">
-    export let orders = []
+	import LayoutA2 from "./layoutA2.svelte"
+    import LayoutA1 from "./layoutA1.svelte";
+	import type { IModel } from "@/lib/types"
+
+    export let items : IModel.IItem[] = []
+    export let listMenu : IModel.IMenu[] = []
+    export let addedId : string
+    export let invoice : string
+    export let customer : string
+    export let handleClear : () => void
+    export let selectedMenu : IModel.IItem
+    export let resetSelect : () => void
+    let inputElement : HTMLInputElement
+    // eslint-disable-next-line no-unused-vars
+    export let handleAddMenu : (_params : IModel.IMenu, qty : number) => void
+    
 </script>
 
-<h1>layout a</h1>
-<ol>
-    {#each orders as order} 
-    {order.name}
-    {/each}
-</ol>
+<!-- informasi bill -->
+<LayoutA1 {handleClear} on:focus={() => inputElement.focus()} {items} {invoice} bind:customer={customer} />
+<!-- pesanan -->
+<LayoutA2 {resetSelect} bind:selectedMenu={selectedMenu} {handleAddMenu} bind:inputElement={inputElement} {addedId} bind:items={items} {listMenu} />
+
+

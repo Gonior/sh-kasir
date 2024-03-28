@@ -1,4 +1,4 @@
-const formatCurrency = (num : number = 0) : string => {
+const formatCurrency = (num : number) : string => {
     try {
         let rupiah = ''
         let angkarev = num.toString().split('').reverse().join('')
@@ -8,7 +8,7 @@ const formatCurrency = (num : number = 0) : string => {
             .reverse()
             .join('')
     } catch (err) {
-
+        console.log(err)
     }
     return '0'
 	

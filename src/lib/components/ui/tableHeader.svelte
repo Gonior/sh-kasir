@@ -8,10 +8,10 @@
 
 </script>
 
-<table class="text-gray-700 dark:text-white uppercase {marginRight}">
+<table class="text-gray-700 dark:text-white uppercase {marginRight} {$$props.class}">
 	<tr class="{textSize}">
 		{#each tableHeaderItems as item, i (i)}
-			<th scope="col" class="py-2 {item.bgColor ? item.bgColor : 'bg-gray-100 dark:bg-gray-700' } {i === 0 ? 'rounded-tl-lg px-2' : i === tableHeaderItems.length - 1 ? 'rounded-tr-lg' : ''} {item.textAlign ?? 'text-left'} {item.width} {item.paddingRight} ">{item.value}</th>
+			<th scope="col" class="py-2 {item.bgColor ? item.bgColor : 'bg-gray-200 dark:bg-gray-700' } {i === 0 ? 'rounded-tl-lg px-2' : i === tableHeaderItems.length - 1 ? 'rounded-tr-lg' : ''} {item.textAlign ?? 'text-left'} {item.width} {item.paddingRight} ">{item.value}</th>
 		{/each}
 	</tr>
 </table>

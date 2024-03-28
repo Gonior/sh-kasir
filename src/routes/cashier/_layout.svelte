@@ -6,22 +6,22 @@
 	import Homepage from './homepage.svelte'
 	import Icon from '@components/ui/Icon.svelte'
 	import Navbar from '@components/navbar/navbar.svelte';
-	import ButtonUser from '@components/ui/buttonUser.svelte';
+	import ButtonUser from '@components/buttons/buttonUser.svelte';
 	import Clock from '@components/ui/clock.svelte';
-	import PrinterContainer from '@components/ui/printerContainer.svelte';
+	import ButtonPrinter from '@components/buttons/buttonPrinter.svelte';
 	let submenu : ISubMenu[]= [
 		{
 			id: 1,
 			name: 'Home Page',
 			component: Homepage,
-			selected : true,
+			selected : false,
 			icon: 'home'
 		},
 		{
 			id: 2,
 			name: 'Workspace',
 			component: Workspace,
-			selected: false,
+			selected: true,
 			icon: 'calc'
 		}
 	]
@@ -51,7 +51,7 @@
 		<div class="flex justify-between items-start px-3">
 			<Clock />
 			<div class="flex space-x-3">
-				<PrinterContainer />
+				<ButtonPrinter />
 				<ButtonUser />
 			</div>
 		</div>

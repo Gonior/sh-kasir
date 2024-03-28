@@ -51,6 +51,7 @@ export interface IItem {
     price?: number
     total?: number
     forId?: string
+    selected? : boolean
 }
 
 export interface IDiscount {

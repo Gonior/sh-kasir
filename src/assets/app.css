@@ -108,9 +108,9 @@ input[type="checkbox"] {
 }
 
 .container-placeholder {
-	@apply animate-pulse bg-gray-200 rounded-lg dark:bg-gray-700;
+	@apply animate-pulse bg-gray-300 rounded-lg dark:bg-gray-700;
 }
 
 .tr-item {
-	@apply transition border-b border-gray-400 dark:border-gray-700 focus:outline-none focus:bg-amber-100 dark:focus:bg-amber-900;
+	@apply transition border-b border-gray-400 dark:border-gray-700 focus:outline-none focus:bg-amber-200 dark:focus:bg-amber-900;
 }
