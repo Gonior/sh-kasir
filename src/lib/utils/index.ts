@@ -7,6 +7,7 @@ import removeDuplicateArray from "./logic/removeDuplicateArrat";
 import sorting from './logic/sorting'
 import * as validator from './logic/validator'
 import ascendingAlphabetByName from './logic/arraySortByName';
+import selectId from './logic/selectId';
 import clickOutside from "./ui/clickoutside";
 import scrollToBottom from './ui/scrollToBottom';
 import scrollToElement from './ui/scrollToElement';
@@ -30,6 +31,7 @@ export {
     needToPrint,
     keydownHandler,
     switchTheme,
+    selectId,
     formatCurrency,
     scrollToBottom,
     scrollToElement

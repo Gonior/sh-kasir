@@ -2,6 +2,7 @@
 <script lang="ts">
 	
 	import {type ISubMenu} from '@lib/types'
+	import { selectId } from '@lib/utils';
 	import Workspace from './workspace.svelte'
 	import Homepage from './homepage.svelte'
 	import Icon from '@components/ui/Icon.svelte'
@@ -26,15 +27,16 @@
 		}
 	]
 	const subMenuHandleClick = (id : string | number) => {
-		submenu = [
-			...submenu.map((s) => {
-				if (s.id === id) {
-					s.selected = true
-				}
-				else s.selected = false
-				return s
-			})
-		]
+		submenu = [...selectId(submenu, id)]
+		// submenu = [
+		// 	...submenu.map((s) => {
+		// 		if (s.id === id) {
+		// 			s.selected = true
+		// 		}
+		// 		else s.selected = false
+		// 		return s
+		// 	})
+		// ]
 	}
 </script>
 <div class="flex h-full">

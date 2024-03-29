@@ -54,9 +54,12 @@
         <div class="grid justify-end">
             <button class="btn-secondary truncate max-w-max " on:click={() => openFormCustomer = true}>
                 {#if customer}
-                    <span>{customer}</span>
-                {:else}
                     <div class="flex space-x-1 items-center">
+                        <Icon name="edit" stroke={1.5} class="h-5 w-5 text-gray-400" />
+                        <span>{customer}</span>
+                    </div>
+                {:else}
+                    <div class="flex space-x-1 items-center text-gray-700 dark:text-gray-300">
                         <Icon name="plus" stroke={3} class="h-6 w-6" />
                         <span class="">Pelanggan</span>
                     </div>

@@ -9,7 +9,7 @@
 	import { createEventDispatcher } from 'svelte'
 	import { generateAvatar } from '@lib/utils/'
 	import type { IModel } from '@/lib/types'
-	// import { IModel } from '@lib/types';
+
 	const dispatch = createEventDispatcher()
 	const userService = new UserService()
 
@@ -22,7 +22,7 @@
 	let isValid = false
 	let isLoading = false
 	onMount( async () => {
-
+		console.log('haii')
 		let isSuccess = await userService.load()
 		if (isSuccess) {
 			isValid = true
@@ -79,7 +79,7 @@
 		<div class="flex items-center justify-between mt-5">
 			<h1 class="text-gray-500 dark:text-gray-400">Pengguna saat ini</h1>
 			<div class="flex items-center space-x-1">
-				<img src={generateAvatar(currentUser.name)} alt={`avatar-${currentUser.name}`} class="h-8 w-8">
+				<img src={generateAvatar(currentUser.name)} alt={`avatar-${currentUser.name}`} class="h-6 w-6">
 				<span class="">{currentUser.name}</span>
 			</div>
 		</div>

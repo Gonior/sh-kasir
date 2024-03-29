@@ -104,6 +104,7 @@
                 {resetSelect}
                 {handleAddMenu}
                 {handleClear}
+                {handleAddNote}
                 {addedId}
                 {listMenu}  
                 />

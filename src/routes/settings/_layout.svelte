@@ -12,7 +12,7 @@
 	import CoSetting from "./COSetting.svelte"
 	import Icon from "@components/ui/Icon.svelte";
 	import Title from "@components/navbar/title.svelte";
-	import { isValidObject } from "@/lib/utils"
+	import { isValidObject, selectId } from "@/lib/utils"
 	
 	let isLogged = false
 	let localUserStored = get(userStored)
@@ -51,16 +51,7 @@
 	})
 
 	const subMenuHandleClick = (id : string | number) => {
-		submenu = [
-			...submenu.map((s) => {
-				if (s.id === id) {
-					s.selected = true
-					selectedId = s.id
-				}
-				else s.selected = false
-				return s
-			})
-		]
+		submenu = [...selectId(submenu, id, (__id) => selectedId = __id)]
 	}
 </script>
 

@@ -2,24 +2,28 @@
     import { tick, onMount } from 'svelte'
     import { dragscroll } from "@svelte-put/dragscroll";
 	import { fade } from 'svelte/transition'
-    import { addedEffect, formatCurrency, scrollToElement } from '@lib/utils'
+    import { addedEffect, formatCurrency, scrollToElement, selectId, scrollToBottom } from '@lib/utils'
 	import { type IModel, Constant } from '@/lib/types'
 	import Icon from '@components/ui/Icon.svelte'
 	import TableHeader from '@components/ui/tableHeader.svelte'
     import ConfirmModal from '@components/modal/confirmModal.svelte'
     import SearchMenuModal from '@components/modal/searcMenuModal.svelte'
+    import CustomAddNoteModal from '@components/modal/customAddNoteModal.svelte';
 
     // eslint-disable-next-line no-unused-vars
     export let handleAddMenu : (_params : IModel.IMenu, qty? : number) => void
+    // eslint-disable-next-line no-unused-vars
+    export let handleAddNote : (params : {name : string}) => void
     export let items : IModel.IItem[] = []
     export let listMenu : IModel.IMenu[] = []
     export let addedId : string
     export let inputElement : HTMLInputElement
     export let selectedMenu = items.find(i => i.selected) ?? null
     export let resetSelect : () => void
-
+    let containerr : HTMLElement
     onMount(() => {
         inputElement.focus()
+        scrollToBottom(containerr)
     })
 
     $: selectedMenu = items.find(i => i.selected) ?? null
@@ -35,6 +39,7 @@
     let keyword : string = ""
     let openConfirmModalDelete = false
     let openSearchMenuModal = false
+    let openCustomAddNoteModal = false
 
     const watchChange = async (id : string) : Promise<void> =>  {
         await tick()        
@@ -43,11 +48,12 @@
     }
 
     const handleClickMenu = (_id : string) => {
-        items = [ ...items.map((item) => {
-			if (item._id === _id) item.selected = true
-			else item.selected = false
-			return item
-		})]
+        items = [...selectId(items, _id)]
+        // items = [ ...items.map((item) => {
+		// 	if (item._id === _id) item.selected = true
+		// 	else item.selected = false
+		// 	return item
+		// })]
     }
 
     const handleClickDiv = () => {
@@ -57,9 +63,8 @@
             let filtered = [...items.filter((item) => !item.forId)]
             handleClickMenu(filtered[filtered.length-1]._id)
         }
-        
-        
     }
+
     const handleSearch = (e : KeyboardEvent) => {
         
         if (e.key === 'Enter') {
@@ -102,7 +107,7 @@
 
     const handleKeydown = (e : KeyboardEvent) => {
         let key = e.key
-        if (key !== 'ArrowUp' && key !== 'ArrowDown' && key !== 'Enter') return
+        if (key !== 'ArrowUp' && key !== 'ArrowDown') return
         const currentIndex = items.indexOf(selectedMenu)
         let newIndex : number
         if (currentIndex === -1) {
@@ -110,11 +115,10 @@
         } else {
             if (key === 'ArrowUp') newIndex = (currentIndex + items.length - 1) % items.length
             else if (key === 'ArrowDown') newIndex = (currentIndex + 1) % items.length
-            else if (key === 'Enter') {
-                console.log('enter detected')
-            }
+            
         }
-        handleClickMenu(items[newIndex]._id)
+        let id  = (items[newIndex] && items[newIndex]._id) ?? ""
+        handleClickMenu(id)
     }
 
     const handleSubmit = (e : CustomEvent<{menu : IModel.IMenu}>) => {
@@ -125,16 +129,26 @@
         inputElement.focus()
         openSearchMenuModal = false
     }
+
+    const handleClose = () => {
+        openConfirmModalDelete = false
+        openSearchMenuModal = false
+        openCustomAddNoteModal = false
+        inputElement.focus()
+    }
     
 
 </script>
 {#if openConfirmModalDelete}
-    <ConfirmModal title="Konfirmasi Hapus Pesanan" confirmText="Ya, Hapus" on:close={() => {openConfirmModalDelete = false; inputElement.focus()}} on:confirm={handleDelete} >
+    <ConfirmModal title="Konfirmasi Hapus Pesanan" confirmText="Ya, Hapus" on:close={handleClose} on:confirm={handleDelete} >
         <p>Apakah anda yakin akan menghapus <span class="font-bold uppercase">{selectedMenu.name}?</span></p>
     </ConfirmModal>
 {/if}
 {#if openSearchMenuModal}
-    <SearchMenuModal {listMenu} {keyword} on:close={() => {openSearchMenuModal = false; inputElement.focus()}} on:submit={handleSubmit}></SearchMenuModal>
+    <SearchMenuModal {listMenu} {keyword} on:close={handleClose} on:submit={handleSubmit}></SearchMenuModal>
+{/if}
+{#if openCustomAddNoteModal}
+    <CustomAddNoteModal on:close={handleClose} on:submit={(e) => {handleAddNote({...e.detail}), handleClose()}} />
 {/if}
 
 <div class="row-span-10 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden max-h-full grid grid-cols-1 grid-rows-12 p-2">
@@ -162,7 +176,7 @@
                     <Icon name="ellipsis-vertical" class="h-6 w-6" stroke={3} />
                 </button>
             {/if}
-            <button disabled={items.length === 0} transition:fade={{duration :200}} class="btn-secondary !p-2">
+            <button disabled={items.length === 0} transition:fade={{duration :200}} class="btn-secondary !p-2" on:click={() => openCustomAddNoteModal = true}>
                 <Icon name="chat" class="h-6 w-6" />
             </button>
         </div>
@@ -170,7 +184,15 @@
     <div class="grid items-start">
         <TableHeader {tableHeaderItems} textSize={'text-sm'} class="w-full"/>
     </div>
-    <div tabindex="0" role="button" class="overflow-y-auto row-span-11 overflow-x-hidden outline-none cursor-default " on:keydown={handleKeydown} on:click={handleClickDiv} use:dragscroll={{cursor : false, axis : 'y'}} style="scrollbar-gutter: stable;" >
+    <div 
+        tabindex="0" 
+        role="button"
+        style="scrollbar-gutter: stable;"
+        class="overflow-y-auto row-span-11 overflow-x-hidden outline-none cursor-default" 
+        bind:this={containerr}
+        on:keydown={handleKeydown} 
+        on:click={handleClickDiv} 
+        use:dragscroll={{cursor : false, axis : 'y'}}>
         <div >
             <table id="table-conter"  class="tex4t-gray-500 dark:text-gray-300 text-sm font-bold w-full" >
             {#each items as order (order._id)}

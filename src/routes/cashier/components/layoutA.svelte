@@ -14,12 +14,14 @@
     let inputElement : HTMLInputElement
     // eslint-disable-next-line no-unused-vars
     export let handleAddMenu : (_params : IModel.IMenu, qty : number) => void
+    // eslint-disable-next-line no-unused-vars
+    export let handleAddNote : (params : {name : string}) => void
     
 </script>
 
 <!-- informasi bill -->
 <LayoutA1 {handleClear} on:focus={() => inputElement.focus()} {items} {invoice} bind:customer={customer} />
 <!-- pesanan -->
-<LayoutA2 {resetSelect} bind:selectedMenu={selectedMenu} {handleAddMenu} bind:inputElement={inputElement} {addedId} bind:items={items} {listMenu} />
+<LayoutA2 {handleAddNote} {resetSelect} bind:selectedMenu={selectedMenu} {handleAddMenu} bind:inputElement={inputElement} {addedId} bind:items={items} {listMenu} />
 
 

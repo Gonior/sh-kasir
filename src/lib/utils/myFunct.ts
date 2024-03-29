@@ -16,14 +16,6 @@ export const capitalize = (str : string) => {
 	return `${str[0].toUpperCase()}${str.slice(1)}`
 }
 
-export const scrollToElement = async (elementId : string, options : ScrollIntoViewOptions = { behavior: 'instant', block: 'nearest' }) => {
-	let el = document.querySelector(`#${elementId}`)
-	if (!el) return
-	el.scrollIntoView(options)
-}
-
-
-
 export const parsingDate = (array=[]) => {
 	return array.map((a) => {
 		a.createdAt = new Date(a.createdAt)

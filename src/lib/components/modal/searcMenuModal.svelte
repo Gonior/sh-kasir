@@ -6,7 +6,7 @@
     import Modal from "./modal.svelte";
     import Icon from '../ui/Icon.svelte'
 	import type { IModel } from '@/lib/types'
-    import { formatCurrency, searchHandler } from '@lib/utils'
+    import { formatCurrency, searchHandler, selectId } from '@lib/utils'
 	
     const dispatch = createEventDispatcher()
 
@@ -61,11 +61,7 @@
     }
 
     const handleSelect = (_id : string) => {
-        filteredMenu = [...filteredMenu.map(menu => {
-            if (menu._id === _id) menu.selected = true
-            else menu.selected = false
-            return menu
-        })]
+        filteredMenu = [...selectId(filteredMenu, _id)]
     }
 
     const handleKeydown = (e : KeyboardEvent) => {
@@ -80,9 +76,10 @@
             else if (key === 'ArrowDown') newIndex = (currentIndex + 1) % filteredMenu.length
             else if (key === 'Enter') {
                 console.log('enter detected')
+                newIndex = currentIndex
             }
             else if (key === 'Escape') {
-                
+                newIndex = currentIndex
                 handleClose()
             }
         }
@@ -98,7 +95,7 @@
 
 </script>
 <svelte:window on:keydown={handleKeydown} ></svelte:window>
-<Modal outside={false}  on:close={() => handleClose()} class="w-3/4 md:w-1/2 lg:w-1/2 h-[80vh] max-h-[80vh] overflow-y-hidden bg-red-600">
+<Modal outside={false}  on:close={() => handleClose()} class="w-3/4 md:w-1/2 lg:w-1/2 h-[80vh] max-h-[80vh] overflow-y-hidden ">
     <form on:submit|preventDefault|capture={handleSubmit} class="h-full" use:focusTrap>
         <div class="grid grid-cols-1 grid-rows-12 h-full ">
             <div class="flex justify-between items-center">
@@ -111,7 +108,7 @@
             <div class="row-span-9 overflow-y-auto">
                 <table class="w-full">
                     {#each filteredMenu as menu}
-                        <tr id={'menu-'+menu._id} class=" w-full {menu.selected ? 'bg-gray-700' : 'bg-inherit'}" on:click={() => handleSelect(menu._id)}>
+                        <tr id={'menu-'+menu._id} class=" w-full {menu.selected ? 'bg-gray-300 dark:bg-gray-700' : 'bg-inherit'}" on:click={() => handleSelect(menu._id)}>
                             <td class="">{menu.name} <span class="text-gray-500 dark:text-gray-400 ">(UPC {menu.upc ? menu.upc : '-'})</span></td>
                             <td class="text-right">{formatCurrency(menu.price)}</td>
                         </tr>
