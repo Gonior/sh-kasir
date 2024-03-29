@@ -10,7 +10,7 @@
 
 
 </script>
-<Modal class="w-1/3 " outside={true} overlay={true} on:close={() => dispatch('close', false)}>
+<Modal class="max-w-[50vw]" outside={true} overlay={true} on:close={() => dispatch('close', false)}>
 	<div class="mb-2 flex items-center justify-between">
 		<h1 class="font-bold text-xl">{title}</h1>
 		<button class="btn text-gray-500 dark:text-gray-400" on:click={() => dispatch('close', false)}>

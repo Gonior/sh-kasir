@@ -18,10 +18,5 @@ const selectId = <T extends { selected?: boolean, [index : string] : any}>(items
 
     return result
 }
-// let items :  ISubMenu[] = [{
-//     name: 'blabal',
-//     selected: false,
-//     id: ""
-// }]
-// selectId(items, 'ite', (id) => console.log(id))
+
 export default selectId

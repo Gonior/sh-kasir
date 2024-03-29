@@ -1,7 +1,7 @@
 
 <script lang="ts">
 	
-	import {type ISubMenu} from '@lib/types'
+	import {IModel, type ISubMenu} from '@lib/types'
 	import { selectId } from '@lib/utils';
 	import Workspace from './workspace.svelte'
 	import Homepage from './homepage.svelte'
@@ -10,6 +10,23 @@
 	import ButtonUser from '@components/buttons/buttonUser.svelte';
 	import Clock from '@components/ui/clock.svelte';
 	import ButtonPrinter from '@components/buttons/buttonPrinter.svelte';
+	import StoreController from '@lib/controller/store.controller';
+	import { onMount } from 'svelte'
+
+	const storeController = new StoreController()
+
+	let storeInfo : IModel.IStoreInfo = {
+		name: '',
+		address: '',
+		phone: '',
+		footerNote: ''
+	}
+	let taxInfo : IModel.ITax = {
+		checked: false,
+		name : '',
+		value : 0
+	}
+
 	let submenu : ISubMenu[]= [
 		{
 			id: 1,
@@ -26,18 +43,21 @@
 			icon: 'calc'
 		}
 	]
+
+	onMount( async () => {
+		let isSuccess = await storeController.init()
+		if( isSuccess ) {
+			storeInfo = {...storeController.getStoreInfo()}
+			taxInfo = {...storeController.getTaxInfo()}			
+		}
+	})
+
 	const subMenuHandleClick = (id : string | number) => {
 		submenu = [...selectId(submenu, id)]
-		// submenu = [
-		// 	...submenu.map((s) => {
-		// 		if (s.id === id) {
-		// 			s.selected = true
-		// 		}
-		// 		else s.selected = false
-		// 		return s
-		// 	})
-		// ]
 	}
+
+	
+	
 </script>
 <div class="flex h-full">
 	<Navbar direction="vertical" showSetting={false}>
@@ -51,14 +71,17 @@
 	</Navbar>
 	<div class="flex-1 h-full max-h-full flex flex-col pt-3">
 		<div class="flex justify-between items-start px-3">
-			<Clock />
+			<div>
+				<p class="text-sm truncate"> {storeInfo.name} , {storeInfo.address}, {storeInfo.phone}</p>				
+				<Clock />
+			</div>
 			<div class="flex space-x-3">
 				<ButtonPrinter />
 				<ButtonUser />
 			</div>
 		</div>
 		<div class="flex-1 overflow-hidden">
-			<svelte:component this={submenu.find((menu) => menu.selected).component} ></svelte:component>
+			<svelte:component this={submenu.find((menu) => menu.selected).component} {storeInfo} {taxInfo} ></svelte:component>
 		</div>
 	</div>
 </div>

@@ -9,7 +9,7 @@
     import ConfirmModal from '@components/modal/confirmModal.svelte'
     import SearchMenuModal from '@components/modal/searcMenuModal.svelte'
     import CustomAddNoteModal from '@components/modal/customAddNoteModal.svelte';
-	import EditMenuLayoutA2Modal from '@/lib/components/modal/editMenuLayoutA2Modal.svelte'
+	import EditMenuLayoutA2Modal from '@components/modal/editMenuLayoutA2Modal.svelte'
 
     // eslint-disable-next-line no-unused-vars
     export let handleAddMenu : (_params : IModel.IMenu, qty? : number) => void
@@ -21,6 +21,7 @@
     export let inputElement : HTMLInputElement
     export let selectedMenu = items.find(i => i.selected) ?? null
     export let resetSelect : () => void
+    export let invoice : string
     let containerr : HTMLElement
     onMount(() => {
         inputElement.focus()
@@ -42,6 +43,7 @@
     let openSearchMenuModal = false
     let openCustomAddNoteModal = false
     let openEditMenuModal = false
+    let openConfirmModalSetPrinted = false
 
     const watchChange = async (id : string) : Promise<void> =>  {
         await tick()        
@@ -51,11 +53,6 @@
 
     const handleClickMenu = (_id : string) => {
         items = [...selectId(items, _id)]
-        // items = [ ...items.map((item) => {
-		// 	if (item._id === _id) item.selected = true
-		// 	else item.selected = false
-		// 	return item
-		// })]
     }
 
     const handleClickDiv = () => {
@@ -137,6 +134,7 @@
         openSearchMenuModal = false
         openCustomAddNoteModal = false
         openEditMenuModal = false
+        openConfirmModalSetPrinted = false
         inputElement.focus()
         resetSelect()
     }
@@ -159,12 +157,37 @@
         openEditMenuModal = false
         
     }
+    const handleSetPrinted = (e : CustomEvent<boolean>) => {
+        if (e.detail && selectedMenu) {
+            selectedMenu.printed = !selectedMenu.printed
+            if(!selectedMenu.forId) {
+                let notes = items.filter((item) => item.forId === selectedMenu._id)
+                if (notes.length > 0) notes.forEach(note => note.printed = selectedMenu.printed)
+            }
+
+            items = [...items]
+            resetSelect()
+        }
+        openConfirmModalSetPrinted = false
+    }
     
 
 </script>
 {#if openConfirmModalDelete}
     <ConfirmModal title="Konfirmasi Hapus Pesanan" confirmText="Ya, Hapus" on:close={handleClose} on:confirm={handleDelete} >
         <p>Apakah anda yakin akan menghapus <span class="font-bold uppercase">{selectedMenu.name}?</span></p>
+    </ConfirmModal>
+{/if}
+{#if openConfirmModalSetPrinted}
+    <ConfirmModal title="Konfirmasi Ubah Status Menu" confirmText="Ya, Ubah" on:close={handleClose} on:confirm={handleSetPrinted} >
+        <p>Status 
+            <span class="font-bold uppercase">{selectedMenu.name}</span> 
+            adalah 
+            <span class="font-bold uppercase">{selectedMenu.printed ? '"sudah dipesan"' : '"belum dipesan"'}</span>
+            apakah anda yakin merubah status menjadi
+            <span class="font-bold uppercase">{selectedMenu.printed ? '"belum dipesan"' : '"sudah dipesan"'}</span>
+            ?
+        </p>
     </ConfirmModal>
 {/if}
 {#if openSearchMenuModal}
@@ -192,9 +215,7 @@
             <Icon name="qr-code" class="h-6 w-6 absolute top-2.5 left-1.5 text-gray-500 peer-focus:text-gray-900 dark:peer-focus:text-gray-50"  />
         </div>
         <div class="flex flex-0 items-center justify-end space-x-2">
-            <!-- <button class="btn-secondary !p-2">
-                <Icon name="padlock" class="h-6 w-6" />
-            </button> -->
+            
             {#if selectedMenu}
                 <button transition:fade={{duration :200}} class="btn-secondary !p-2" on:click={() => openConfirmModalDelete = true}>
                     <Icon name="trash" class="h-6 w-6" />
@@ -202,6 +223,15 @@
                 <button transition:fade={{duration :200}} class="btn-secondary !p-2"  on:click={() => openEditMenuModal = true}>
                     <Icon name="ellipsis-vertical" class="h-6 w-6" stroke={3} />
                 </button>
+                {#if invoice}
+                    <button class="btn-secondary !p-2" on:click={() => openConfirmModalSetPrinted = true}>
+                        {#if !selectedMenu.printed}
+                            <Icon name="open-padlock" class="h-6 w-6" />
+                        {:else}
+                            <Icon name="padlock" class="h-6 w-6" />
+                        {/if}
+                    </button>
+                {/if}
             {/if}
             <button disabled={items.length === 0 || (selectedMenu && !!selectedMenu.forId) } transition:fade={{duration :200}} class="btn-secondary !p-2" on:click={() => openCustomAddNoteModal = true}>
                 <Icon name="chat" class="h-6 w-6" />
@@ -225,13 +255,13 @@
             {#each items as order (order._id)}
                 <tr 
                     id={`item-${order._id}`} 
-                    class="{order.selected ? 'bg-gray-300 dark:bg-gray-700' : 'bg-inherit' } "
+                    class="{order.selected ? 'bg-gray-300 dark:bg-gray-700' : 'bg-inherit' } {order.printed ? 'dark:text-gray-600 text-gray-400' : ''} "
                     in:addedEffect|local
                     on:click={() => handleClickMenu(order._id)}
                     >
                     {#if !order.forId}
                         {#key order.qty}
-                            <td in:addedEffect|local class="w-14 text-center">{order.qty}</td>
+                            <td in:addedEffect|local class="w-14 text-center  ">{order.qty}</td>
                             <td in:addedEffect|local class="">{order.name}</td>
                             <td in:addedEffect|local class="w-20 text-right">{formatCurrency(order.price)}</td>
                             <td in:addedEffect|local class=" w-28 text-right">{formatCurrency(order.total)}</td>

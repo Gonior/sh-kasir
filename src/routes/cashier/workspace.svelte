@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { IModel} from "@/lib/types"
+	import { IModel} from "@/lib/types"
 	import { onMount } from "svelte"
     import { v4 as uuidv4 } from 'uuid';
     import LayoutA from "./components/layoutA.svelte";
@@ -8,15 +8,34 @@
 	import Errorstate from "@components/state/errorstate.svelte"
 	import Loading from "@components/state/loading.svelte"
     
+    export let taxInfo : IModel.ITax = {
+		 checked: false,
+         name : '',
+         value : 0
+	}
+    export let storeInfo : IModel.IStoreInfo = {
+		 name: "",
+		 address: "",
+		 phone: "",
+		 footerNote: ""
+	}
+
+    let downpayment : number = 0
+    let discount : IModel.IDiscount = {
+		percentage: 0,
+		value: 0
+	}
+
     let isLoading = true
     let isValid = false
     let listMenu : IModel.IMenu[] = []
     let addedId : string = ""
     let items : IModel.IItem[] = []
     let customer : string = ''
-    let invoice : string
+    let invoice : string = "#20241123916712"
     let selectedMenu : IModel.IItem
-
+    
+    
     export let _id = ''
     
     onMount(async() => {
@@ -106,7 +125,11 @@
                 {handleClear}
                 {handleAddNote}
                 {addedId}
-                {listMenu}  
+                {listMenu}
+                {discount}
+                {taxInfo}
+                {downpayment}
+                {storeInfo}
                 />
         {:else}
             <div class="row-span-12">

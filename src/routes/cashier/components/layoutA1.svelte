@@ -12,6 +12,22 @@
     export let invoice : string
     export let customer = ""
     export let handleClear : () => void
+    export let taxInfo : IModel.ITax = {
+		 checked: false,
+         name : '',
+         value : 0
+	}
+    export let storeInfo : IModel.IStoreInfo = {
+		 name: "",
+		 address: "",
+		 phone: "",
+		 footerNote: ""
+	}
+    export let downpayment : number = 0
+    export let discount : IModel.IDiscount = {
+		percentage: 0,
+		value: 0
+	}
     
     const dispatch = createEventDispatcher()
 
@@ -33,7 +49,7 @@
     }
 
     const handlePay = () => {
-        console.log({items, customer, subtotal : $tSubtotal})
+        console.log({items, customer, subtotal : $tSubtotal, taxInfo, storeInfo, downpayment, discount})
     }
 </script>
 {#if openConfirmModal}

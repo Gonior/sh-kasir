@@ -3,9 +3,9 @@
     import { focusTrap } from 'svelte-focus-trap';
     import Modal from "./modal.svelte";
     import Icon from '../ui/Icon.svelte'
-	import type { IModel } from '@/lib/types'
+	import type { IModel } from '@lib/types'
+	import { formatCurrency } from '@lib/utils'
     import TextInput from '../forms/textInput.svelte'
-	import { formatCurrency } from '@/lib/utils'
     const dispatch = createEventDispatcher()
 
 	export let _id  : string = ''
