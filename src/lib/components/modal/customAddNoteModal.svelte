@@ -28,8 +28,8 @@
             <div class="row-span-2">
                 <TextInput isFocused={true} bind:value={noteName} placeholder="Cth. Jangan Kering" />
             </div>
-            <div class="grid grid-cols-2 items-end justify-end">
-                <button type="submit" class="btn-primary !px-5 !py-3">Simpan</button>
+            <div class="grid justify-end ">
+                <button type="submit" class="btn-primary !px-5 !py-3 w-max">Simpan</button>
             </div>
         </div>
     </form>

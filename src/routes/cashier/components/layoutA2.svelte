@@ -9,6 +9,7 @@
     import ConfirmModal from '@components/modal/confirmModal.svelte'
     import SearchMenuModal from '@components/modal/searcMenuModal.svelte'
     import CustomAddNoteModal from '@components/modal/customAddNoteModal.svelte';
+	import EditMenuLayoutA2Modal from '@/lib/components/modal/editMenuLayoutA2Modal.svelte'
 
     // eslint-disable-next-line no-unused-vars
     export let handleAddMenu : (_params : IModel.IMenu, qty? : number) => void
@@ -40,6 +41,7 @@
     let openConfirmModalDelete = false
     let openSearchMenuModal = false
     let openCustomAddNoteModal = false
+    let openEditMenuModal = false
 
     const watchChange = async (id : string) : Promise<void> =>  {
         await tick()        
@@ -134,7 +136,28 @@
         openConfirmModalDelete = false
         openSearchMenuModal = false
         openCustomAddNoteModal = false
+        openEditMenuModal = false
         inputElement.focus()
+        resetSelect()
+    }
+
+    const handleEdit = (e : CustomEvent<IModel.IItem>) => {
+        let { forId, name, printed, _id, qty, price, total } = e.detail
+        let findItem = items.find(item => item._id === _id)
+        if(findItem) {
+            if(findItem.forId && forId) {
+                findItem.name = name
+            } else {
+                findItem.name = name
+                findItem.printed = printed
+                findItem.qty = qty
+                findItem.total = total
+                findItem.price = price
+            }
+        }
+        items = [...items]
+        openEditMenuModal = false
+        
     }
     
 
@@ -149,6 +172,10 @@
 {/if}
 {#if openCustomAddNoteModal}
     <CustomAddNoteModal on:close={handleClose} on:submit={(e) => {handleAddNote({...e.detail}), handleClose()}} />
+{/if}
+{#if openEditMenuModal}
+    <EditMenuLayoutA2Modal {...selectedMenu} on:close={handleClose} on:submit={handleEdit} />
+    
 {/if}
 
 <div class="row-span-10 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden max-h-full grid grid-cols-1 grid-rows-12 p-2">
@@ -169,14 +196,14 @@
                 <Icon name="padlock" class="h-6 w-6" />
             </button> -->
             {#if selectedMenu}
-                <button transition:fade={{duration :200}} class="btn-secondary !p-2"  on:click={() => openConfirmModalDelete = true}>
+                <button transition:fade={{duration :200}} class="btn-secondary !p-2" on:click={() => openConfirmModalDelete = true}>
                     <Icon name="trash" class="h-6 w-6" />
                 </button>
-                <button transition:fade={{duration :200}} class="btn-secondary !p-2">
+                <button transition:fade={{duration :200}} class="btn-secondary !p-2"  on:click={() => openEditMenuModal = true}>
                     <Icon name="ellipsis-vertical" class="h-6 w-6" stroke={3} />
                 </button>
             {/if}
-            <button disabled={items.length === 0} transition:fade={{duration :200}} class="btn-secondary !p-2" on:click={() => openCustomAddNoteModal = true}>
+            <button disabled={items.length === 0 || (selectedMenu && !!selectedMenu.forId) } transition:fade={{duration :200}} class="btn-secondary !p-2" on:click={() => openCustomAddNoteModal = true}>
                 <Icon name="chat" class="h-6 w-6" />
             </button>
         </div>

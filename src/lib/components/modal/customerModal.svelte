@@ -9,6 +9,7 @@
 
     export let customer = ""
     export let showButtonUser = true
+
     const handleClose = () => {
         dispatch('close', false)
     }

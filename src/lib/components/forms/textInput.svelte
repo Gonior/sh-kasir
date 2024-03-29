@@ -9,6 +9,8 @@
 	export let isFocused : boolean = false
 	export let typeInput : "text" | 'password' | 'number' = 'text'
 	export let placeholder = "Text input"
+	export let textAlign : '!text-center' | '!text-left' | '!text-right' = "!text-left"
+	export let readonly : boolean = false
 	
 	onMount(() => {
 		if (isFocused) {
@@ -29,11 +31,11 @@
 	<p class="mb-1">{label}</p>
 	{/if}
 	{#if typeInput === 'text'}
-		<input bind:this={elInput} bind:value={value} type='text' class="form-control w-full" placeholder={placeholder}>
+		<input {readonly} bind:this={elInput} bind:value={value} type='text' class="form-control w-full  {textAlign}" placeholder={placeholder}>
 	{:else if typeInput === 'number'}
-		<input bind:this={elInput} bind:value={value} type='number' class="form-control w-full" placeholder={placeholder}>
+		<input {readonly} bind:this={elInput} bind:value={value} type='number' class="form-control w-full {textAlign}" placeholder={placeholder}>
 	{:else}
-		<input bind:this={elInput} bind:value={value} type='password' class="form-control w-full" placeholder={placeholder}>
+		<input {readonly} bind:this={elInput} bind:value={value} type='password' class="form-control w-full {textAlign}" placeholder={placeholder}>
 	{/if}
 	{#if errorMsg}
 		<p class="text-red-500 text-sm">{errorMsg}</p>
