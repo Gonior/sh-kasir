@@ -8,11 +8,11 @@
 		@apply font-inter select-none;
 	}
 	.btn {
-		@apply rounded-lg p-2 font-semibold transform transition-all active:scale-[0.99] disabled:active:scale-100 duration-200 ease-in-out disabled:bg-opacity-50 disabled:text-opacity-20 dark:disabled:bg-opacity-50 dark:disabled:text-opacity-20;
+		@apply focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 focus:ring-offset-gray-50 dark:focus:outline-none dark:focus:border-0 focus:ring-amber-600 rounded-lg p-2 font-semibold transform transition-all active:scale-[0.99] disabled:active:scale-100 duration-200 ease-in-out disabled:bg-opacity-50 disabled:text-opacity-20 dark:disabled:bg-opacity-50 dark:disabled:text-opacity-20;
 	}
 
 	.secondary-color {
-		@apply ring-1 ring-gray-300  text-gray-600 dark:ring-0 dark:bg-gray-700 dark:text-white;
+		@apply outline outline-1 outline-gray-300  text-gray-600 dark:outline-none dark:bg-gray-700 dark:text-white;
 	}
 
 	.primary-color {
@@ -94,7 +94,6 @@ input[type="checkbox"] {
 	@apply btn secondary-color ;
 }
 
-
 .chips {
 	@apply btn py-2 px-4 rounded-full flex items-center space-x-1 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white;
 }
@@ -104,7 +103,7 @@ input[type="checkbox"] {
 }
 
 .form-control {
-	@apply text-left rounded-lg outline-none p-2 border-2 border-gray-300 dark:border-gray-700 bg-transparent focus:outline-none focus:border-transparent focus:bg-white dark:focus:bg-gray-700 focus:ring-2 focus:ring-amber-600 ;
+	@apply !select-all relative text-left rounded-lg outline-none p-2 border-2 border-gray-300 dark:border-gray-700 bg-transparent focus:outline-none focus:border-transparent focus:bg-white dark:focus:bg-gray-700 focus:ring-2 focus:ring-amber-600 ;
 }
 
 .container-placeholder {

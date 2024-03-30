@@ -18,16 +18,17 @@
         if(_id) console.log('edit mode')
         let isSuccess = await menuService.load()
         if (isSuccess) {
+            isValid = true
             listData = [...menuService.getDataByCategory()]
             listMenu = [...menuService.getData().map(menu => {return {...menu}})]
-            isValid = true
             
         }
         isLoading = false
     })
     // keperluan bill
     let _id :string = ''
-    let invoice : string = "#20241123916712"
+    let invoice : string = "#2024112391671212317826318263871623812637126387"
+
     let status : string = ""
     let customer : string = ''
     let downpayment : number = 0
@@ -77,12 +78,14 @@
                 items = [...items]
                 addedId = findOrder._id    
             } else {
-                // FIX this
-                // handleSelectItem(findOrder._id)
+                
                 selectedMenu = findOrder
-                // console.log({selectedMenu, findOrder})
-                openConfirmModalSetPrinted = true
-                // return
+                inputElement.blur()
+                setTimeout(() => {
+                    openConfirmModalSetPrinted = true
+
+                }, 100)
+                return
             }
             
         }
@@ -128,6 +131,7 @@
             }
 
             items = [...items]
+            inputElement.focus()
             handleReset()
         }
     }
@@ -135,15 +139,15 @@
 </script>
 {#if openConfirmModalSetPrinted}
     <ConfirmModal title="Konfirmasi Ubah Status Menu" confirmText="Ya, Ubah" on:close={() => openConfirmModalSetPrinted = false} on:confirm={(e) => {handleSetPrinted(e); openConfirmModalSetPrinted = false}} >
-        {selectedMenu}
-        <!-- <p>Status 
-            <span class="font-bold uppercase">{selectedMenu.name}</span> 
+        <!-- {selectedMenu} -->
+        <p>Status 
+            <span class="font-bold uppercase">{selectedMenu?.name}</span> 
             adalah 
-            <span class="font-bold uppercase">{selectedMenu.printed ? '"sudah dipesan"' : '"belum dipesan"'}</span>
+            <span class="font-bold uppercase">{selectedMenu?.printed ? '"sudah dipesan"' : '"belum dipesan"'}</span>
             apakah anda yakin merubah status menjadi
-            <span class="font-bold uppercase">{selectedMenu.printed ? '"belum dipesan"' : '"sudah dipesan"'}</span>
+            <span class="font-bold uppercase">{selectedMenu?.printed ? '"belum dipesan"' : '"sudah dipesan"'}</span>
             ?
-        </p> -->
+        </p>
     </ConfirmModal>
 {/if}
 <div class="grid grid-cols-2 h-full gap-2 p-2">
@@ -171,12 +175,12 @@
                 bind:items={items}
                 bind:selectedMenu={selectedMenu}
                 bind:inputElement={inputElement}
+                bind:openConfirmModalSetPrinted={openConfirmModalSetPrinted}
                 {listMenu}
                 {handleSelectItem}
                 {handleAddNote}
                 {handleAddMenu}
                 {handleReset}
-                {handleSetPrinted}
                 {addedId}
              />
             

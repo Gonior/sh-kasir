@@ -36,7 +36,7 @@
 			<div class="flex-1" >
 				<h1 class="max-w-2xl mb-4 text-4xl font-extrabold tracking leading-relaxed  md:text-5xl xl:text-6xl dark:text-white">Hitung Cepat & Tepat</h1>
 				<p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">Aplikasi kasir untuk RM Sangkan Hurip</p>
-				<div class="flex space-x-2">
+				<div class="flex space-x-2 px-2">
 					<button on:click={() => {openModalSwithUser = true, loginInto = "Cashier"}} class="btn-primary flex !px-5 !py-3 items-center space-x-1">
 						<Icon name="calc" class="h-6 w-6" />
 						<span>Masuk ke Aplikasi Kasir</span>

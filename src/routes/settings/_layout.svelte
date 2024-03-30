@@ -57,8 +57,8 @@
 
 <div class="w-full flex flex-col h-full">
 	<Title title="Pengaturan" />
-	<div class="flex flex-col mb-5">
-		<div class="flex items-center overflow-x-auto space-x-2">
+	<div class="flex flex-col mb-5 ">
+		<div class="flex items-center overflow-x-auto space-x-2 p-2">
 			{#each submenu as sm}
 				{#if sm.id !== 3}
 					<button on:click={() => subMenuHandleClick(sm.id)} class="chips {sm.selected ? 'active' : '' }" >

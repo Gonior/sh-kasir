@@ -58,17 +58,17 @@
 {/if}
 
 <div class="row-span-2 grid grid-cols-1 border border-gray-200 dark:border-gray-700 rounded-lg p-2 ">
-    <div class="grid grid-cols-2 items-start">
+    <div class="grid grid-cols-2 items-start gap-3">
         <div class="grid grid-rows-2">
             <span class="font-bold">Pelanggan</span>
-            <span class="text-sm text-gray-400">invoice {invoice ? invoice : '-'}</span>
+            <span class="text-sm text-gray-400 truncate">invoice {invoice ? invoice : '-'}</span>
         </div>
         <div class="grid justify-end">
-            <button class="btn-secondary truncate max-w-max " on:click={() => openFormCustomer = true}>
+            <button class="btn-secondary truncate max-w-full " on:click={() => openFormCustomer = true}>
                 {#if customer}
                     <div class="flex space-x-1 items-center">
-                        <Icon name="edit" stroke={1.5} class="h-5 w-5 text-gray-400" />
-                        <span>{customer}</span>
+                        <Icon name="edit" stroke={1.5} class="flex-shrink-0 h-5 w-5 text-gray-400" />
+                        <span class="truncate">{customer}</span>
                     </div>
                 {:else}
                     <div class="flex space-x-1 items-center text-gray-700 dark:text-gray-300">
@@ -85,7 +85,7 @@
             <h1 class="text-2xl  font-extrabold text-amber-600">{formatCurrency(Math.trunc($tSubtotal))}</h1>
         </div>
         <div class="flex flex-0 items-center justify-end space-x-2">
-            <button disabled={items.length === 0 && !customer} on:click={() => openConfirmModal = true} class="btn-secondary disabled:!bg-opacity-50 disabled:!text-opacity-50 !ring-0 !bg-red-600 !text-white !p-2">
+            <button disabled={items.length === 0 && !customer} on:click={() => openConfirmModal = true} class="btn-secondary disabled:!bg-opacity-50 disabled:!text-opacity-50  !bg-red-600 !text-white !p-2">
                 <Icon name="eraser" class="h-6 w-6" />
             </button>
             <button disabled={items.length === 0} on:click={() => handlePay()}  class="btn-primary !p-2">

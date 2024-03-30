@@ -24,11 +24,12 @@
     export let handleAddNote : (params : {name : string}) => void
     export let handleReset : () => void
     // eslint-disable-next-line no-unused-vars
-    export let handleSetPrinted : (_e : CustomEvent<boolean>) => void
+    // export let handleSetPrinted : (_e : CustomEvent<boolean>) => void
 
     // ui depedencies
     export let addedId : string
     export let inputElement : HTMLInputElement
+    export let openConfirmModalSetPrinted = false
     
     let containerr : HTMLElement
 
@@ -57,7 +58,7 @@
     let openSearchMenuModal = false
     let openCustomAddNoteModal = false
     let openEditMenuModal = false
-    let openConfirmModalSetPrinted = false
+    
 
     const watchChange = async (id : string) : Promise<void> =>  {
         await tick()        
@@ -189,7 +190,7 @@
         <p>Apakah anda yakin akan menghapus <span class="font-bold uppercase">{selectedMenu.name}?</span></p>
     </ConfirmModal>
 {/if}
-{#if openConfirmModalSetPrinted}
+<!-- {#if openConfirmModalSetPrinted}
     <ConfirmModal title="Konfirmasi Ubah Status Menu" confirmText="Ya, Ubah" on:close={handleClose} on:confirm={(e) => {handleSetPrinted(e); openConfirmModalSetPrinted = false}} >
         <p>Status 
             <span class="font-bold uppercase">{selectedMenu.name}</span> 
@@ -200,7 +201,7 @@
             ?
         </p>
     </ConfirmModal>
-{/if}
+{/if} -->
 {#if openSearchMenuModal}
     <SearchMenuModal {listMenu} {keyword} on:close={handleClose} on:submit={handleSubmit}></SearchMenuModal>
 {/if}
