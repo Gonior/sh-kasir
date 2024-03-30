@@ -2,7 +2,7 @@
     import { tick, onMount } from 'svelte'
     import { dragscroll } from "@svelte-put/dragscroll";
 	import { fade } from 'svelte/transition'
-    import { addedEffect, formatCurrency, scrollToElement, selectId, scrollToBottom } from '@lib/utils'
+    import { addedEffect, formatCurrency, scrollToElement, scrollToBottom } from '@lib/utils'
 	import { type IModel, Constant } from '@/lib/types'
 	import Icon from '@components/ui/Icon.svelte'
 	import TableHeader from '@components/ui/tableHeader.svelte'
@@ -11,30 +11,44 @@
     import CustomAddNoteModal from '@components/modal/customAddNoteModal.svelte';
 	import EditMenuLayoutA2Modal from '@components/modal/editMenuLayoutA2Modal.svelte'
 
+    export let invoice : string = ''
+    export let items : IModel.IItem[] = []
+    export let selectedMenu : IModel.IItem
+    export let listMenu : IModel.IMenu[] = []
+
+    // eslint-disable-next-line no-unused-vars
+    export let handleSelectItem : (_id : string) => void
     // eslint-disable-next-line no-unused-vars
     export let handleAddMenu : (_params : IModel.IMenu, qty? : number) => void
     // eslint-disable-next-line no-unused-vars
     export let handleAddNote : (params : {name : string}) => void
-    export let items : IModel.IItem[] = []
-    export let listMenu : IModel.IMenu[] = []
+    export let handleReset : () => void
+    // eslint-disable-next-line no-unused-vars
+    export let handleSetPrinted : (_e : CustomEvent<boolean>) => void
+
+    // ui depedencies
     export let addedId : string
     export let inputElement : HTMLInputElement
-    export let selectedMenu = items.find(i => i.selected) ?? null
-    export let resetSelect : () => void
-    export let invoice : string
+    
     let containerr : HTMLElement
+
     onMount(() => {
         inputElement.focus()
         scrollToBottom(containerr)
     })
 
     $: selectedMenu = items.find(i => i.selected) ?? null
+    
     $: {
         watchChange(addedId).then(() => {
             scrollToElement(`item-${addedId}`, {behavior : 'smooth', block : 'nearest'})
             inputElement.focus()
         })
     }
+
+    $: isDisabledToAddNote = items.length === 0 
+        || (selectedMenu && (!!selectedMenu?.forId || selectedMenu.printed) ) 
+        || ((items.length > 0 && items[items.length-1].printed) ?? true)
     
     const tableHeaderItems = Constant.tableHeaderItemsLayoutB
 
@@ -51,16 +65,13 @@
         inputElement.focus()
     }
 
-    const handleClickMenu = (_id : string) => {
-        items = [...selectId(items, _id)]
-    }
-
     const handleClickDiv = () => {
         if(items.length === 0) return 
 
         if(!selectedMenu) {
+            
             let filtered = [...items.filter((item) => !item.forId)]
-            handleClickMenu(filtered[filtered.length-1]._id)
+            handleSelectItem(filtered[filtered.length-1]._id)
         }
     }
 
@@ -99,7 +110,7 @@
         if(e.detail) {
             items = [...items.filter(item => item._id !== selectedMenu._id)]
             items = [...items.filter(item => item.forId !== selectedMenu._id)]
-            resetSelect()
+            handleReset()
         }
         openConfirmModalDelete = false
     }
@@ -117,7 +128,7 @@
             
         }
         let id  = (items[newIndex] && items[newIndex]._id) ?? ""
-        handleClickMenu(id)
+        handleSelectItem(id)
     }
 
     const handleSubmit = (e : CustomEvent<{menu : IModel.IMenu}>) => {
@@ -136,7 +147,7 @@
         openEditMenuModal = false
         openConfirmModalSetPrinted = false
         inputElement.focus()
-        resetSelect()
+        handleReset()
     }
 
     const handleEdit = (e : CustomEvent<IModel.IItem>) => {
@@ -157,19 +168,19 @@
         openEditMenuModal = false
         
     }
-    const handleSetPrinted = (e : CustomEvent<boolean>) => {
-        if (e.detail && selectedMenu) {
-            selectedMenu.printed = !selectedMenu.printed
-            if(!selectedMenu.forId) {
-                let notes = items.filter((item) => item.forId === selectedMenu._id)
-                if (notes.length > 0) notes.forEach(note => note.printed = selectedMenu.printed)
-            }
+    // const handleSetPrinted = (e : CustomEvent<boolean>) => {
+    //     if (e.detail && selectedMenu) {
+    //         selectedMenu.printed = !selectedMenu.printed
+    //         if(!selectedMenu.forId) {
+    //             let notes = items.filter((item) => item.forId === selectedMenu._id)
+    //             if (notes.length > 0) notes.forEach(note => note.printed = selectedMenu.printed)
+    //         }
 
-            items = [...items]
-            resetSelect()
-        }
-        openConfirmModalSetPrinted = false
-    }
+    //         items = [...items]
+    //         handleReset()
+    //     }
+    //     openConfirmModalSetPrinted = false
+    // }
     
 
 </script>
@@ -179,7 +190,7 @@
     </ConfirmModal>
 {/if}
 {#if openConfirmModalSetPrinted}
-    <ConfirmModal title="Konfirmasi Ubah Status Menu" confirmText="Ya, Ubah" on:close={handleClose} on:confirm={handleSetPrinted} >
+    <ConfirmModal title="Konfirmasi Ubah Status Menu" confirmText="Ya, Ubah" on:close={handleClose} on:confirm={(e) => {handleSetPrinted(e); openConfirmModalSetPrinted = false}} >
         <p>Status 
             <span class="font-bold uppercase">{selectedMenu.name}</span> 
             adalah 
@@ -198,7 +209,6 @@
 {/if}
 {#if openEditMenuModal}
     <EditMenuLayoutA2Modal {...selectedMenu} on:close={handleClose} on:submit={handleEdit} />
-    
 {/if}
 
 <div class="row-span-10 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden max-h-full grid grid-cols-1 grid-rows-12 p-2">
@@ -210,7 +220,7 @@
                 bind:this={inputElement}
                 bind:value={keyword}
                 on:keydown={handleSearch}
-                on:click={() => resetSelect()}
+                on:click={() => handleReset()}
                 class="form-control !pl-8 peer" placeholder="Masukan UPC atau nama menu" />
             <Icon name="qr-code" class="h-6 w-6 absolute top-2.5 left-1.5 text-gray-500 peer-focus:text-gray-900 dark:peer-focus:text-gray-50"  />
         </div>
@@ -233,7 +243,7 @@
                     </button>
                 {/if}
             {/if}
-            <button disabled={items.length === 0 || (selectedMenu && !!selectedMenu.forId) } transition:fade={{duration :200}} class="btn-secondary !p-2" on:click={() => openCustomAddNoteModal = true}>
+            <button disabled={isDisabledToAddNote} transition:fade={{duration :200}} class="btn-secondary !p-2" on:click={() => openCustomAddNoteModal = true}>
                 <Icon name="chat" class="h-6 w-6" />
             </button>
         </div>
@@ -257,7 +267,7 @@
                     id={`item-${order._id}`} 
                     class="{order.selected ? 'bg-gray-300 dark:bg-gray-700' : 'bg-inherit' } {order.printed ? 'dark:text-gray-600 text-gray-400' : ''} "
                     in:addedEffect|local
-                    on:click={() => handleClickMenu(order._id)}
+                    on:click={() => handleSelectItem(order._id)}
                     >
                     {#if !order.forId}
                         {#key order.qty}

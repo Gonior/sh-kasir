@@ -3,8 +3,8 @@
 	
 	import {IModel, type ISubMenu} from '@lib/types'
 	import { selectId } from '@lib/utils';
-	import Workspace from './workspace.svelte'
-	import Homepage from './homepage.svelte'
+	import Workspace from './workspace/_layout.svelte'
+	import Homepage from './_home/_layout.svelte'
 	import Icon from '@components/ui/Icon.svelte'
 	import Navbar from '@components/navbar/navbar.svelte';
 	import ButtonUser from '@components/buttons/buttonUser.svelte';

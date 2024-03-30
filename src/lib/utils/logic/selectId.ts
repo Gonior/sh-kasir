@@ -1,7 +1,7 @@
 
 const selectId = <T extends { selected?: boolean, [index : string] : any}>(items : T[], params : number | string, callback? : (id: string) => void ) : T[] => {
     let result : T[] = [] 
-    if (!items || items.length === 0 ) return null
+    if (!items || items.length === 0 ) return []
 
     result = [...items.map((item : T) => {
         if(item.id === params || item._id === params) {

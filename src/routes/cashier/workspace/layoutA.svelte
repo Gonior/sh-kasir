@@ -8,38 +8,34 @@
     import Icon from '@components/ui/Icon.svelte';
     import CustomerModal from '@components/modal/customerModal.svelte'
     
-    export let items : IModel.IItem[] = []
+    export let _id : string
     export let invoice : string
-    export let customer = ""
-    export let handleClear : () => void
-    export let taxInfo : IModel.ITax = {
-		 checked: false,
-         name : '',
-         value : 0
-	}
-    export let storeInfo : IModel.IStoreInfo = {
-		 name: "",
-		 address: "",
-		 phone: "",
-		 footerNote: ""
-	}
-    export let downpayment : number = 0
+    export let customer : string
+    export let downpayment : number
+    export let status : string
     export let discount : IModel.IDiscount = {
-		percentage: 0,
+        percentage: 0,
 		value: 0
 	}
+    export let items : IModel.IItem[] = []
+    export let handleClear : () => void
     
     const dispatch = createEventDispatcher()
 
     let openConfirmModal = false
     let openFormCustomer = false
+    
     let tSubtotal = tweened(0,{duration : 300, easing : quadInOut})
     $ : tSubtotal.set(items.filter((order) => !order.forId).reduce<number>((acc, val) => acc + val.total, 0) )
     
-    const handleConfirm = () => {
-        handleClear()
+    const handleConfirm = (e : CustomEvent<boolean>) => {
+        if(e.detail) {
+            handleClear()
+        }
+        
         dispatch('focus')
-        openConfirmModal = false
+        openConfirmModal = false 
+
     }
 
     const handleSumbit = (e :CustomEvent<{customer : string}>) => {
@@ -49,7 +45,7 @@
     }
 
     const handlePay = () => {
-        console.log({items, customer, subtotal : $tSubtotal, taxInfo, storeInfo, downpayment, discount})
+        console.log({_id,status,  items, customer, subtotal : $tSubtotal, downpayment, discount})
     }
 </script>
 {#if openConfirmModal}

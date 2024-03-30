@@ -1,6 +1,6 @@
 <script lang="ts">
-	import LayoutA2 from "./layoutA2.svelte"
-    import LayoutA1 from "./layoutA1.svelte";
+	import LayoutA2 from "../components/layoutA2.svelte"
+    import LayoutA1 from "../components/layoutA1.svelte";
 	import type { IModel } from "@/lib/types"
 
     export let items : IModel.IItem[] = []

@@ -1,42 +1,30 @@
 <script lang="ts">
-	import { onMount, createEventDispatcher } from "svelte"
+	import { onMount } from "svelte"
     import { paginate} from 'svelte-paginate'
     import { IModel } from "@lib/types";
-    import MenuService from "@lib/services/menu.service";	
-	import { formatCurrency } from "@lib/utils"
-    import LayoutBLoadingState from "@components/state/layoutBLoadingState.svelte";
-    import Errorstate from "@components/state/errorstate.svelte";
-    import Pagination from './paginationLayoutB.svelte'
+	import { formatCurrency} from "@lib/utils"
+    import Pagination from './components/paginationLayoutC.svelte'
 
-    const menuService = new MenuService()
-    const dispatch = createEventDispatcher()
     const pageSizeCategory = 8
     const pageSizeMenu = 14
 
     // eslint-disable-next-line no-unused-vars
     export let handleAddMenu : (_params : IModel.IMenu, qty? : number) => void
 
-    let listData : IModel.ILayoutBData[] = []
-    let isLoading = true
-    let isValid = false
+    export let listData : IModel.ILayoutCData[] = []
+    
     let currentPageCategory = 1
     let currentPageMenu = 1
     
     $: selectedCategory = listData.find(d => d.category.selected) ?? {data : []}
-    $: paginateData = paginate({items : listData, pageSize : pageSizeCategory, currentPage : currentPageCategory}) as IModel.ILayoutBData[]
-    $: paginateMenu = paginate({items : selectedCategory?.data, pageSize : pageSizeMenu, currentPage : currentPageMenu}) as IModel.IMenu[]
+    $: paginateData = paginate({items : listData, pageSize : pageSizeCategory, currentPage : currentPageCategory})
+    $: paginateMenu = paginate({items : selectedCategory?.data, pageSize : pageSizeMenu, currentPage : currentPageMenu}) 
 
     onMount( async () => {
-        let isSuccess = await menuService.load()
-        if (isSuccess) {
-            listData = [...menuService.getDataByCategory()]
-            if(selectedCategory.data.length === 0) listData[0].category.selected = true
-            isValid = true
-            
+        if(selectedCategory.data.length === 0) {
+            listData[0].category.selected = true
         }
-        let data = isSuccess ? [...menuService.getData().map(menu => {return {...menu}})] : null
-        dispatch('loaded', {isSuccess, data})
-        isLoading = false
+        
     })
 
     const handleSelectCategory = (_id : string) => {
@@ -46,6 +34,7 @@
             else data.category.selected = false
             return data
         })]
+
     }
 
     const addMenu = (menu : IModel.IMenu) => {
@@ -58,9 +47,7 @@
 
 </script>
 
-{#if isLoading}
-    <LayoutBLoadingState />
-{:else if isValid}
+
 <div class="grid grid-rows-12 grid-cols-1 gap-1 h-full ">
     <div class="grid grid-cols-3 gap-2 row-span-11">
         <div class="grid grid-cols-1 grid-rows-8 gap-2">
@@ -97,9 +84,3 @@
         </div>
     </div>
 </div>
-
-
-{:else}
-<Errorstate msg="Gagal Memuat Data!" submsg={'Pastikan anda terkoneksi dengan server!'} />
-
-{/if}

@@ -19,10 +19,12 @@
     let elInput : HTMLInputElement
 
     onMount(() => {
-        filteredMenu = [...listMenu.map((menu) => {
-            let item : IModel.IItem = {...menu, printed : false, selected : false}
-            return item
-        })]
+        keyword = keyword.replaceAll(/[^a-zA-Z0-9 -*]*/g, '')
+        // console.log(listMenu)
+        // filteredMenu = [...listMenu.map((menu) => {
+        //     let item : IModel.IItem = {...menu, printed : false, selected : false}
+        //     return item
+        // })]
         handleSearch()
         elInput.focus()
         elInput.select()
@@ -35,11 +37,16 @@
     }
 
     const handleSearch = (e? : KeyboardEvent) => {
-        if (keyword) filteredMenu = [...searchHandler(keyword,['name', "upc"], listMenu) as IModel.IItem[]]
-        else filteredMenu = []
-        if (filteredMenu.length === 1) {
-            handleSelect(filteredMenu[0]._id)
+        try {
+            if (keyword) filteredMenu = [...searchHandler(keyword,['name', "upc"], listMenu) as IModel.IItem[]]
+            else filteredMenu = []
+            if (filteredMenu.length === 1) {
+                handleSelect(filteredMenu[0]._id)
+            }    
+        } catch (error) {
+            console.error(error)
         }
+        
         if(e && e.key === "Escape") {
             handleClose()
         }

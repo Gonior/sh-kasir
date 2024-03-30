@@ -36,7 +36,7 @@ export interface ICategory {
     selected ? : boolean
 }
 
-export interface ILayoutBData {
+export interface ILayoutCData {
     category : ICategory,
     data : IMenu[]
 }
