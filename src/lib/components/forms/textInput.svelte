@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onDestroy, onMount } from "svelte"
 
-	let elInput : HTMLInputElement
-
+	
+	export let elInput : HTMLInputElement = null
 	export let errorMsg = ""
 	export let label = ""
 	export let value : string | number
@@ -12,15 +12,16 @@
 	export let textAlign : '!text-center' | '!text-left' | '!text-right' = "!text-left"
 	export let readonly : boolean = false
 	
+	
 	onMount(() => {
 		if (isFocused) {
-			elInput.focus()
-			elInput.select()
+			elInput?.focus()
+			elInput?.select()
 		}
 	})
 
 	onDestroy(()=> {
-		elInput.blur()
+		elInput?.blur()
 	})
 
 	

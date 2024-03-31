@@ -2,7 +2,7 @@
     import {onMount} from 'svelte'
     let date = new Date()
 	let opsiJam = { hour: 'numeric', minute: 'numeric', hour12: false } as  Intl.DateTimeFormatOptions
-	let opsiTanggal = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' } as  Intl.DateTimeFormatOptions
+	let opsiTanggal = {year: 'numeric', month: '2-digit', day: 'numeric',  } as  Intl.DateTimeFormatOptions
 
 	$: tanggal = new Intl.DateTimeFormat('id', opsiTanggal).format(date)
     $: jam = new Intl.DateTimeFormat('en', opsiJam).format(date)
@@ -17,4 +17,8 @@
 		}
     })  
 </script>
-<div class=" text-sm">{tanggal} {jam}</div>
+<div class="grid grid-rows-2 justify-end items-end text-sm">
+    <p class="text-right">{jam}</p>
+    <p class="text-right">{tanggal}</p>
+</div>
+<!-- <div class=" text-sm">{tanggal} {jam}</div> -->

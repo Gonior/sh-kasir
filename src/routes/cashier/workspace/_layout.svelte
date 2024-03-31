@@ -48,8 +48,8 @@
     let inputElement : HTMLInputElement
     let openConfirmModalSetPrinted = false
     
-    const handleClear = () => {
-        handleReset()
+    const handleClearWorkspace = () => {
+        handleResetSelect()
         customer = ""
         invoice = ""
         status = ""
@@ -94,7 +94,7 @@
             addedId = myItem._id
         }
         
-        handleReset()
+        handleResetSelect()
     }
 
     const handleAddNote = (params : {name : string} ) => {
@@ -118,7 +118,7 @@
         addedId = myNote._id
     }
 
-    const handleReset = () => {
+    const handleResetSelect = () => {
         if(items.length > 0)items = [...selectId(items, '')]
     }
 
@@ -132,9 +132,25 @@
 
             items = [...items]
             inputElement.focus()
-            handleReset()
+            handleResetSelect()
         }
     }
+
+    // const handleKeydown = (e : KeyboardEvent) => {
+    //     let key = e.key
+    //     if (key !== 'ArrowUp' && key !== 'ArrowDown' && items.length !== 0) return
+    //     const currentIndex = items.indexOf(selectedMenu)
+    //     let newIndex : number
+    //     if (currentIndex === -1) {
+    //         newIndex = 0
+    //     } else {
+    //         if (key === 'ArrowUp') newIndex = (currentIndex + items.length - 1) % items.length
+    //         else if (key === 'ArrowDown') newIndex = (currentIndex + 1) % items.length
+            
+    //     }
+    //     let id  = (items[newIndex] && items[newIndex]._id) ?? ""
+    //     handleSelectItem(id)
+    // }
 
 </script>
 {#if openConfirmModalSetPrinted}
@@ -150,12 +166,14 @@
         </p>
     </ConfirmModal>
 {/if}
+<!-- <svelte:window on:keydown={handleKeydown}></svelte:window> -->
 <div class="grid grid-cols-2 h-full gap-2 p-2">
     {#if isLoading}
         <div class="row-span-12 col-span-2">
             <Loading/>
         </div>
     {:else if isValid}
+        
         <div class="overflow-hidden grid grid-cols-1 grid-rows-12 gap-2">
             <!-- informasi bill -->
             <LayoutA 
@@ -167,7 +185,7 @@
                 bind:discount={discount}                
                 bind:items={items}
                 on:focus={() => inputElement.focus()}
-                {handleClear}
+                {handleClearWorkspace}
                 />
             <!-- pesanan -->
             <LayoutB 
@@ -180,7 +198,7 @@
                 {handleSelectItem}
                 {handleAddNote}
                 {handleAddMenu}
-                {handleReset}
+                {handleResetSelect}
                 {addedId}
              />
             

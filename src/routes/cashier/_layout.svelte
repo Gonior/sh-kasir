@@ -69,15 +69,20 @@
 			{/if}
 		{/each}
 	</Navbar>
-	<div class="flex-1 h-full max-h-full flex flex-col pt-3">
-		<div class="flex justify-between items-start px-3">
-			<div>
-				<p class="text-sm truncate"> {storeInfo.name} , {storeInfo.address}, {storeInfo.phone}</p>				
-				<Clock />
+	<div class="flex-1 h-full max-h-full flex flex-col">
+		<div class="flex justify-between items-start px-3 py-2.5 bg-gray-800">
+			<div class="flex items-center space-x-2">
+				<Icon name="building" class='!h-8 !w-8' stroke={1.5} />
+				<div>
+					<p class="text-base truncate font-inter font-bold"> {storeInfo.name}</p>				
+					<p class="text-xs text-gray-300">{storeInfo.address}</p>
+				</div>
 			</div>
+			
 			<div class="flex space-x-3">
 				<ButtonPrinter />
 				<ButtonUser />
+				<Clock />
 			</div>
 		</div>
 		<div class="flex-1 overflow-hidden">

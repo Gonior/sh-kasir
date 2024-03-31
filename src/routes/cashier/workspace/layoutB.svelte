@@ -22,10 +22,7 @@
     export let handleAddMenu : (_params : IModel.IMenu, qty? : number) => void
     // eslint-disable-next-line no-unused-vars
     export let handleAddNote : (params : {name : string}) => void
-    export let handleReset : () => void
-    // eslint-disable-next-line no-unused-vars
-    // export let handleSetPrinted : (_e : CustomEvent<boolean>) => void
-
+    export let handleResetSelect : () => void
     // ui depedencies
     export let addedId : string
     export let inputElement : HTMLInputElement
@@ -66,15 +63,15 @@
         inputElement.focus()
     }
 
-    const handleClickDiv = () => {
-        if(items.length === 0) return 
+    // const handleClickDiv = () => {
+    //     if(items.length === 0) return 
 
-        if(!selectedMenu) {
+    //     if(!selectedMenu) {
             
-            let filtered = [...items.filter((item) => !item.forId)]
-            handleSelectItem(filtered[filtered.length-1]._id)
-        }
-    }
+    //         let filtered = [...items.filter((item) => !item.forId)]
+    //         handleSelectItem(filtered[filtered.length-1]._id)
+    //     }
+    // }
 
     const handleSearch = (e : KeyboardEvent) => {
         
@@ -109,16 +106,23 @@
 
     const handleDelete = (e : CustomEvent<boolean>) => {
         if(e.detail) {
-            items = [...items.filter(item => item._id !== selectedMenu._id)]
-            items = [...items.filter(item => item.forId !== selectedMenu._id)]
-            handleReset()
+            if(selectedMenu && selectedMenu.printed) {
+                openConfirmModalSetPrinted = true
+
+            } else {
+                items = [...items.filter(item => item._id !== selectedMenu._id)]
+                items = [...items.filter(item => item.forId !== selectedMenu._id)]
+                handleResetSelect()
+            }
+            
         }
         openConfirmModalDelete = false
     }
 
     const handleKeydown = (e : KeyboardEvent) => {
         let key = e.key
-        if (key !== 'ArrowUp' && key !== 'ArrowDown') return
+        if (key !== 'ArrowUp' && key !== 'ArrowDown' && items.length !== 0) return
+        e.preventDefault()
         const currentIndex = items.indexOf(selectedMenu)
         let newIndex : number
         if (currentIndex === -1) {
@@ -128,8 +132,16 @@
             else if (key === 'ArrowDown') newIndex = (currentIndex + 1) % items.length
             
         }
+
+        
         let id  = (items[newIndex] && items[newIndex]._id) ?? ""
         handleSelectItem(id)
+        if(id) {
+            scrollToElement(`item-${id}`, {behavior : 'smooth', block : 'nearest'})
+            // selectedMenu._id
+        }
+    
+
     }
 
     const handleSubmit = (e : CustomEvent<{menu : IModel.IMenu}>) => {
@@ -148,7 +160,7 @@
         openEditMenuModal = false
         openConfirmModalSetPrinted = false
         inputElement.focus()
-        handleReset()
+        handleResetSelect()
     }
 
     const handleEdit = (e : CustomEvent<IModel.IItem>) => {
@@ -169,39 +181,18 @@
         openEditMenuModal = false
         
     }
-    // const handleSetPrinted = (e : CustomEvent<boolean>) => {
-    //     if (e.detail && selectedMenu) {
-    //         selectedMenu.printed = !selectedMenu.printed
-    //         if(!selectedMenu.forId) {
-    //             let notes = items.filter((item) => item.forId === selectedMenu._id)
-    //             if (notes.length > 0) notes.forEach(note => note.printed = selectedMenu.printed)
-    //         }
-
-    //         items = [...items]
-    //         handleReset()
-    //     }
-    //     openConfirmModalSetPrinted = false
-    // }
-    
 
 </script>
 {#if openConfirmModalDelete}
     <ConfirmModal title="Konfirmasi Hapus Pesanan" confirmText="Ya, Hapus" on:close={handleClose} on:confirm={handleDelete} >
+        {#if selectedMenu?.printed}
+        <p>Pesanan yang akan dihapus berstatus <span class="font-bold uppercase">sudah dipesan</span>.</p>
         <p>Apakah anda yakin akan menghapus <span class="font-bold uppercase">{selectedMenu.name}?</span></p>
+        {:else}
+        <p>Apakah anda yakin akan menghapus <span class="font-bold uppercase">{selectedMenu.name}?</span></p>
+        {/if}
     </ConfirmModal>
 {/if}
-<!-- {#if openConfirmModalSetPrinted}
-    <ConfirmModal title="Konfirmasi Ubah Status Menu" confirmText="Ya, Ubah" on:close={handleClose} on:confirm={(e) => {handleSetPrinted(e); openConfirmModalSetPrinted = false}} >
-        <p>Status 
-            <span class="font-bold uppercase">{selectedMenu.name}</span> 
-            adalah 
-            <span class="font-bold uppercase">{selectedMenu.printed ? '"sudah dipesan"' : '"belum dipesan"'}</span>
-            apakah anda yakin merubah status menjadi
-            <span class="font-bold uppercase">{selectedMenu.printed ? '"belum dipesan"' : '"sudah dipesan"'}</span>
-            ?
-        </p>
-    </ConfirmModal>
-{/if} -->
 {#if openSearchMenuModal}
     <SearchMenuModal {listMenu} {keyword} on:close={handleClose} on:submit={handleSubmit}></SearchMenuModal>
 {/if}
@@ -211,7 +202,7 @@
 {#if openEditMenuModal}
     <EditMenuLayoutA2Modal {...selectedMenu} on:close={handleClose} on:submit={handleEdit} />
 {/if}
-
+<svelte:window on:keydown={handleKeydown}></svelte:window>
 <div class="row-span-10 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden max-h-full grid grid-cols-1 grid-rows-12 p-2">
     <div class="grid grid-cols-2 items-end pb-2">
         <!-- input upc -->
@@ -221,7 +212,7 @@
                 bind:this={inputElement}
                 bind:value={keyword}
                 on:keydown={handleSearch}
-                on:click={() => handleReset()}
+                on:click={() => handleResetSelect()}
                 class="form-control !pl-8 peer" placeholder="Masukan UPC atau nama menu" />
             <Icon name="qr-code" class="h-6 w-6 absolute top-2.5 left-1.5 text-gray-500 peer-focus:text-gray-900 dark:peer-focus:text-gray-50"  />
         </div>
@@ -252,14 +243,15 @@
     <div class="grid items-start">
         <TableHeader {tableHeaderItems} textSize={'text-sm'} class="w-full"/>
     </div>
+    <!-- on:keydown={handleKeydown}  -->
+    <!-- on:click={handleClickDiv}  -->
+    <!-- tabindex="0" 
+        role="button" -->
     <div 
-        tabindex="0" 
-        role="button"
+        
         style="scrollbar-gutter: stable;"
         class="overflow-y-auto row-span-11 overflow-x-hidden outline-none cursor-default" 
         bind:this={containerr}
-        on:keydown={handleKeydown} 
-        on:click={handleClickDiv} 
         use:dragscroll={{cursor : false, axis : 'y'}}>
         <div >
             <table id="table-conter"  class="tex4t-gray-500 dark:text-gray-300 text-sm font-bold w-full" >
