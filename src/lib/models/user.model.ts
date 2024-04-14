@@ -46,7 +46,7 @@ class User {
         try {
             let response = await UserService.login(this.getProperties())
             if( response && typeof response === 'object' && "success" in response && response.success && "token" in response && typeof response.token === 'string' && "data" in response ) {
-                toast.success('Login berhasil!')
+                toast.success('Login berhasil!', {duration : 2000})
                 token.set(response.token)
 				user.set(response.data)
                 return true

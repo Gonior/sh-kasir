@@ -11,8 +11,8 @@
     
     export let _id : string
     export let invoice : string
-    export let customer : string
-    export let downpayment : number
+    export let customer : string = ""
+    export let downpayment : number = 0
     export let status : string
     export let discount : IModel.IDiscount = {
         percentage: 0,
@@ -48,8 +48,6 @@
             dispatch('focus')
         }
     }
-
-    
 
     const handleSumbit = (e :CustomEvent<{customer : string}>) => {
         customer = e.detail.customer

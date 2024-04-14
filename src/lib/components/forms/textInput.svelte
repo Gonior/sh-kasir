@@ -11,7 +11,8 @@
 	export let placeholder = "Text input"
 	export let textAlign : '!text-center' | '!text-left' | '!text-right' = "!text-left"
 	export let readonly : boolean = false
-	
+	export let min = -9999999999
+	export let max = 9999999999
 	
 	onMount(() => {
 		if (isFocused) {
@@ -34,7 +35,7 @@
 	{#if typeInput === 'text'}
 		<input {readonly} bind:this={elInput} bind:value={value} type='text' class="form-control w-full  {textAlign}" placeholder={placeholder}>
 	{:else if typeInput === 'number'}
-		<input {readonly} bind:this={elInput} bind:value={value} type='number' class="form-control w-full {textAlign}" placeholder={placeholder}>
+		<input {readonly} bind:this={elInput} bind:value={value} type='number' step="0.5" {min} {max} class="form-control w-full {textAlign}" placeholder={placeholder}>
 	{:else}
 		<input {readonly} bind:this={elInput} bind:value={value} type='password' class="form-control w-full {textAlign}" placeholder={placeholder}>
 	{/if}

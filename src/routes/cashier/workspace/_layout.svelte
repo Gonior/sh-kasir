@@ -26,11 +26,11 @@
         isLoading = false
     })
     // keperluan bill
-    let _id :string = ''
-    let invoice : string = "#2024112391671212317826318263871623812637126387"
+    let _id :string 
+    let invoice : string 
 
-    let status : string = ""
-    let customer : string = ''
+    let status : string
+    let customer : string
     let downpayment : number = 0
     let discount : IModel.IDiscount = {
 		percentage: 0,

@@ -12,6 +12,7 @@
 	import ButtonPrinter from '@components/buttons/buttonPrinter.svelte';
 	import StoreController from '@lib/controller/store.controller';
 	import { onMount } from 'svelte'
+	import { taxInfo as taxInfoLocalStorage, storeInfo as storeInfoLocalStorage } from '@lib/store'
 
 	const storeController = new StoreController()
 
@@ -48,7 +49,10 @@
 		let isSuccess = await storeController.init()
 		if( isSuccess ) {
 			storeInfo = {...storeController.getStoreInfo()}
-			taxInfo = {...storeController.getTaxInfo()}			
+			taxInfo = {...storeController.getTaxInfo()}
+			storeInfoLocalStorage.set(storeInfo)
+			taxInfoLocalStorage.set(taxInfo)
+			console.log($taxInfoLocalStorage)
 		}
 	})
 
@@ -70,12 +74,12 @@
 		{/each}
 	</Navbar>
 	<div class="flex-1 h-full max-h-full flex flex-col">
-		<div class="flex justify-between items-start px-3 py-2.5 bg-gray-800">
+		<div class="flex justify-between items-start px-3 py-2.5 bg-gray-100 dark:bg-gray-800">
 			<div class="flex items-center space-x-2">
 				<Icon name="building" class='!h-8 !w-8' stroke={1.5} />
 				<div>
 					<p class="text-base truncate font-inter font-bold"> {storeInfo.name}</p>				
-					<p class="text-xs text-gray-300">{storeInfo.address}</p>
+					<p class="text-xs text-gray-500 dark:text-gray-300">{storeInfo.address}</p>
 				</div>
 			</div>
 			
@@ -86,7 +90,7 @@
 			</div>
 		</div>
 		<div class="flex-1 overflow-hidden">
-			<svelte:component this={submenu.find((menu) => menu.selected).component} {storeInfo} {taxInfo} ></svelte:component>
+			<svelte:component this={submenu.find((menu) => menu.selected).component} ></svelte:component>
 		</div>
 	</div>
 </div>

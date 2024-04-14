@@ -10,7 +10,7 @@
 
     $: isDisabledToAddNote = items.length === 0 
         || (selectedMenu && (!!selectedMenu?.forId || selectedMenu.printed) ) 
-        || ((items.length > 0 && items[items.length-1].printed) ?? true)
+        || ((items.length > 0 && items.filter(i => !i.forId)[items.filter(i => !i.forId).length-1].printed) ?? true)
 </script>
 
 <div class="grid grid-rows-5 grid-cols-4 gap-1 h-full p-2">

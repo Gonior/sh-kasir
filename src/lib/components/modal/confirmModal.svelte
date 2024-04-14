@@ -43,7 +43,7 @@
 
 </script>
 <svelte:window on:keydown={handleKeydown}/>
-<Modal class="max-w-[50vw]" outside={true} overlay={true} on:close={() => dispatch('close', false)} >
+<Modal class="max-w-[50vw] min-w-[30vw]" outside={true} overlay={true} on:close={() => dispatch('close', false)} >
 	<div class="mb-2 flex items-center justify-between">
 		<h1 class="font-bold text-xl">{title}</h1>
 		<button class="btn text-gray-500 dark:text-gray-400" on:click={() => dispatch('close', false)}>

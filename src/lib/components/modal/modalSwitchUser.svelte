@@ -31,7 +31,6 @@
 			listUser = userService.getData()
 			setTimeout(() => {
 				const items =  [...document.getElementsByName('my-controller')] 
-				console.log(items)
 				if(items.length > 0) items[0].focus()
 			}, 200)
 			

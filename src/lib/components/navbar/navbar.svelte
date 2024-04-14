@@ -29,7 +29,7 @@
 		{/if}
 	</div>
 
-	<div class="flex {direction === 'vertical' ? 'flex-col space-y-4' : 'items-center space-x-1'}">
+	<div class="flex {direction === 'vertical' ? 'flex-col space-y-4 ' : 'items-center space-x-1'}">
 		<slot />
 	</div>
 	<div class="flex {direction === 'vertical' ? 'flex-col space-y-2' : 'items-center flex-row-reverse space-x-1 space-x-reverse' }">

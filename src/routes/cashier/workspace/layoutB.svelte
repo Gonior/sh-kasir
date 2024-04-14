@@ -46,7 +46,7 @@
 
     $: isDisabledToAddNote = items.length === 0 
         || (selectedMenu && (!!selectedMenu?.forId || selectedMenu.printed) ) 
-        || ((items.length > 0 && items[items.length-1].printed) ?? true)
+        || ((items.length > 0 && items.filter(i => !i.forId)[items.filter(i => !i.forId).length-1].printed) ?? true)
     
     const tableHeaderItems = Constant.tableHeaderItemsLayoutB
 
@@ -63,16 +63,6 @@
         inputElement.focus()
     }
 
-    // const handleClickDiv = () => {
-    //     if(items.length === 0) return 
-
-    //     if(!selectedMenu) {
-            
-    //         let filtered = [...items.filter((item) => !item.forId)]
-    //         handleSelectItem(filtered[filtered.length-1]._id)
-    //     }
-    // }
-
     const handleSearch = (e : KeyboardEvent) => {
         
         if (e.key === 'Enter') {
@@ -86,7 +76,7 @@
             }
 			else if (regex.test(keyword)) {
 				let result = keyword.split('*')
-				qty = !result[0] ? 1 : parseInt(result[0])
+				qty = !result[0] ? 1 : parseFloat(result[0])
 				keyword = result[1]
                 let findMenu = listMenu.find((menu) => menu.upc === +keyword)
                 if ( findMenu ) menu = {...findMenu}
@@ -106,23 +96,17 @@
 
     const handleDelete = (e : CustomEvent<boolean>) => {
         if(e.detail) {
-            if(selectedMenu && selectedMenu.printed) {
-                openConfirmModalSetPrinted = true
-
-            } else {
-                items = [...items.filter(item => item._id !== selectedMenu._id)]
-                items = [...items.filter(item => item.forId !== selectedMenu._id)]
-                handleResetSelect()
-            }
-            
+            items = [...items.filter(item => item._id !== selectedMenu._id)]
+            items = [...items.filter(item => item.forId !== selectedMenu._id)]
+            handleResetSelect()
         }
         openConfirmModalDelete = false
     }
 
     const handleKeydown = (e : KeyboardEvent) => {
         let key = e.key
-        if (key !== 'ArrowUp' && key !== 'ArrowDown' && items.length !== 0) return
-        e.preventDefault()
+        if (key !== 'ArrowUp' && key !== 'ArrowDown') return
+        if(selectedMenu) e.preventDefault()
         const currentIndex = items.indexOf(selectedMenu)
         let newIndex : number
         if (currentIndex === -1) {
@@ -130,17 +114,14 @@
         } else {
             if (key === 'ArrowUp') newIndex = (currentIndex + items.length - 1) % items.length
             else if (key === 'ArrowDown') newIndex = (currentIndex + 1) % items.length
-            
         }
-
         
         let id  = (items[newIndex] && items[newIndex]._id) ?? ""
-        handleSelectItem(id)
         if(id) {
+            handleSelectItem(id)
             scrollToElement(`item-${id}`, {behavior : 'smooth', block : 'nearest'})
-            // selectedMenu._id
+            inputElement.blur()
         }
-    
 
     }
 
@@ -186,8 +167,8 @@
 {#if openConfirmModalDelete}
     <ConfirmModal title="Konfirmasi Hapus Pesanan" confirmText="Ya, Hapus" on:close={handleClose} on:confirm={handleDelete} >
         {#if selectedMenu?.printed}
-        <p>Pesanan yang akan dihapus berstatus <span class="font-bold uppercase">sudah dipesan</span>.</p>
-        <p>Apakah anda yakin akan menghapus <span class="font-bold uppercase">{selectedMenu.name}?</span></p>
+        <p>Pesanan <span class="font-bold uppercase">{selectedMenu.name}</span> berstatus <span class="font-bold uppercase">sudah dipesan</span>.</p>
+        <p>Apakah anda yakin akan menghapusnya? </p>
         {:else}
         <p>Apakah anda yakin akan menghapus <span class="font-bold uppercase">{selectedMenu.name}?</span></p>
         {/if}
@@ -213,7 +194,7 @@
                 bind:value={keyword}
                 on:keydown={handleSearch}
                 on:click={() => handleResetSelect()}
-                class="form-control !pl-8 peer" placeholder="Masukan UPC atau nama menu" />
+                class="form-control !pl-8 peer" placeholder="Masukan UPC atau Nama Menu" />
             <Icon name="qr-code" class="h-6 w-6 absolute top-2.5 left-1.5 text-gray-500 peer-focus:text-gray-900 dark:peer-focus:text-gray-50"  />
         </div>
         <div class="flex flex-0 items-center justify-end space-x-2">
@@ -256,9 +237,10 @@
         <div >
             <table id="table-conter"  class="tex4t-gray-500 dark:text-gray-300 text-sm font-bold w-full" >
             {#each items as order (order._id)}
+            <!--  -->
                 <tr 
                     id={`item-${order._id}`} 
-                    class="{order.selected ? 'bg-gray-300 dark:bg-gray-700' : 'bg-inherit' } {order.printed ? 'dark:text-gray-600 text-gray-400' : ''} "
+                    class="{order.selected ? 'bg-gray-300 dark:bg-gray-700' : 'bg-inherit' } {order.printed ? 'dark:text-gray-600 text-gray-400' : ''} my-items"
                     in:addedEffect|local
                     on:click={() => handleSelectItem(order._id)}
                     >
